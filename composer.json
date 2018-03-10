@@ -1,0 +1,40 @@
+{
+    "name": "drupal/marvin_incubator",
+    "description": "Drush commands to manage contrib development",
+    "type": "drupal-drush",
+    "license": "GPL-3.0-or-later",
+    "conflict": {
+        "drupal/marvin_product": "*"
+    },
+    "require": {
+        "drupal/marvin": "dev-8.x-1.x"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drush\\Commands\\marvin_incubator\\": "Commands/marvin_incubator/",
+            "Drush\\marvin_incubator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drush\\marvin_incubator\\Tests\\Unish\\marvin\\": "tests/src/Unish/",
+            "Drush\\Commands\\marvin_incubator\\Tests\\Unit\\": "tests/src/Unit/Drush/Commands/marvin_incubator/",
+            "Drush\\marvin_incubator\\Tests\\Unit\\": "tests/src/Unit/Drush/marvin_incubator/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-1.x": "8.x-1.x"
+        },
+        "sweetchuck/git-hooks": {
+            "core.hooksPath": "vendor/drupal/marvin/gitHooks/self",
+            "symlink": true
+        },
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": true
+    },
+    "scripts": {
+        "post-install-cmd": "\\Drush\\marvin\\Composer\\Scripts::selfPostInstallCmd",
+        "post-update-cmd": "\\Drush\\marvin\\Composer\\Scripts::selfPostUpdateCmd"
+    }
+}
