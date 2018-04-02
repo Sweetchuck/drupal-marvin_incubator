@@ -1,0 +1,47 @@
+
+command:
+  marvin:
+    settings:
+      ##
+      # @todo
+      #
+      # @var string
+      ##
+      projectType: 'incubator'
+
+      ##
+      # If TRUE then the managed Drupal extensions will be detected automatically.
+      #
+      # Auto-detection pickups every Drupal extensions up which managed by Git,
+      # and symlinked under to Drupal root from outside of the project root.
+      # Otherwise only those extension will be managed which are explicitly listed
+      # in the ./managedDrupalExtension.package configuration.
+      #
+      # @var bool
+      ##
+      autodetectManagedDrupalExtensions: true
+      managedDrupalExtension:
+
+        ##
+        # List of the managed extension and their properties.
+        #
+        # Key is the name of the composer package.
+        #
+        # @var array
+        ##
+        package: {}
+          # my_vendor/my_name:
+          #   ##
+          #   # The auto-detection should ignore this package or not.
+          #   #
+          #   # @var bool
+          #   ignored: false
+    git-hook: {}
+#      commit-msg:
+#        settings:
+#          rules:
+#            subjectLine:
+#              enabled: true
+#              pattern: ''
+#              description: ''
+#              errorMessage: ''

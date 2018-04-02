@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drush\Commands\marvin_incubator;
 
 use Drush\Commands\marvin\GitHookCommandsBase;
 use Robo\Collection\CollectionBuilder;
 
+/**
+ * @todo Decide that the "@bootstrap none" is required or not.
+ */
 class GitHookCommands extends GitHookCommandsBase {
 
   /**
@@ -115,7 +120,7 @@ class GitHookCommands extends GitHookCommandsBase {
    * @command marvin:git-hook:pre-rebase
    * @hidden
    */
-  public function gitHookPreRebase(string $packagePath, string $upstream, ?string $branch = null): CollectionBuilder {
+  public function gitHookPreRebase(string $packagePath, string $upstream, ?string $branch = NULL): CollectionBuilder {
     return $this->delegate('pre-rebase');
   }
 

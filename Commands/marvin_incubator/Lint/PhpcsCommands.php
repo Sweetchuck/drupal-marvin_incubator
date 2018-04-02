@@ -1,50 +1,64 @@
 <?php
 
-namespace Drush\Commands\marvin_incubator\Qa;
+declare(strict_types = 1);
 
-use Consolidation\AnnotatedCommand\CommandData;
-use Drush\Commands\marvin\Qa\LintPhpcsCommandsBase;
+namespace Drush\Commands\marvin_incubator\Lint;
+
+use Drush\Commands\marvin\Lint\PhpcsCommandsBase;
+use Drupal\marvin_incubator\CommandsBaseTrait;
 use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 
-class LintPhpcsCommands extends LintPhpcsCommandsBase {
+class PhpcsCommands extends PhpcsCommandsBase {
+
+  use CommandsBaseTrait;
 
   /**
-   * @hook on-event marvin-git-hook-pre-commit
+   * @hook on-event marvin:composer:post-install-cmd
+   * @hook on-event marvin:composer:post-update-cmd
+   */
+  public function composerPostInstallAndUpdateCmd() {
+    return [
+      'marvin.phpcs.config.installed_paths' => [
+        'weight' => -200,
+        'task' => $this->getTaskPhpcsConfigSetInstalledPaths(getcwd()),
+      ],
+    ];
+  }
+
+  /**
+   * @hook on-event marvin:git-hook:pre-commit
    */
   public function onEventMarvinGitHookPreCommit(InputInterface $input): array {
     $package = $this->normalizeManagedDrupalExtensionName($input->getArgument('packagePath'));
 
     return [
-      'marvin.qa.lint.phpcs' => [
+      'marvin.lint.phpcs' => [
+        'weight' => -200,
         'task' => $this->lintPhpcs([$package['name']]),
       ],
     ];
   }
 
   /**
-   * @hook on-event marvin-qa-lint
+   * @hook on-event marvin:lint
    */
-  public function onEventMarvinQaLint(InputInterface $input): array {
+  public function onEventMarvinLint(InputInterface $input): array {
     return [
-      'marvin.qa.lint.phpcs' => [
+      'marvin.lint.phpcs' => [
+        'weight' => -200,
         'task' => $this->lintPhpcs($input->getArgument('packages')),
       ],
     ];
   }
 
   /**
-   * @hook validate marvin:qa:lint:phpcs
-   */
-  public function lintPhpcsHookValidate(CommandData $commandData) {
-    $this->hookValidateArgumentPackages($commandData);
-  }
-
-  /**
    * Runs PHP Code Sniffer.
    *
-   * @command marvin:qa:lint:phpcs
+   * @command marvin:lint:phpcs
    * @bootstrap none
+   *
+   * @marvinArgPackages packages
    */
   public function lintPhpcs(array $packages): CollectionBuilder {
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();

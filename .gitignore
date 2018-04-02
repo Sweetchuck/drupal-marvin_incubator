@@ -1,0 +1,13 @@
+
+/bin/
+/reports/
+
+/tests/fixtures/drush-sandbox/
+/tests/fixtures/drush-sut/*
+!/tests/fixtures/drush-sut/web/modules/custom/
+!/tests/fixtures/drush-sut/drush/drush.yml
+/tests/fixtures/drush_coverage*
+
+/vendor/
+
+/phpunit.xml

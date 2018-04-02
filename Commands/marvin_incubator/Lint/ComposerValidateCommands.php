@@ -1,41 +1,40 @@
 <?php
 
-namespace Drush\Commands\marvin_incubator\Qa;
+declare(strict_types = 1);
 
-use Consolidation\AnnotatedCommand\CommandData;
-use Drush\Commands\marvin\Qa\ComposerValidateCommandsBase;
-use Robo\Contract\TaskInterface;
+namespace Drush\Commands\marvin_incubator\Lint;
+
+use Drush\Commands\marvin\Lint\ComposerValidateCommandsBase;
+use Drupal\marvin_incubator\CommandsBaseTrait;
+use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 
 class ComposerValidateCommands extends ComposerValidateCommandsBase {
 
+  use CommandsBaseTrait;
+
   /**
-   * @hook on-event marvin-git-hook-pre-commit
+   * @hook on-event marvin:git-hook:pre-commit
    */
   public function onEventMarvinGitHookPreCommit(InputInterface $input): array {
     $package = $this->normalizeManagedDrupalExtensionName($input->getArgument('packagePath'));
 
     return [
-      'marvin:qa:composer:validate' => [
+      'marvin:lint:composer-validate' => [
         'task' => $this->composerValidate([$package['name']]),
       ],
     ];
   }
 
   /**
-   * @hook validate marvin:qa:composer:validate
-   */
-  public function composerValidateHookValidate(CommandData $commandData) {
-    $this->hookValidateArgumentPackages($commandData);
-  }
-
-  /**
    * Runs `composer validate`.
    *
-   * @command marvin:qa:composer:validate
+   * @command marvin:lint:composer-validate
    * @bootstrap none
+   *
+   * @marvinArgPackages packages
    */
-  public function composerValidate(array $packages): TaskInterface {
+  public function composerValidate(array $packages): CollectionBuilder {
     $cb = $this->collectionBuilder();
 
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();
