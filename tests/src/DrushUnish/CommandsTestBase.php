@@ -51,34 +51,22 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
 
   /**
    * {@inheritdoc}
-   */
-  protected function setUp() {
-    if (!$this->getSites()) {
-      $this->setUpDrupal(1, FALSE);
-    }
-
-    parent::setUp();
-    $this->deleteTestArtifacts();
-    $this->initGitRepoForDummyExtensions();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    $this->deleteTestArtifacts();
-    $this->deleteGitHistoryOfDummyExtensions();
-    parent::tearDown();
-  }
-
-  /**
-   * {@inheritdoc}
    *
    * Replace self::getDrush() with static::getDrush().
    * Support array values for --include.
    * Use the same PHP executable.
    */
-  public function drush($command, array $args = [], array $options = [], $site_specification = NULL, $cd = NULL, $expected_return = self::EXIT_SUCCESS, $suffix = NULL, $env = []) {
+  public function drush(
+    $command,
+    array $args = [],
+    array $options = [],
+    $site_specification = NULL,
+    $cd = NULL,
+    $expected_return = self::EXIT_SUCCESS,
+    $suffix = NULL,
+    $env = [],
+    $withCoverage = TRUE
+  ) {
     $sites = static::getSites();
 
     // Cd is added for the benefit of siteSshTest which tests a strict command.
@@ -138,7 +126,7 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
     // parsed as a global option. This matters for commands like ssh and rsync
     // where options after the command are passed along to external commands.
     $result = $this->getTestResultObject();
-    if ($result->getCollectCodeCoverageInformation()) {
+    if ($withCoverage && $result->getCollectCodeCoverageInformation()) {
       $coverage_file = tempnam($this->getTmp(), 'drush_coverage');
       if ($coverage_file) {
         $cmd[] = "--drush-coverage=" . $coverage_file;
@@ -195,6 +183,66 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
     }
 
     return $return;
+  }
+
+  public function installDrupal($env = 'dev', $install = FALSE, $withCoverage = FALSE) {
+    $root = $this->webroot();
+    $uri = $env;
+    $site = "$root/sites/$uri";
+
+    // If specified, install Drupal as a multi-site.
+    if ($install) {
+      $options = [
+        'root' => $root,
+        'db-url' => $this->dbUrl($env),
+        'sites-subdir' => $uri,
+        'yes' => NULL,
+        'quiet' => NULL,
+      ];
+      $this->drush(
+        'site-install',
+        ['testing', 'install_configure_form.enable_update_status_emails=NULL'],
+        $options,
+        NULL,
+        NULL,
+        self::EXIT_SUCCESS,
+        NULL,
+        [],
+        $withCoverage
+      );
+      // Give us our write perms back.
+      chmod($site, 0777);
+    }
+    else {
+      $this->mkdir($site);
+      touch("$site/settings.php");
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    if (!$this->getSites()) {
+      $this->setUpDrupal(1, $this->setUpDrupalNeedsToBeInstalled());
+    }
+
+    parent::setUp();
+    $this->deleteTestArtifacts();
+    $this->initGitRepoForDummyExtensions();
+  }
+
+  protected function setUpDrupalNeedsToBeInstalled(): bool {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    $this->deleteTestArtifacts();
+    $this->deleteGitHistoryOfDummyExtensions();
+    parent::tearDown();
   }
 
   /**

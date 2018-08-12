@@ -12,6 +12,7 @@ class MarvinManagedDrupalExtensionListTest extends CommandsTestBase {
     $expectedExitCode = 0;
     $expectedStdOutput = [
       'drupal/dummy_m1' => static::getExtensionsDir() . '/dummy_m1',
+      'drupal/dummy_m2' => static::getExtensionsDir() . '/dummy_m2',
     ];
 
     $args = [];

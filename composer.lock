@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5ecaffd54773d5e6ff789a4337d8ab7",
+    "content-hash": "21db0928e8147c466f2f4828fd024e8a",
     "packages": [
         {
             "name": "chi-teck/drupal-code-generator",
@@ -4441,6 +4441,31 @@
             "description": "Nothing special"
         },
         {
+            "name": "drupal/dummy_m2",
+            "version": "dev-8.x-1.x",
+            "dist": {
+                "type": "path",
+                "url": "tests/fixtures/extensions/dummy_m2",
+                "reference": "6757913881ed6b3c9c852b27a2363c9d14ee70db",
+                "shasum": null
+            },
+            "type": "drupal-module",
+            "scripts": {
+                "pre-install-cmd": [
+                    "@pm:policy"
+                ],
+                "pre-update-cmd": [
+                    "@pm:policy"
+                ],
+                "pm:policy": [
+                    "false"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ]
+        },
+        {
             "name": "easyrdf/easyrdf",
             "version": "0.9.1",
             "source": {
@@ -7384,7 +7409,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/marvin": 20,
-        "drupal/dummy_m1": 20
+        "drupal/dummy_m1": 20,
+        "drupal/dummy_m2": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

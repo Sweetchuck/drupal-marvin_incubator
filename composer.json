@@ -19,6 +19,10 @@
             "type": "path",
             "url": "tests/fixtures/extensions/dummy_m1"
         },
+        "drupal/dummy_m2": {
+            "type": "path",
+            "url": "tests/fixtures/extensions/dummy_m2"
+        },
         "drupal/marvin": {
             "type": "path",
             "url": "../../drupal/marvin"
@@ -108,6 +112,7 @@
         "drupal/coder": "^8.2",
         "drupal/core": "^8.5",
         "drupal/dummy_m1": "dev-8.x-1.x",
+        "drupal/dummy_m2": "dev-8.x-1.x",
         "mikey179/vfsStream": "^1.6",
         "phpunit/phpunit": "^6.3",
         "sweetchuck/git-hooks": "^0.0"

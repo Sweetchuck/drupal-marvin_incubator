@@ -1,0 +1,23 @@
+{
+    "name": "drupal/dummy_m2",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin",
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "require": {},
+    "require-dev": {},
+    "scripts": {
+        "pre-install-cmd": [
+            "@pm:policy"
+        ],
+        "pre-update-cmd": [
+            "@pm:policy"
+        ],
+        "pm:policy": "false"
+    }
+}

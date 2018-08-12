@@ -7,7 +7,7 @@ namespace Drush\Commands\marvin_incubator;
 use Consolidation\AnnotatedCommand\CommandData;
 use Consolidation\AnnotatedCommand\CommandError;
 use Drush\Commands\marvin\CommandsBase;
-use Drupal\marvin\Utils;
+use Drupal\marvin\Utils as MarvinUtils;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 
 class BaseValidatorCommands extends CommandsBase {
@@ -29,7 +29,7 @@ class BaseValidatorCommands extends CommandsBase {
       $commandErrors[] = $this->hookValidateMarvinArgPackagesSingle($commandData, $argName);
     }
 
-    return Utils::aggregateCommandErrors($commandErrors);
+    return MarvinUtils::aggregateCommandErrors($commandErrors);
   }
 
   protected function hookValidateMarvinArgPackagesSingle(CommandData $commandData, string $argName): ?CommandError {
