@@ -58,6 +58,7 @@ class PhpLintCommands extends Commands {
     $cb = $this->collectionBuilder();
 
     $phpVariants = $this->getPhpVariants();
+
     foreach ($packages as $packageName) {
       $packagePath = $managedDrupalExtensions[$packageName];
       $cb->addTask($this->getTaskLintPhpExtension($packagePath, $phpVariants));

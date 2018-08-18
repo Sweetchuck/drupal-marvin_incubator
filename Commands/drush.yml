@@ -36,6 +36,19 @@ command:
           #   #
           #   # @var bool
           #   ignored: false
+      php:
+
+        ##
+        # @var bool[]
+        ##
+        extension:
+          engine: true
+          install: true
+          module: true
+          php: true
+          profile: true
+          theme: true
+
     git-hook: {}
 #      commit-msg:
 #        settings:

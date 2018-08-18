@@ -296,7 +296,10 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
       'yes' => NULL,
       'no-ansi' => NULL,
       'config' => [
+        "$projectRootDir/drush/unish/marvin/drush.yml",
+        "$projectRootDir/drush/custom/marvin_incubator/drush.yml",
         "$projectRootDir/drush",
+        "$projectRootDir/drush/drush.local.yml",
       ],
       'include' => [
         "$projectRootDir/drush/unish/marvin",
@@ -338,12 +341,12 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
       'exitCode' => 0,
       'stdOutput' => [
         'same' => [
-          'stdOutput' => '',
+          'default' => '',
         ],
       ],
       'stdError' => [
         'same' => [
-          'stdError' => '',
+          'default' => '',
         ],
       ],
     ];
@@ -358,24 +361,25 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
     );
 
     if (array_key_exists('stdOutput', $expected)) {
-      $this->assertText($expected['stdOutput'], $this->getOutput());
+      $this->assertText($expected['stdOutput'], $this->getOutput(), 'stdOutput');
     }
 
     if (array_key_exists('stdError', $expected)) {
-      $this->assertText($expected['stdError'], $this->getErrorOutput());
+      $this->assertText($expected['stdError'], $this->getErrorOutput(), 'stdError');
     }
   }
 
-  protected function assertText(array $rules, $text) {
+  protected function assertText(array $rules, $text, string $msgPrefix) {
     foreach ($rules as $assertType => $expectations) {
       foreach ($expectations as $message => $expected) {
+        $fullMessage = "$msgPrefix $assertType - $message";
         switch ($assertType) {
           case 'same':
-            $this->assertSame($expected, $text, $message);
+            $this->assertSame($expected, $text, $fullMessage);
             break;
 
           case 'contains':
-            $this->assertContains($expected, $text, $message);
+            $this->assertContains($expected, $text, $fullMessage);
             break;
         }
       }
