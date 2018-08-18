@@ -295,7 +295,9 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
       'uri' => 'http://' . key(static::getSites()),
       'yes' => NULL,
       'no-ansi' => NULL,
-      'config' => "$projectRootDir/drush",
+      'config' => [
+        "$projectRootDir/drush",
+      ],
       'include' => [
         "$projectRootDir/drush/unish/marvin",
         "$projectRootDir/drush/custom/marvin_incubator",
@@ -306,6 +308,78 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
   protected function getPhpExecutable(): string {
     // @todo Make it configurable through environment variable.
     return PHP_BINDIR . '/php';
+  }
+
+  /**
+   * @var string
+   */
+  protected $drushCommand = 'marvin';
+
+  protected function getDrushCommand(): string {
+    return $this->drushCommand;
+  }
+
+  abstract public function casesExecuteDrushCommand(): array;
+
+  /**
+   * @dataProvider casesExecuteDrushCommand
+   */
+  public function testExecuteDrushCommand(array $expected, array $args, array $options): void {
+    $this->assertExecuteDrushCommand($expected, $this->getDrushCommand(), $args, $options);
+  }
+
+  protected function assertExecuteDrushCommand(
+    array $expected,
+    string $command,
+    array $args = [],
+    array $options = []
+  ) {
+    $expected += [
+      'exitCode' => 0,
+      'stdOutput' => [
+        'same' => [
+          'stdOutput' => '',
+        ],
+      ],
+      'stdError' => [
+        'same' => [
+          'stdError' => '',
+        ],
+      ],
+    ];
+
+    $this->drush(
+      $command,
+      $args,
+      $options,
+      NULL,
+      static::getSut(),
+      $expected['exitCode']
+    );
+
+    if (array_key_exists('stdOutput', $expected)) {
+      $this->assertText($expected['stdOutput'], $this->getOutput());
+    }
+
+    if (array_key_exists('stdError', $expected)) {
+      $this->assertText($expected['stdError'], $this->getErrorOutput());
+    }
+  }
+
+  protected function assertText(array $rules, $text) {
+    foreach ($rules as $assertType => $expectations) {
+      foreach ($expectations as $message => $expected) {
+        switch ($assertType) {
+          case 'same':
+            $this->assertSame($expected, $text, $message);
+            break;
+
+          case 'contains':
+            $this->assertContains($expected, $text, $message);
+            break;
+        }
+      }
+    }
   }
 
 }

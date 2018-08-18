@@ -80,6 +80,9 @@ trait CommandsBaseTrait {
           ->deferTaskConfiguration('setPackagePaths', 'packagePaths'));
   }
 
+  /**
+   * @todo This method could be part of the \Drupal\marvin_incubator\Utils.
+   */
   protected function normalizeManagedDrupalExtensionName(string $extensionName): ?array {
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();
 
@@ -93,6 +96,7 @@ trait CommandsBaseTrait {
 
     // Transform a Drupal extension machine-name to a fq composer package name.
     if (mb_strpos($extensionName, '/') === FALSE) {
+      // @todo The vendor can be anything not just "drupal".
       $packageName = "drupal/$extensionName";
       if (isset($managedDrupalExtensions[$packageName])) {
         return [

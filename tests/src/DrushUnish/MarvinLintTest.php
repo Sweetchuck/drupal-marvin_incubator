@@ -6,33 +6,33 @@ namespace Drush\Commands\Tests\marvin_incubator\Unish;
 
 class MarvinLintTest extends CommandsTestBase {
 
-  public function testMarvinLintPhpcs(): void {
-    $expectedExitCode = 0;
-    $expectedStdOutput = '';
-    $expectedStdErrorFragments = [
-      "/bin/phpcs --standard='Drupal,DrupalPractice' --report='json'",
-      'bundle exec scss-lint',
-    ];
+  /**
+   * {@inheritdoc}
+   */
+  protected $drushCommand = 'marvin:lint';
 
+  /**
+   * {@inheritdoc}
+   */
+  public function casesExecuteDrushCommand(): array {
     $options = $this->getDefaultDrushCommandOptions();
 
-    $this->drush(
-      'marvin:lint',
-      [
-        'dummy_m1',
+    return [
+      'default' => [
+        [
+          'stdError' => [
+            'contains' => [
+              'stdError contains - phpcs' => "/bin/phpcs --standard='Drupal,DrupalPractice' --report='json'",
+              'stdError contains - scss-lint' => 'bundle exec scss-lint',
+            ],
+          ],
+        ],
+        [
+          'dummy_m1',
+        ],
+        $options,
       ],
-      $options,
-      NULL,
-      static::getSut(),
-      $expectedExitCode
-    );
-
-    $actualStdOutput = $this->getOutput();
-    $actualStdError = $this->getErrorOutput();
-    $this->assertSame($expectedStdOutput, $actualStdOutput);
-    foreach ($expectedStdErrorFragments as $expectedStdErrorFragment) {
-      $this->assertContains($expectedStdErrorFragment, $actualStdError);
-    }
+    ];
   }
 
 }

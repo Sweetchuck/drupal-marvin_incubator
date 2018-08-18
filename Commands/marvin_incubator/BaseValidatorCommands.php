@@ -18,13 +18,14 @@ class BaseValidatorCommands extends CommandsBase {
    * @hook validate @marvinArgPackages
    */
   public function hookValidateMarvinArgPackages(CommandData $commandData): ?CommandError {
+    $annotationKey = 'marvinArgPackages';
     $annotationData = $commandData->annotationData();
-    if (!$annotationData->has('marvinArgPackages')) {
+    if (!$annotationData->has($annotationKey)) {
       return NULL;
     }
 
     $commandErrors = [];
-    $argNames = array_filter(explode(',', $commandData->annotationData()->get('marvinArgPackages')));
+    $argNames = $this->parseMultiValueAnnotation($annotationKey, $annotationData->get($annotationKey));
     foreach ($argNames as $argName) {
       $commandErrors[] = $this->hookValidateMarvinArgPackagesSingle($commandData, $argName);
     }
@@ -80,6 +81,10 @@ class BaseValidatorCommands extends CommandsBase {
     $commandData->input()->setArgument($argName, $packages);
 
     return NULL;
+  }
+
+  protected function parseMultiValueAnnotation(string $name, string $value): array {
+    return array_filter(explode(',', $value));
   }
 
 }

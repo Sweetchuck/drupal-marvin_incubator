@@ -6,7 +6,15 @@ namespace Drush\Commands\Tests\marvin_incubator\Unish;
 
 class MarvinLintComposerValidateTest extends CommandsTestBase {
 
-  public function caseMarvinLintComposerValidate(): array {
+  /**
+   * {@inheritdoc}
+   */
+  protected $drushCommand = 'marvin:lint:composer-validate';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function casesExecuteDrushCommand(): array {
     $fixturesDir = static::getTmp();
     $options = $this->getDefaultDrushCommandOptions();
 
@@ -51,39 +59,6 @@ class MarvinLintComposerValidateTest extends CommandsTestBase {
         $options,
       ],
     ];
-  }
-
-  /**
-   * @dataProvider caseMarvinLintComposerValidate
-   */
-  public function testMarvinLintComposerValidate(array $expected, array $args, array $options): void {
-    $this->drush(
-      'marvin:lint:composer-validate',
-      $args,
-      $options,
-      NULL,
-      static::getSut(),
-      $expected['exitCode']
-    );
-
-    $this->assertText($expected['stdOutput'],  $this->getOutput());
-    $this->assertText($expected['stdError'], $this->getErrorOutput());
-  }
-
-  protected function assertText(array $rules, $text) {
-    foreach ($rules as $assertType => $expectations) {
-      foreach ($expectations as $message => $expected) {
-        switch ($assertType) {
-          case 'same':
-            $this->assertSame($expected, $text, $message);
-            break;
-
-          case 'contains':
-            $this->assertContains($expected, $text, $message);
-            break;
-        }
-      }
-    }
   }
 
 }
