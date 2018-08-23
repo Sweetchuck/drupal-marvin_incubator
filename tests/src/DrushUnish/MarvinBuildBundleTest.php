@@ -4,18 +4,19 @@ declare(strict_types = 1);
 
 namespace Drush\Commands\Tests\marvin_incubator\Unish;
 
-class MarvinBuildNpmTest extends CommandsTestBase {
+class MarvinBuildBundleTest extends CommandsTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $drushCommand = 'marvin:build:npm';
+  protected $drushCommand = 'marvin:build:bundle';
 
   /**
    * {@inheritdoc}
    */
   public function casesExecuteDrushCommand(): array {
     $options = $this->getDefaultDrushCommandOptions();
+    $envRvmPath = getenv('rvm_path');
 
     return [
       'basic' => [
@@ -27,8 +28,7 @@ class MarvinBuildNpmTest extends CommandsTestBase {
           ],
           'stdError' => [
             'contains' => [
-              'nvm which' => "nvm which '9.11.2'",
-              'yarn install' => 'yarn install',
+              'bundle install' => "$envRvmPath/rubies/ruby-2.4.1/bin/ruby $envRvmPath/gems/ruby-2.4.1/bin/bundle install\n",
             ],
           ],
         ],
