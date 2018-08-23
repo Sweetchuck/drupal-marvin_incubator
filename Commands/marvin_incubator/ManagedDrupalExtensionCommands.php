@@ -42,14 +42,4 @@ class ManagedDrupalExtensionCommands extends CommandsBase {
     return $this->getManagedDrupalExtensions();
   }
 
-  /**
-   * @command dummy
-   * @bootstrap none
-   */
-  public function dummy() {
-    $config = $this->getConfig();
-
-    $this->output()->write(yaml_emit($config->export()));
-  }
-
 }

@@ -16,7 +16,6 @@ class MarvinLintPhpTest extends CommandsTestBase {
    */
   public function casesExecuteDrushCommand(): array {
     $options = $this->getDefaultDrushCommandOptions();
-
     $fileListerCommand = "git ls-files -z -- '*.profile' '*.module' '*.theme' '*.engine' '*.install' '*.php'";
 
     return [

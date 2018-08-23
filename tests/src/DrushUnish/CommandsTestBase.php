@@ -279,6 +279,8 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
       "git config user.email 'unish.drush@example.com'",
       'git add .',
       "git commit -m 'Initial commit'",
+      'git clean --force -d -X',
+      'git clean --force -d -x',
     ]);
 
     $process = new Process($command, $dir);

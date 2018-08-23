@@ -15,7 +15,27 @@ class MarvinBuildNpmTest extends CommandsTestBase {
    * {@inheritdoc}
    */
   public function casesExecuteDrushCommand(): array {
-    return [];
+    $options = $this->getDefaultDrushCommandOptions();
+
+    return [
+      'basic' => [
+        [
+          'stdOutput' => [
+            'same' => [
+              'todo-1' => '',
+            ],
+          ],
+          'stdError' => [
+            'contains' => [
+              'nvm which' => "nvm which '9.11.2'",
+              'yarn install' => "yarn install",
+            ],
+          ],
+        ],
+        ['dummy_m1'],
+        $options,
+      ],
+    ];
   }
 
 }
