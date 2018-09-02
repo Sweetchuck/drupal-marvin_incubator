@@ -70,7 +70,8 @@ class GitHookCommitMsgCommands extends CommandsBase implements LoggerAwareInterf
       $exitCode = 0;
       foreach ($this->getRules() as $rule) {
         if (preg_match($rule['pattern'], $data['commitMsg']) !== 1) {
-          $this->logger->error($rule['errorMessage']);
+          $logEntry = $this->getRuleErrorLogEntry($rule);
+          $this->logger->error($logEntry['message'], $logEntry['context']);
           $exitCode = 1;
         }
       }
@@ -86,15 +87,21 @@ class GitHookCommitMsgCommands extends CommandsBase implements LoggerAwareInterf
     );
 
     foreach (array_keys($rules) as $ruleName) {
-      $rules[$ruleName]['name'] = $ruleName;
-      $rules[$ruleName] += [
-        'enabled' => TRUE,
-        'description' => '- Missing -',
-        'errorMessage' => '- Missing -',
-      ];
+      $this->applyDefaultsToRule($ruleName, $rules[$ruleName]);
     }
 
     return array_filter($rules, $this->getRuleFilter());
+  }
+
+  protected function applyDefaultsToRule(string $ruleName, array &$rule) {
+    $rule['name'] = $ruleName;
+    $rule += [
+      'enabled' => TRUE,
+      'description' => '- Missing -',
+      'examples' => [],
+    ];
+
+    return $this;
   }
 
   protected function getRuleFilter(): ArrayFilterInterface {
@@ -104,12 +111,41 @@ class GitHookCommitMsgCommands extends CommandsBase implements LoggerAwareInterf
   protected function getDefaultRules(): array {
     return [
       'subjectLine' => [
+        'enabled' => TRUE,
         'name' => 'subjectLine',
         'pattern' => "/^(Issue #[0-9]+ - .{5,})|(Merge( remote-tracking){0,1} branch '[^\\s]+?'(, '[^\\s]+?'){0,} into [^\\s]+?)(\\n|$)/u",
-        'description' => '@todo',
-        'errorMessage' => '@todo',
+        'description' => 'Subject line contains reference to the issue number followed by a short description, or the subject line is an automatically generated message for merge commits',
+        'examples' => [
+          'Issue #42 - Something' => TRUE,
+          "Merge branch 'issue-42' into master" => TRUE,
+          "Merge branch 'issue-42', 'issue-43' into master" => TRUE,
+          "Merge remote-tracking branch 'issue-42' into master" => TRUE,
+          "Merge remote-tracking branch 'issue-42', 'issue-43' into master" => TRUE,
+        ],
       ],
     ];
+  }
+
+  protected function getRuleErrorLogEntry(array $rule): array {
+    $entry = [
+      'context' => [
+        'ruleName' => $rule['name'],
+      ],
+      'message' => [
+        'Commit message validation with rule <info>{ruleName}</info> failed.',
+        $rule['description'],
+      ],
+    ];
+
+    $examples = array_filter($rule['examples'], new ArrayFilterEnabled());
+    if ($examples) {
+      $entry['message'][] = 'Valid commit message examples are:';
+      $entry['message'] = array_merge($entry['message'], array_keys($rule['examples']));
+    }
+
+    $entry['message'] = implode(PHP_EOL, $entry['message']);
+
+    return $entry;
   }
 
 }

@@ -5,7 +5,7 @@
  * Git hook callback handler for managed extensions.
  */
 
-use Drush\marvin_incubator\GitHookHandler;
+use Drupal\marvin_incubator\GitHookHandler;
 
 call_user_func(function () {
   $rootProjectDir = '';

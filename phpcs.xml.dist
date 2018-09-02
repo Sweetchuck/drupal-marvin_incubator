@@ -4,6 +4,13 @@
   <file>src/</file>
   <file>tests/src/</file>
 
+  <file>tests/fixtures/extensions/dummy_m1/</file>
+  <exclude-pattern>./tests/fixtures/extensions/dummy_m1/node_modules/</exclude-pattern>
+
+  <file>tests/fixtures/extensions/dummy_m2/</file>
+  <exclude-pattern>./tests/fixtures/extensions/dummy_m2/node_modules/</exclude-pattern>
+  <exclude-pattern>./tests/fixtures/extensions/dummy_m2/dummy_m2.module</exclude-pattern>
+
   <arg
     name="extensions"
     value="inc/PHP,install/PHP,module/PHP,php/PHP,profile/PHP,test/PHP,theme/PHP"/>
