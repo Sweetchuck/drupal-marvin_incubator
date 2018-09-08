@@ -1,0 +1,7 @@
+drupalRoot: 'drupal_root'
+url: 'http://example.com:8080'
+dbConnection:
+  driver:  'sqlite'
+  database: '../sites/foo/default__default.sqlite'
+packagePaths:
+  - 'a/b'

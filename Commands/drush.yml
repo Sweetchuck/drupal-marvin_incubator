@@ -10,6 +10,11 @@ command:
       projectType: 'incubator'
 
       ##
+      # @var string
+      ##
+      reportsDir: 'reports'
+
+      ##
       # If TRUE then the managed Drupal extensions will be detected automatically.
       #
       # Auto-detection pickups every Drupal extensions up which managed by Git,

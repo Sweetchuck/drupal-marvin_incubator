@@ -101,6 +101,8 @@
         }
     },
     "require": {
+        "ext-dom": "*",
+        "ext-json": "*",
         "drupal/marvin": "dev-8.x-1.x",
         "drush/drush": "^9.3",
         "sweetchuck/robo-php-lint": "^0.0",

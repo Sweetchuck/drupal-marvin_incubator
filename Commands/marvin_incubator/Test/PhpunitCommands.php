@@ -27,7 +27,6 @@ class PhpunitCommands extends PhpunitCommandsBase {
       'phpVariants' => [],
     ]
   ): CollectionBuilder {
-    // @todo Generate phpunit.xml for managed extensions.
     // @todo CLI option for testSuiteNames.
     $cb = $this->collectionBuilder();
     $testSuiteNames = $this->getTestSuiteNamesByEnvironmentVariant();
@@ -45,13 +44,19 @@ class PhpunitCommands extends PhpunitCommandsBase {
     }
 
     $phpVariants = array_filter($options['phpVariants'], new ArrayFilterEnabled());
-    $drupalRoot = $this->getDrupalRootDir();
+    $dbVariants = [
+      'my0506' => 'my0506',
+    ];
+    $projectRootDir = $this->getConfig()->get('env.cwd');
     foreach ($phpVariants as $phpVariant) {
-      $phpUnitTask = $this
-        ->getTaskPhpUnit($testSuiteNames, $groups, $phpVariant)
-        ->setConfiguration("$drupalRoot/core/phpunit.xml");
+      foreach ($dbVariants as $dbVariant) {
+        $phpUnitTask = $this
+          ->getTaskPhpUnit($testSuiteNames, $groups, $phpVariant)
+          ->setProcessTimeout(NULL)
+          ->setConfiguration("$projectRootDir/phpunit.$dbVariant.{$phpVariant['version']['majorMinor']}.xml");
 
-      $cb->addTask($phpUnitTask);
+        $cb->addTask($phpUnitTask);
+      }
     }
 
     return $cb;
