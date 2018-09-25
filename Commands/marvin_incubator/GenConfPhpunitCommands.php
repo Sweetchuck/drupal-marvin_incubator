@@ -12,7 +12,7 @@ use Drush\Sql\SqlBase;
 use Robo\Contract\TaskInterface;
 use Webmozart\PathUtil\Path;
 
-class PhpunitGenConfCommands extends CommandsBase {
+class GenConfPhpunitCommands extends CommandsBase {
 
   use CommandsBaseTrait;
   use PhpVariantTrait;

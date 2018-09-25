@@ -112,7 +112,7 @@
         "composer/installers": "^1.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/coder": "^8.2",
-        "drupal/core": "^8.5",
+        "drupal/core": "^8.6",
         "drupal/dummy_m1": "dev-8.x-1.x",
         "drupal/dummy_m2": "dev-8.x-1.x",
         "mikey179/vfsStream": "^1.6",
