@@ -141,6 +141,36 @@ class SiteCreateTask extends BaseTask implements
    */
   protected $dbVariant = [];
 
+  public function setOptions(array $options) {
+    parent::setOptions($options);
+
+    if (array_key_exists('drupalRoot', $options)) {
+      $this->setDrupalRoot($options['drupalRoot']);
+    }
+
+    if (array_key_exists('siteName', $options)) {
+      $this->setSiteName($options['siteName']);
+    }
+
+    if (array_key_exists('dbVariants', $options)) {
+      $this->setDbVariants($options['dbVariants']);
+    }
+
+    if (array_key_exists('phpVariants', $options)) {
+      $this->setPhpVariants($options['phpVariants']);
+    }
+
+    if (array_key_exists('uriPattern', $options)) {
+      $this->setUriPattern($options['uriPattern']);
+    }
+
+    if (array_key_exists('siteDirPattern', $options)) {
+      $this->setSiteDirPattern($options['siteDirPattern']);
+    }
+
+    return $this;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -163,6 +193,9 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
+  /**
+   * @return $this
+   */
   protected function addTaskCreateDirectories() {
     $siteDir = $this->getSiteDir();
     $drupalRoot = $this->getDrupalRoot();
@@ -228,6 +261,10 @@ PHP;
    */
   protected function addTaskDrushSiteAliases() {
     foreach ($this->getPhpVariants() as $phpVariant) {
+      if (empty($phpVariant['cli'])) {
+        continue;
+      }
+
       $this->addTaskDrushSiteAlias($phpVariant);
     }
 

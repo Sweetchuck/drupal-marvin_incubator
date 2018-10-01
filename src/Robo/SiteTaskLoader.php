@@ -17,4 +17,15 @@ trait SiteTaskLoader {
     return $task;
   }
 
+  /**
+   * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\SiteDeleteTask
+   */
+  protected function taskMarvinSiteDelete(array $options = []) {
+    /** @var \Drupal\marvin_incubator\Robo\Task\SiteDeleteTask $task */
+    $task = $this->task(Task\SiteDeleteTask::class);
+    $task->setOptions($options);
+
+    return $task;
+  }
+
 }

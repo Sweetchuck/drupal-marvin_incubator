@@ -76,8 +76,10 @@ class SiteCommands extends CommandsBase {
    *
    * @bootstrap root
    */
-  public function delete() {
-
+  public function delete(string $siteName) {
+    return $this
+      ->taskMarvinSiteDelete()
+      ->setSiteName($siteName);
   }
 
   protected function getSites(string $drupalRoot): array {
