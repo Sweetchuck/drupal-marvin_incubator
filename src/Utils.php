@@ -38,4 +38,43 @@ class Utils implements UtilsInterface {
     return $managedExtensions;
   }
 
+  /**
+   * @param string $sitesDir
+   *   Example: "path/to/drupal_root/sites".
+   *
+   * @return string[]
+   */
+  public static function getSiteDirs(string $sitesDir): array {
+    $sites = [];
+
+    $dirIterator = new \DirectoryIterator($sitesDir);
+    foreach ($dirIterator as $dir) {
+      if ($dir->isDot()
+        || !$dir->isDir()
+        || !file_exists($dir->getPathname() . '/settings.php')
+        || $dir->getFilename() === 'simpletest'
+      ) {
+        continue;
+      }
+
+      $sites[] = $dir->getPathname();
+    }
+
+    return $sites;
+  }
+
+  /**
+   * @param string[] $siteDirs
+   *
+   * @return string[]
+   */
+  public static function getSiteNames(array $siteDirs): array {
+    $siteNames = [];
+    foreach ($siteDirs as $siteDir) {
+      $siteNames[] = explode('.', basename($siteDir))[0];
+    }
+
+    return $siteNames;
+  }
+
 }

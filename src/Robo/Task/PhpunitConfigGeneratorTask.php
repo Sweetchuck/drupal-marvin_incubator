@@ -4,13 +4,13 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator\Robo\Task;
 
+use Drupal\marvin\OutputDestinationTrait;
 use Drupal\marvin\Robo\Task\BaseTask;
 use Drupal\marvin_incubator\PhpunitConfigGenerator;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Filesystem\Filesystem;
 
 class PhpunitConfigGeneratorTask extends BaseTask {
+
+  use OutputDestinationTrait;
 
   /**
    * {@inheritdoc}
@@ -108,73 +108,17 @@ class PhpunitConfigGeneratorTask extends BaseTask {
   }
 
   /**
-   * Output destination.
-   *
-   * @var null|string|\Symfony\Component\Console\Output\OutputInterface
-   */
-  protected $destination = NULL;
-
-  /**
-   * @return null|string|\Symfony\Component\Console\Output\OutputInterface
-   */
-  public function getDestination() {
-    return $this->destination;
-  }
-
-  /**
-   * @param null|string|\Symfony\Component\Console\Output\OutputInterface $destination
-   *
-   * @return $this
-   */
-  public function setDestination($destination) {
-    $this->destination = $destination;
-
-    return $this;
-  }
-
-  /**
-   * Output destination mode.
-   *
-   * @var string
-   */
-  protected $destinationMode = 'w';
-
-  /**
-   * Output destination.
-   *
-   * @var null|\Symfony\Component\Console\Output\OutputInterface
-   */
-  protected $destinationOutput = NULL;
-
-  /**
-   * File handler.
-   *
-   * @var null|resource
-   */
-  protected $destinationResource = NULL;
-
-  public function getDestinationMode(): string {
-    return $this->destinationMode;
-  }
-
-  public function setDestinationMode(string $destinationMode) {
-    $this->destinationMode = $destinationMode;
-
-    return $this;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function setOptions(array $options) {
     parent::setOptions($options);
 
-    if (array_key_exists('destination', $options)) {
-      $this->setDestination($options['destination']);
+    if (array_key_exists('outputDestination', $options)) {
+      $this->setOutputDestination($options['outputDestination']);
     }
 
-    if (array_key_exists('destinationMode', $options)) {
-      $this->setDestinationMode($options['destinationMode']);
+    if (array_key_exists('outputDestinationMode', $options)) {
+      $this->setOutputDestinationMode($options['outputDestinationMode']);
     }
 
     if (array_key_exists('drupalRoot', $options)) {
@@ -243,8 +187,7 @@ class PhpunitConfigGeneratorTask extends BaseTask {
    */
   protected function runAction() {
     $this->assets['phpunitConfig'] = $this->getGenerator()->generate();
-
-    $this->writeToDestination();
+    $this->writeToOutputDestination($this->assets['phpunitConfig']);
 
     return $this;
   }
@@ -277,62 +220,6 @@ class PhpunitConfigGeneratorTask extends BaseTask {
     }
 
     return $generator;
-  }
-
-  /**
-   * @return $this
-   */
-  protected function writeToDestination() {
-    $this->initDestination();
-    if ($this->destinationOutput) {
-      $this->destinationOutput->write($this->assets['phpunitConfig']);
-    }
-    $this->closeDestination();
-
-    return $this;
-  }
-
-  /**
-   * Initialize the output destination based on the Jar values.
-   *
-   * @return $this
-   */
-  protected function initDestination() {
-    $destination = $this->getDestination();
-    if (is_string($destination)) {
-      $fs = new Filesystem();
-      $fs->mkdir(dirname($destination));
-
-      $this->destinationResource = fopen($destination, $this->getDestinationMode());
-      if ($this->destinationResource === FALSE) {
-        throw  new \RuntimeException("File '$destination' could not be opened.");
-      }
-
-      $this->destinationOutput = new StreamOutput(
-        $this->destinationResource,
-        OutputInterface::VERBOSITY_NORMAL,
-        FALSE
-      );
-
-      return $this;
-    }
-
-    $this->destinationOutput = $destination;
-
-    return $this;
-  }
-
-  /**
-   * Close the destination resource if it was opened here.
-   *
-   * @return $this
-   */
-  protected function closeDestination() {
-    if ($this->destinationResource) {
-      fclose($this->destinationResource);
-    }
-
-    return $this;
   }
 
 }

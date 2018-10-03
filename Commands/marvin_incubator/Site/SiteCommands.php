@@ -7,6 +7,7 @@ namespace Drush\Commands\marvin_incubator\Site;
 use Drupal\marvin\DatabaseVariantTrait;
 use Drupal\marvin\PhpVariantTrait;
 use Drupal\marvin_incubator\Robo\SiteTaskLoader;
+use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drush\Commands\marvin\CommandsBase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -46,7 +47,7 @@ class SiteCommands extends CommandsBase {
    * @bootstrap root
    */
   public function list() {
-    var_dump($this->getSites('.'));
+    var_dump(MarvinIncubatorUtils::getSiteDirs('.'));
   }
 
   /**
@@ -80,25 +81,6 @@ class SiteCommands extends CommandsBase {
     return $this
       ->taskMarvinSiteDelete()
       ->setSiteName($siteName);
-  }
-
-  protected function getSites(string $drupalRoot): array {
-    $sites = [];
-
-    $dirIterator = new \DirectoryIterator("$drupalRoot/sites");
-    foreach ($dirIterator as $dir) {
-      if ($dir->isDot()
-        || !$dir->isDir()
-        || !$this->fs->exists($dir->getPathname() . '/settings.php')
-        || $dir->getFilename() === 'simpletest'
-      ) {
-        continue;
-      }
-
-      $sites[] = $dir->getPathname();
-    }
-
-    return $sites;
   }
 
 }

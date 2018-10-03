@@ -16,9 +16,9 @@ use Robo\Task\Filesystem\loadTasks as FilesystemTaskLoader;
 use Symfony\Component\Yaml\Yaml;
 
 class SiteCreateTask extends BaseTask implements
-  BuilderAwareInterface,
-  ContainerAwareInterface,
-  OutputAwareInterface {
+    BuilderAwareInterface,
+    ContainerAwareInterface,
+    OutputAwareInterface {
 
   use BuilderAwareTrait;
   use ContainerAwareTrait;
@@ -98,7 +98,7 @@ class SiteCreateTask extends BaseTask implements
   /**
    * @var string
    */
-  protected $uriPattern = 'http://{phpId}.dev.{dbId}.{siteName}.marvin_incubator.d8.localhost:1080';
+  protected $uriPattern = 'http://{{ phpId }}.dev.{{ dbId }}.{{ siteName }}.marvin_incubator.d8.localhost:1080';
 
   public function getUriPattern(): string {
     return $this->uriPattern;
@@ -116,7 +116,7 @@ class SiteCreateTask extends BaseTask implements
   /**
    * @var string
    */
-  protected $siteDirPattern = '{siteName}.{dbId}';
+  protected $siteDirPattern = '{{ siteName }}.{{ dbId }}';
 
   public function getSiteDirPattern(): string {
     return $this->siteDirPattern;
@@ -229,14 +229,14 @@ class SiteCreateTask extends BaseTask implements
   }
 
   protected function addTaskSettingsPhp() {
-    $fileContent = <<< 'PHP'
+    $fileContent = <<< PHP
 <?php
 
 /**
- * @var string $app_root
- * @var string $site_path
- * @var string $projectName
- * @var string $dbName
+ * @var string \$app_root
+ * @var string \$site_path
+ * @var string \$projectName
+ * @var string \$dbName
  */
 
 include __DIR__ . '/../base.settings.php';
@@ -301,8 +301,8 @@ PHP;
     return strtr(
       $this->getSiteDirPattern(),
       [
-        '{siteName}' => $this->getSiteName(),
-        '{dbId}' => $this->dbVariant['id'],
+        '{{ siteName }}' => $this->getSiteName(),
+        '{{ dbId }}' => $this->dbVariant['id'],
       ]
     );
   }
@@ -311,21 +311,21 @@ PHP;
     return strtr(
       $this->getUriPattern(),
       [
-        '{siteName}' => $this->getSiteName(),
-        '{dbId}' => $this->dbVariant['id'],
-        '{phpId}' => $phpVariant['id'],
+        '{{ siteName }}' => $this->getSiteName(),
+        '{{ dbId }}' => $this->dbVariant['id'],
+        '{{ phpId }}' => $phpVariant['id'],
       ]
     );
   }
 
   protected function getDrushSiteAliasFileName(array $phpVariant): string {
     return strtr(
-      '{drupalRoot}/../drush/sites/{siteName}-{dbId}-{phpId}.site.yml',
+      '{{ drupalRoot }}/../drush/sites/{{ siteName }}-{{ dbId }}-{{ phpId }}.site.yml',
       [
-        '{drupalRoot}' => $this->getDrupalRoot(),
-        '{siteName}' => $this->getSiteName(),
-        '{dbId}' => $this->dbVariant['id'],
-        '{phpId}' => $phpVariant['id'],
+        '{{ drupalRoot }}' => $this->getDrupalRoot(),
+        '{{ siteName }}' => $this->getSiteName(),
+        '{{ dbId }}' => $this->dbVariant['id'],
+        '{{ phpId }}' => $phpVariant['id'],
       ]
     );
   }

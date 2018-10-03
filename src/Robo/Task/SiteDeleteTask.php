@@ -15,9 +15,9 @@ use Robo\Task\File\loadTasks as FileTaskLoader;
 use Robo\Task\Filesystem\loadTasks as FilesystemTaskLoader;
 
 class SiteDeleteTask extends BaseTask implements
-  BuilderAwareInterface,
-  ContainerAwareInterface,
-  OutputAwareInterface {
+    BuilderAwareInterface,
+    ContainerAwareInterface,
+    OutputAwareInterface {
 
   use BuilderAwareTrait;
   use ContainerAwareTrait;
