@@ -48,7 +48,7 @@ class GenConfPhpunitCommands extends CommandsBase {
 
     $phpunitConfGenTask = $this
       ->taskPhpunitConfigGenerator()
-      ->setDestination($dstFileName)
+      ->setOutputDestination($dstFileName)
       ->setDrupalRoot($drupalRoot)
       ->setUrl($bootstrapManager->getUri())
       ->setDbConnection($dbConnection)

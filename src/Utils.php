@@ -77,4 +77,12 @@ class Utils implements UtilsInterface {
     return $siteNames;
   }
 
+  public static function getPhpUnitConfigFileName(
+    string $projectRootDir,
+    array $phpVariant,
+    array $dbVariant
+  ): string {
+    return "$projectRootDir/phpunit.{$dbVariant['id']}.{$phpVariant['version']['majorMinor']}.xml";
+  }
+
 }

@@ -77,7 +77,7 @@ class SitesPhpGenerator {
   }
 
   public function generate(): string {
-    $content = [
+    $lines = [
       '<?php',
       '',
       '$sites = [',
@@ -94,7 +94,7 @@ class SitesPhpGenerator {
       $replacementPairs['{{ siteName }}'] = $siteName;
       foreach ($this->getDatabaseVariantIds() as $dbId) {
         $replacementPairs['{{ dbId }}'] = $dbId;
-        $content[] = sprintf(
+        $lines[] = sprintf(
           '  %s => %s,',
           var_export(strtr($urlPattern, $replacementPairs), TRUE),
           var_export(strtr($siteDirPattern, $replacementPairs), TRUE)
@@ -102,16 +102,16 @@ class SitesPhpGenerator {
       }
     }
 
-    if (count($content) === 3) {
-      $content[2] .= '];';
+    if (count($lines) === 3) {
+      $lines[2] .= '];';
     }
     else {
-      $content[] = '];';
+      $lines[] = '];';
     }
 
-    $content[] = '';
+    $lines[] = '';
 
-    return implode(PHP_EOL, $content);
+    return implode(PHP_EOL, $lines);
   }
 
 }

@@ -6,6 +6,7 @@ namespace Drush\Commands\marvin_incubator;
 
 use Consolidation\AnnotatedCommand\CommandData;
 use Consolidation\AnnotatedCommand\CommandError;
+use Drupal\marvin\DatabaseVariantTrait;
 use Drupal\marvin\PhpVariantTrait;
 use Drush\Commands\marvin\CommandsBase;
 use Drupal\marvin\Utils as MarvinUtils;
@@ -15,6 +16,7 @@ class BaseValidatorCommands extends CommandsBase {
 
   use CommandsBaseTrait;
   use PhpVariantTrait;
+  use DatabaseVariantTrait;
 
   /**
    * @hook validate @marvinArgPackages
@@ -107,58 +109,100 @@ class BaseValidatorCommands extends CommandsBase {
   }
 
   protected function hookValidateMarvinOptionPhpVariantsSingle(CommandData $commandData, string $optionName): ?CommandError {
-    $optionValues = $commandData->input()->getOption($optionName);
-    $phpVariantIds = $this->foo($optionValues);
+    return $this->validateMarvinOptionItemIds(
+      $commandData,
+      $optionName,
+      $this->getConfigPhpVariants(),
+      'The following PHP variants are invalid for option "--@optionName": @invalidItemIds'
+    );
+  }
 
-    $isArray = is_array($phpVariantIds);
-    if (!$isArray) {
-      $phpVariantIds = [$phpVariantIds];
+  /**
+   * @hook validate @marvinOptionDatabaseVariants
+   *
+   * @todo Error when a disabled database variant is provided.
+   */
+  public function hookValidateMarvinDatabaseVariants(CommandData $commandData): ?CommandError {
+    $annotationKey = 'marvinOptionDatabaseVariants';
+    $annotationData = $commandData->annotationData();
+    if (!$annotationData->has($annotationKey)) {
+      return NULL;
     }
 
-    $validPhpVariants = $this->getConfigPhpVariants();
+    $commandErrors = [];
+    $optionNames = $this->parseMultiValueAnnotation($annotationKey, $annotationData->get($annotationKey));
+    foreach ($optionNames as $optionName) {
+      $commandErrors[] = $this->hookValidateMarvinOptionDatabaseVariantsSingle($commandData, $optionName);
+    }
 
-    $phpVariants = [];
-    $invalidPhpVariantIds = [];
-    foreach ($phpVariantIds as $phpVariantId) {
-      if (isset($validPhpVariants[$phpVariantId])) {
-        $phpVariants[$phpVariantId] = $validPhpVariants[$phpVariantId];
+    return MarvinUtils::aggregateCommandErrors($commandErrors);
+  }
+
+  protected function hookValidateMarvinOptionDatabaseVariantsSingle(CommandData $commandData, string $optionName): ?CommandError {
+    return $this->validateMarvinOptionItemIds(
+      $commandData,
+      $optionName,
+      $this->getConfigDatabaseVariants(),
+      'The following Database variants are invalid for option "--@optionName": @invalidItemIds'
+    );
+  }
+
+  protected function validateMarvinOptionItemIds(
+    CommandData $commandData,
+    string $optionName,
+    array $validItems,
+    string $errorMessage
+  ): ?CommandError {
+    $optionValues = $commandData->input()->getOption($optionName);
+    $itemIds = $this->parseOptionValues($optionValues);
+
+    $isArray = is_array($itemIds);
+    if (!$isArray) {
+      $itemIds = [$itemIds];
+    }
+
+    $items = [];
+    $invalidItemIds = [];
+    foreach ($itemIds as $itemId) {
+      if (isset($validItems[$itemId])) {
+        $items[$itemId] = $validItems[$itemId];
       }
       else {
-        $invalidPhpVariantIds[] = $phpVariantId;
+        $invalidItemIds[] = $itemId;
       }
     }
 
-    if ($invalidPhpVariantIds) {
+    if ($invalidItemIds) {
       // @todo Designed exit codes and messages.
       // @todo The documentation about the return value is not clear.
       // Exception vs CommandError?
       // See https://github.com/consolidation/annotated-command#validate-hook .
       return new CommandError(
         dt(
-          'The following PHP variants are invalid for option "--@optionName": @phpVariantIds',
+          $errorMessage,
           [
             '@optionName' => $optionName,
-            '@phpVariantIds' => implode(', ', $invalidPhpVariantIds),
+            '@invalidItemIds' => implode(', ', $invalidItemIds),
           ]
         ),
         1
       );
     }
 
-    if (!$phpVariants) {
-      $phpVariants = $validPhpVariants;
+    if (!$items) {
+      $items = $validItems;
     }
 
     if (!$isArray) {
-      $phpVariants = reset($phpVariants);
+      $items = reset($items);
     }
 
-    $commandData->input()->setOption($optionName, $phpVariants);
+    $commandData->input()->setOption($optionName, $items);
 
     return NULL;
   }
 
-  protected function foo(array $optionValues): array {
+  protected function parseOptionValues(array $optionValues): array {
     $items = [];
     foreach ($optionValues as $optionValue) {
       $items = array_merge($items, $this->explodeCommaSeparatedList($optionValue));
@@ -171,7 +215,7 @@ class BaseValidatorCommands extends CommandsBase {
     return $this->explodeCommaSeparatedList($value);
   }
 
-  protected  function explodeCommaSeparatedList(string $items): array {
+  protected function explodeCommaSeparatedList(string $items): array {
     return array_filter(preg_split('/\s*,\s*/', trim($items)));
   }
 

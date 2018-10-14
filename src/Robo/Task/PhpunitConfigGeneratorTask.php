@@ -4,18 +4,28 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator\Robo\Task;
 
-use Drupal\marvin\OutputDestinationTrait;
 use Drupal\marvin\Robo\Task\BaseTask;
+use Drupal\marvin\WriterWrapper;
 use Drupal\marvin_incubator\PhpunitConfigGenerator;
 
 class PhpunitConfigGeneratorTask extends BaseTask {
-
-  use OutputDestinationTrait;
 
   /**
    * {@inheritdoc}
    */
   protected $taskName = 'Marvin - Generate PHPUnit XML';
+
+  /**
+   * @var \Drupal\marvin\WriterWrapper
+   */
+  protected $outputDestinationWrapper;
+
+  /**
+   * @param null|\Drupal\marvin\WriterWrapper $outputDestinationWrapper
+   */
+  public function __construct($outputDestinationWrapper = NULL) {
+    $this->outputDestinationWrapper = $outputDestinationWrapper ?: new WriterWrapper();
+  }
 
   /**
    * @var string
@@ -108,6 +118,37 @@ class PhpunitConfigGeneratorTask extends BaseTask {
   }
 
   /**
+   * @return null|string|\Symfony\Component\Console\Output\OutputInterface
+   */
+  public function getOutputDestination() {
+    return $this->outputDestinationWrapper->getDestination();
+  }
+
+  /**
+   * @param null|string|\Symfony\Component\Console\Output\OutputInterface $destination
+   *
+   * @return $this
+   */
+  public function setOutputDestination($destination) {
+    $this->outputDestinationWrapper->setDestination($destination);
+
+    return $this;
+  }
+
+  public function getOutputDestinationMode(): string {
+    return $this->outputDestinationWrapper->getDestinationMode();
+  }
+
+  /**
+   * @return $this
+   */
+  public function setOutputDestinationMode(string $mode) {
+    $this->outputDestinationWrapper->setDestinationMode($mode);
+
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function setOptions(array $options) {
@@ -174,6 +215,11 @@ class PhpunitConfigGeneratorTask extends BaseTask {
       'value' => $this->getPackagePaths(),
     ];
 
+    $this->options['phpVersion'] = [
+      'type' => 'other',
+      'value' => $this->getPhpVersion(),
+    ];
+
     $this->options['reportsDir'] = [
       'type' => 'other',
       'value' => $this->getReportsDir(),
@@ -187,7 +233,10 @@ class PhpunitConfigGeneratorTask extends BaseTask {
    */
   protected function runAction() {
     $this->assets['phpunitConfig'] = $this->getGenerator()->generate();
-    $this->writeToOutputDestination($this->assets['phpunitConfig']);
+    $this
+      ->outputDestinationWrapper
+      ->write($this->assets['phpunitConfig'])
+      ->close();
 
     return $this;
   }

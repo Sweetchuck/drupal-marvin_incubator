@@ -4,13 +4,11 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator\Robo\Task;
 
-use Drupal\marvin\OutputDestinationTrait;
 use Drupal\marvin\Robo\Task\BaseTask;
+use Drupal\marvin\WriterWrapper;
 use Drupal\marvin_incubator\SitesPhpGenerator;
 
 class SitesPhpGeneratorTask extends BaseTask {
-
-  use OutputDestinationTrait;
 
   /**
    * {@inheritdoc}
@@ -22,8 +20,45 @@ class SitesPhpGeneratorTask extends BaseTask {
    */
   protected $generator;
 
-  public function __construct() {
-    $this->generator = new SitesPhpGenerator();
+  /**
+   * @var \Drupal\marvin\WriterWrapper
+   */
+  protected $outputDestinationWrapper;
+
+  public function __construct($generator = NULL, $outputDestinationWrapper = NULL) {
+    $this->generator = $generator ?: new SitesPhpGenerator();
+    $this->outputDestinationWrapper = $outputDestinationWrapper ?: new WriterWrapper();
+  }
+
+  /**
+   * @return null|string|\Symfony\Component\Console\Output\OutputInterface
+   */
+  public function getOutputDestination() {
+    return $this->outputDestinationWrapper->getDestination();
+  }
+
+  /**
+   * @param null|string|\Symfony\Component\Console\Output\OutputInterface $destination
+   *
+   * @return $this
+   */
+  public function setOutputDestination($destination) {
+    $this->outputDestinationWrapper->setDestination($destination);
+
+    return $this;
+  }
+
+  /**
+   * @return string
+   */
+  public function getOutputDestinationMode() {
+    return $this->outputDestinationWrapper->getDestinationMode();
+  }
+
+  public function setOutputDestinationMode($destinationMode) {
+    $this->outputDestinationWrapper->setDestinationMode($destinationMode);
+
+    return $this;
   }
 
   /**
@@ -124,7 +159,9 @@ class SitesPhpGeneratorTask extends BaseTask {
   protected function runAction() {
     $this->assets['sitesPhp'] = $this->generator->generate();
 
-    $this->writeToOutputDestination($this->assets['sitesPhp']);
+    $this->outputDestinationWrapper
+      ->write($this->assets['sitesPhp'])
+      ->close();
 
     return $this;
   }
