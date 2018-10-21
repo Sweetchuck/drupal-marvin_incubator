@@ -3,11 +3,13 @@
 namespace Drupal\Tests\marvin_incubator\Unit;
 
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
+use Drupal\marvin_incubator\Utils;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Webmozart\PathUtil\Path;
 
 /**
- * @coversDefaultClass \Drupal\marvin_incubator\Utils
+ * @covers \Drupal\marvin_incubator\Utils
  */
 class UtilsTest extends TestCase {
 
@@ -100,8 +102,6 @@ class UtilsTest extends TestCase {
   }
 
   /**
-   * @covers ::collectManagedDrupalExtensions
-   *
    * @dataProvider casesCollectManagedDrupalExtensions
    */
   public function testCollectManagedDrupalExtensions(
@@ -115,9 +115,77 @@ class UtilsTest extends TestCase {
 
     $utils = new MarvinIncubatorUtils();
 
-    $this->assertEquals(
+    static::assertEquals(
       $expected,
       $utils->collectManagedDrupalExtensions($drupalRootDir, $composerLock, $packagePaths)
+    );
+  }
+
+  public function casesGetSiteDirs(): array {
+    return [
+      'basic' => [
+        [
+          'vfs://testGetSiteDirs/docroot/sites/a.b.c',
+          'vfs://testGetSiteDirs/docroot/sites/d.e.f',
+        ],
+        'docroot/sites',
+        [
+          'docroot' => [
+            'sites' => [
+              'default' => [
+                'example.settings.php' => '<?php',
+              ],
+              'a.b.c' => [
+                'settings.php' => '<?php',
+              ],
+              'd.e.f' => [
+                'settings.php' => '<?php',
+              ],
+              'simpletest' => [
+                'settings.php' => '<?php',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @dataProvider casesGetSiteDirs
+   */
+  public function testGetSiteDirs(array $expected, string $sitesDir, array $vfsStructure): void {
+    $vfs = vfsStream::setup(__FUNCTION__, NULL, $vfsStructure);
+    $sitesDir = Path::join($vfs->url(), $sitesDir);
+
+    static::assertTrue(is_dir($sitesDir));
+
+    static::assertEquals($expected, Utils::getSiteDirs($sitesDir));
+  }
+
+  public function casesGetPhpUnitConfigFileName(): array {
+    return [
+      'basic' => [
+        'a/phpunit.my0507.0702.xml',
+        'a',
+        ['id' => 'my0507'],
+        ['version' => ['majorMinor' => '0702']],
+      ],
+    ];
+  }
+
+  /**
+   * @dataProvider casesGetPhpUnitConfigFileName
+   */
+  public function testGetPhpUnitConfigFileName(
+    string $expected,
+    string $projectRootDir,
+    array $phpVariant,
+    array $dbVariant
+  ): void {
+    static::assertEquals(
+      $expected,
+      Utils::getPhpUnitConfigFileName($projectRootDir, $dbVariant, $phpVariant)
     );
   }
 

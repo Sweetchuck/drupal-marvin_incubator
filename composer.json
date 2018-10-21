@@ -126,14 +126,14 @@
         }
     },
     "autoload-dev": {
-        "psr-0": {
-            "Unish": "vendor/drush/drush/tests/"
-        },
         "psr-4": {
-            "Drush\\Commands\\Tests\\marvin_incubator\\Unish\\": "tests/src/DrushUnish/",
-            "Drush\\Commands\\Tests\\marvin_incubator\\Unit\\": "tests/src/DrushUnit/",
-            "Drupal\\Tests\\marvin\\Unit_incubator\\": "tests/src/Unit/",
-            "Drupal\\Dev\\marvin\\Composer\\": "tests/fixtures/drush-sut/drush/unish/marvin/src-dev/Composer/"
+            "Drupal\\Tests\\marvin\\Helper\\": "tests/fixtures/drush-sut/drush/unish/marvin/tests/src/Helper/",
+            "Drupal\\Dev\\marvin\\Composer\\": "tests/fixtures/drush-sut/drush/unish/marvin/src-dev/Composer/",
+
+            "Drush\\Commands\\Tests\\marvin_incubator\\DrushUnish\\": "tests/src/DrushUnish/",
+            "Drush\\Commands\\Tests\\marvin_incubator\\DrushUnit\\": "tests/src/DrushUnit/",
+            "Drupal\\Tests\\marvin_incubator\\Helper\\": "tests/src/Helper/",
+            "Drupal\\Tests\\marvin_incubator\\Unit\\": "tests/src/Unit/"
         }
     },
     "extra": {

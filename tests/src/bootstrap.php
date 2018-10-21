@@ -20,7 +20,6 @@ use PHPUnit\Util\Test as PHPUnitUtilTest;
 use PHPUnit\Util\XML as PHPUnitUtilXML;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../vendor/drush/drush/tests/unish.inc';
 
 call_user_func(function () {
   $phpunitVersion = class_exists('\PHPUnit_Runner_Version') ?

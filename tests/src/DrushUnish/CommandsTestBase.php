@@ -13,7 +13,7 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
   /**
    * @var string
    */
-  protected static $selfDir = '';
+  protected static $composerRoot = '';
 
   /**
    * @var string
@@ -23,20 +23,37 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
   /**
    * {@inheritdoc}
    */
-  public static function getDrush() {
-    return Path::join(static::getSelfDir(), static::$binDir, 'drush');
-  }
-
-  protected static function getSelfDir(): string {
-    if (static::$selfDir === '') {
-      static::$selfDir = Path::canonicalize(Path::join(__DIR__, '..', '..', '..'));
+  public static function getComposerRoot() {
+    if (static::$composerRoot === '') {
+      static::$composerRoot = Path::canonicalize(Path::join(__DIR__, '..', '..', '..'));
     }
 
-    return static::$selfDir;
+    return static::$composerRoot;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDrush() {
+    return Path::join(static::getComposerRoot(), static::$binDir, 'drush');
+  }
+
+  /**
+   * @return string
+   */
+  public static function getSut() {
+    return static::getComposerRoot() . '/tests/fixtures/drush-sut';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function webroot() {
+    return static::getSut() . '/web';
   }
 
   protected static function getExtensionsDir(): string {
-    return static::getTmp() . '/extensions';
+    return static::getComposerRoot() . '/tests/fixtures/extensions';
   }
 
   /**
@@ -127,7 +144,7 @@ abstract class CommandsTestBase extends CommandUnishTestCase {
     // where options after the command are passed along to external commands.
     $result = $this->getTestResultObject();
     if ($withCoverage && $result->getCollectCodeCoverageInformation()) {
-      $coverage_file = tempnam($this->getTmp(), 'drush_coverage');
+      $coverage_file = tempnam($this->getSandbox(), 'drush_coverage');
       if ($coverage_file) {
         $cmd[] = "--drush-coverage=" . $coverage_file;
       }

@@ -154,9 +154,10 @@ class PhpunitConfigGenerator {
       'vendor/phpunit/phpunit/phpunit.xsd'
     );
 
+    $drupalRoot = $this->getDrupalRoot() ?: '.';
     $element->setAttribute(
       'bootstrap',
-      "{$this->drupalRoot}/core/tests/bootstrap.php"
+      "{$drupalRoot}/core/tests/bootstrap.php"
     );
 
     $element->setAttribute(
@@ -266,7 +267,7 @@ class PhpunitConfigGenerator {
     $whitelistElement->setAttribute('processUncoveredFilesFromWhitelist', 'true');
     $element->appendChild($whitelistElement);
 
-    foreach ($this->packagePaths as $packagePath) {
+    foreach ($this->getPackagePaths() as $packagePath) {
       $whitelistElement->appendChild($this->doc->createElement(
         'directory',
         "$packagePath/Commands"
@@ -283,7 +284,7 @@ class PhpunitConfigGenerator {
 
   protected function getPhpIniPairs(): array {
     return [
-      'error_reporting' => MarvinUtils::phpErrorAll($this->phpVersion),
+      'error_reporting' => MarvinUtils::phpErrorAll($this->getPhpVersion()),
       'memory_limit' => '-1',
     ];
   }
@@ -292,8 +293,8 @@ class PhpunitConfigGenerator {
     $jsonFlags = JSON_UNESCAPED_SLASHES;
 
     return [
-      'SIMPLETEST_BASE_URL' => $this->url,
-      'SIMPLETEST_DB' => MarvinUtils::dbUrl($this->dbConnection),
+      'SIMPLETEST_BASE_URL' => $this->getUrl(),
+      'SIMPLETEST_DB' => MarvinUtils::dbUrl($this->getDbConnection()),
       'SYMFONY_DEPRECATIONS_HELPER' => 'weak_vendor',
       'MINK_DRIVER_CLASS' => '\Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver',
       'MINK_DRIVER_ARGS' => json_encode($this->getMinkDriverArgs(), $jsonFlags),
@@ -348,12 +349,14 @@ class PhpunitConfigGenerator {
   }
 
   protected function getLoggingEntries(): array {
+    $reportsDir = $this->getReportsDir();
+
     return [
       ['type' => 'coverage-text', 'target' => 'php://stdout'],
-      ['type' => 'coverage-html', 'target' => "{$this->reportsDir}/human/coverage/html"],
-      ['type' => 'coverage-clover', 'target' => "{$this->reportsDir}/machine/coverage.xml"],
-      ['type' => 'testdox-html', 'target' => "{$this->reportsDir}/human/unit/junit.html"],
-      ['type' => 'junit', 'target' => "{$this->reportsDir}/machine/unit/junit.xml"],
+      ['type' => 'coverage-html', 'target' => "{$reportsDir}/human/coverage/html"],
+      ['type' => 'coverage-clover', 'target' => "{$reportsDir}/machine/coverage.xml"],
+      ['type' => 'testdox-html', 'target' => "{$reportsDir}/human/unit/junit.html"],
+      ['type' => 'junit', 'target' => "{$reportsDir}/machine/unit/junit.xml"],
     ];
   }
 
