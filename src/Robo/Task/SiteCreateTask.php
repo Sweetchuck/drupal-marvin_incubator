@@ -275,9 +275,22 @@ PHP;
    * @return $this
    */
   protected function addTaskDrushSiteAlias(array $phpVariant) {
+    $siteDir = $this->getSiteDir();
+
     $site = [
       'dev' => [
         'uri' => $this->getUri($phpVariant),
+        'root' => realpath($this->getDrupalRoot()),
+        'command' => [
+          'site' => [
+            'install' => [
+              'options' => [
+                'sites-subdir' => $siteDir,
+                'site-name' => $siteDir,
+              ],
+            ],
+          ],
+        ],
       ],
     ];
 

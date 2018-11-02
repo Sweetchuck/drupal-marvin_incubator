@@ -25,6 +25,9 @@ class SiteDeleteTask extends BaseTask implements
   use FilesystemTaskLoader;
   use FileTaskLoader;
 
+  /**
+   * @var string
+   */
   protected $drupalRoot = '.';
 
   public function getDrupalRoot(): string {
@@ -100,11 +103,16 @@ class SiteDeleteTask extends BaseTask implements
   protected function addTaskDeleteDirectories() {
     $drupalRoot = $this->getDrupalRoot();
 
+    $innerSiteDirs = $this->getSiteDirs("$drupalRoot/sites");
+    $outerSiteDirs = $this->getSiteDirs($this->getOuterSitePath());
+
     $this->cb
       ->addTask($this
         ->taskFilesystemStack()
-        ->remove($this->getSiteDirs("$drupalRoot/sites"))
-        ->remove($this->getSiteDirs($this->getOuterSitePath()))
+        ->chmod($innerSiteDirs, 0700, 0000, TRUE)
+        ->remove($innerSiteDirs)
+        ->chmod($outerSiteDirs, 0700, 0000, TRUE)
+        ->remove($outerSiteDirs)
       );
 
     return $this;

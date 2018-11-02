@@ -163,6 +163,33 @@ class UtilsTest extends TestCase {
     static::assertEquals($expected, Utils::getSiteDirs($sitesDir));
   }
 
+  public function casesGetSiteNames(): array {
+    return [
+      'empty' => [
+        [],
+        [],
+      ],
+      'basic' => [
+        [
+          'c',
+          'd',
+        ],
+        [
+          '/a/b/c',
+          '/a/b/d.my',
+          '/a/b/d.pg',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @dataProvider casesGetSiteNames
+   */
+  public function testGetSiteNames($expected, array $siteDirs): void {
+    static::assertSame($expected, Utils::getSiteNames($siteDirs));
+  }
+
   public function casesGetPhpUnitConfigFileName(): array {
     return [
       'basic' => [

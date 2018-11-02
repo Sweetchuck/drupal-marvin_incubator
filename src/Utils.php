@@ -74,7 +74,7 @@ class Utils implements UtilsInterface {
       $siteNames[] = explode('.', basename($siteDir))[0];
     }
 
-    return $siteNames;
+    return array_unique($siteNames);
   }
 
   public static function getPhpUnitConfigFileName(

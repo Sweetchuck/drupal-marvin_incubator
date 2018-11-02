@@ -3,8 +3,6 @@ command:
   marvin:
     settings:
       ##
-      # @todo
-      #
       # @var string
       ##
       projectType: 'incubator'
@@ -13,6 +11,16 @@ command:
       # @var string
       ##
       reportsDir: 'reports'
+
+      ##
+      # @var string
+      ##
+      siteDirPattern: '{{ siteName }}.{{ dbId }}'
+
+      ##
+      # @var string
+      ##
+      urlPattern: '{{ dbId }}.{{ siteName }}.d8.localhost'
 
       ##
       # If TRUE then the managed Drupal extensions will be detected automatically.

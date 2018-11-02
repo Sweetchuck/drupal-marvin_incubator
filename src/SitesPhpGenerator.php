@@ -48,7 +48,12 @@ class SitesPhpGenerator {
   /**
    * @var string
    */
-  protected $siteDirPattern = '{{ siteName }}.{{ dbId }}';
+  protected $siteDirPatternDefault = '{{ siteName }}.{{ dbId }}';
+
+  /**
+   * @var string
+   */
+  protected $siteDirPattern = '';
 
   public function getSiteDirPattern(): string {
     return $this->siteDirPattern;
@@ -66,7 +71,12 @@ class SitesPhpGenerator {
   /**
    * @var string
    */
-  protected $urlPattern = '{{ dbId }}.{{ siteName }}.d8.localhost';
+  protected $urlPatternDefault = '{{ dbId }}.{{ siteName }}.d8.localhost';
+
+  /**
+   * @var string
+   */
+  protected $urlPattern = '';
 
   public function getUrlPattern(): string {
     return $this->urlPattern;
@@ -88,8 +98,8 @@ class SitesPhpGenerator {
       '{{ dbId }}' => '',
     ];
 
-    $urlPattern = $this->getUrlPattern();
-    $siteDirPattern = $this->getSiteDirPattern();
+    $urlPattern = $this->getUrlPattern() ?: $this->urlPatternDefault;
+    $siteDirPattern = $this->getSiteDirPattern() ?: $this->siteDirPatternDefault;
     foreach ($this->getSiteNames() as $siteName) {
       $replacementPairs['{{ siteName }}'] = $siteName;
       foreach ($this->getDatabaseVariantIds() as $dbId) {
