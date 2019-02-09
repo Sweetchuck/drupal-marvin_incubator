@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace Drush\Commands\marvin_incubator\Build;
 
-use Drush\Commands\marvin\Build\BuildNpmCommandsBase;
+use Drush\Commands\marvin\Build\NpmCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildNpmCommands extends BuildNpmCommandsBase {
+class BuildNpmCommands extends NpmCommandsBase {
 
   use CommandsBaseTrait;
 
@@ -24,7 +24,7 @@ class BuildNpmCommands extends BuildNpmCommandsBase {
   ): array {
     return [
       'marvin.build.npm' => [
-        'task' => $this->getTaskBuildNpmPackage($packageName, $packagePath),
+        'task' => $this->getTaskNpmInstallPackage($packageName, $packagePath),
         'weight' => 10,
       ],
     ];
@@ -44,7 +44,7 @@ class BuildNpmCommands extends BuildNpmCommandsBase {
       array_flip($packages)
     );
 
-    return $this->getTaskBuildNpmPackages($packages);
+    return $this->getTaskNpmInstallPackages($packages);
   }
 
 }

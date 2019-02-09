@@ -35,6 +35,7 @@ class GitHooksCommands extends CommandsBase {
   /**
    * @command marvin:git-hooks:deploy
    * @bootstrap none
+   * @hidden
    *
    * @marvinArgPackages packages
    */

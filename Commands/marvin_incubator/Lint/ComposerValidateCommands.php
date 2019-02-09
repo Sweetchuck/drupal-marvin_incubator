@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace Drush\Commands\marvin_incubator\Lint;
 
-use Drush\Commands\marvin\Lint\ComposerValidateCommandsBase;
+use Drush\Commands\marvin\Lint\ComposerCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 
-class ComposerValidateCommands extends ComposerValidateCommandsBase {
+class ComposerValidateCommands extends ComposerCommandsBase {
 
   use CommandsBaseTrait;
 

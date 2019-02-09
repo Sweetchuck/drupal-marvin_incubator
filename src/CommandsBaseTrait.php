@@ -26,6 +26,11 @@ trait CommandsBaseTrait {
    */
   protected $managedDrupalExtensions = NULL;
 
+  /**
+   * @deprecated Duplicated.
+   *
+   * @see \Drupal\marvin\Utils::detectDrupalRootDir
+   */
   protected function getDrupalRootDir(): string {
     if ($this->drupalRoot === NULL) {
       $this->drupalRoot = '';
