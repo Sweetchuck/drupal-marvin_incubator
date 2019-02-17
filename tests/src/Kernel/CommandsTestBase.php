@@ -43,8 +43,9 @@ class CommandsTestBase extends KernelTestBase {
     $drushExecutable = static::getDrushExecutable();
 
     $commandPrefix = sprintf(
-      '%s --config=%s',
+      '%s --drush-coverage=%s --config=%s',
       escapeshellcmd($drushExecutable),
+      escapeshellarg('/dev/null'),
       escapeshellarg('drush')
     );
     $process = new Process($commandPrefix . ' ' . $command, $sutRoot);
