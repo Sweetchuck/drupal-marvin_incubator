@@ -47,10 +47,10 @@ trait CommandsBaseTrait {
     return $this->drupalRoot;
   }
 
-  protected function getManagedDrupalExtensions(): array {
+  protected function getManagedDrupalExtensions(string $workingDirectory = ''): array {
     if ($this->managedDrupalExtensions === NULL) {
       $result = $this
-        ->getTaskManagedDrupalExtensionList()
+        ->getTaskManagedDrupalExtensionList($workingDirectory)
         ->run()
         ->stopOnFail();
 
@@ -60,7 +60,7 @@ trait CommandsBaseTrait {
     return $this->managedDrupalExtensions;
   }
 
-  protected function getTaskManagedDrupalExtensionList(): CollectionBuilder {
+  protected function getTaskManagedDrupalExtensionList(string $workingDirectory = ''): CollectionBuilder {
     $packageDefinitions = (array) $this
       ->getConfig()
       ->get('command.marvin.settings.managedDrupalExtension.package');
@@ -69,7 +69,9 @@ trait CommandsBaseTrait {
     $ignoredFilter->setKey('ignored');
     $ignoredPackages = array_filter($packageDefinitions, $ignoredFilter);
 
-    $workingDirectory = $this->getProjectRootDir();
+    if (!$workingDirectory) {
+      $workingDirectory = $this->getProjectRootDir();
+    }
 
     return $this
       ->collectionBuilder()

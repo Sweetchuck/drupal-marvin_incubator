@@ -1,6 +1,6 @@
 <?php
 
-namespace Drush\Commands\Tests\marvin_incubator\Unish;
+namespace Drush\Commands\Tests\marvin_incubator\DrushUnish;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;

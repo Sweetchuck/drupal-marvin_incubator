@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\Tests\marvin_incubator\Unish;
+namespace Drush\Commands\Tests\marvin_incubator\DrushUnish;
 
 class MarvinArtifactTypesCommandsTest extends CommandsTestBase {
 

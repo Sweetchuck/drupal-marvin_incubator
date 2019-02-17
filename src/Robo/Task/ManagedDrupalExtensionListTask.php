@@ -123,11 +123,11 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     $this->initComposerInfo();
 
     $drupalCoreDir = $this->composerInfo->getDrupalExtensionInstallDir('core');
-    $drupalCoreDirFull = Path::join($workingDirectory, $drupalCoreDir);
+    $drupalRootRelative = Path::join($workingDirectory, $drupalCoreDir, '..');
 
     $utils = $this->getContainer()->get('marvin_incubator.utils');
     $managedDrupalExtensions = $utils->collectManagedDrupalExtensions(
-      Path::makeAbsolute($drupalCoreDirFull, getcwd()),
+      Path::makeAbsolute($drupalRootRelative, getcwd()),
       $this->composerInfo->getLock(),
       $this->getPackagePaths()
     );

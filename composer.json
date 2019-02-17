@@ -133,6 +133,9 @@
             "Drush\\Commands\\Tests\\marvin_incubator\\DrushUnish\\": "tests/src/DrushUnish/",
             "Drush\\Commands\\Tests\\marvin_incubator\\DrushUnit\\": "tests/src/DrushUnit/",
             "Drupal\\Tests\\marvin_incubator\\Helper\\": "tests/src/Helper/",
+            "Drupal\\Tests\\marvin_incubator\\Kernel\\": "tests/src/Kernel/",
+            "Drupal\\Tests\\": "tests/fixtures/drush-sut/web/core/tests/Drupal/Tests/",
+            "Drupal\\KernelTests\\": "tests/fixtures/drush-sut/web/core/tests/Drupal/KernelTests",
             "Drupal\\Tests\\marvin_incubator\\Unit\\": "tests/src/Unit/"
         }
     },
