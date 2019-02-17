@@ -40,18 +40,22 @@ class CommandsTestBase extends KernelTestBase {
   protected function runDrushCommand(string $command): ProcessResult {
     $sutDrupalRoot = static::getDrupalRoot();
     $sutRoot = Path::getDirectory($sutDrupalRoot);
-    $drushExecutable = static::getDrushExecutable();
 
-    $commandPrefix = sprintf(
-      '%s --drush-coverage=%s --config=%s',
-      escapeshellcmd($drushExecutable),
-      escapeshellarg('/dev/null'),
-      escapeshellarg('drush')
-    );
-    $process = new Process($commandPrefix . ' ' . $command, $sutRoot);
+    $process = new Process($this->getFinalDrushCommand($command), $sutRoot);
     $process->run();
 
     return ProcessResult::fromProcess($process);
+  }
+
+  protected function getFinalDrushCommand(string $command): string {
+    $commandPrefix = sprintf(
+      '%s --drush-coverage=%s --config=%s',
+      escapeshellcmd(static::getDrushExecutable()),
+      escapeshellarg('/dev/null'),
+      escapeshellarg('drush')
+    );
+
+    return $commandPrefix . ' ' . $command;
   }
 
 }
