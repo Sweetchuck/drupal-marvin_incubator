@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Lint;
+namespace Drush\Commands\marvin_incubator;
 
 use Drush\Commands\marvin\CommandsBase;
 use Psr\Log\LoggerAwareInterface;

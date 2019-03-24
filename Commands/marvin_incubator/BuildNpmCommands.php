@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Build;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Build\NpmCommandsBase;
+use Drush\Commands\marvin\NpmCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

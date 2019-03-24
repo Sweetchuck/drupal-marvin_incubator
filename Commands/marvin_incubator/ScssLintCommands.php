@@ -2,19 +2,18 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Lint;
+namespace Drush\Commands\marvin_incubator;
 
 use Drupal\marvin_incubator\CommandsBaseTrait;
-use Drush\Commands\marvin\Lint\CommandsBase;
+use Drush\Commands\marvin\LintCommandsBase;
 use Robo\Collection\CollectionBuilder;
 use Robo\State\Data as RoboStateData;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * @deprecated Replace this with a NodeJS based SCSS linter.
- * @todo Replace this with a NodeJS based SCSS linter.
+ * @todo NodeJS based SCSS linter.
  */
-class ScssLintCommands extends CommandsBase {
+class ScssLintCommands extends LintCommandsBase {
 
   use CommandsBaseTrait;
 
@@ -54,7 +53,7 @@ class ScssLintCommands extends CommandsBase {
     foreach ($packages as $packageName) {
       $packagePath = $managedDrupalExtensions[$packageName];
       $cb->addCode(function (RoboStateData $data) use ($packagePath): int {
-        $this->getLogger()->warning('SCSS lint not implemented');
+        $this->getLogger()->warning("SCSS lint not implemented; $packagePath");
 
         return 0;
       });

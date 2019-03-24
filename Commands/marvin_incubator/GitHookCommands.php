@@ -8,7 +8,7 @@ use Drush\Commands\marvin\GitHookCommandsBase;
 use Robo\Collection\CollectionBuilder;
 
 /**
- * @todo Decide that the "@bootstrap none" is required or not.
+ * @todo Decide that the @bootstrap "none" or "max" is required or not.
  */
 class GitHookCommands extends GitHookCommandsBase {
 

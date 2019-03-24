@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Test;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Test\PhpunitCommandsBase;
+use Drush\Commands\marvin\PhpunitCommandsBase;
 use Drupal\marvin\Utils as MarvinUtils;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
@@ -64,25 +64,25 @@ class PhpunitCommands extends PhpunitCommandsBase {
 
     foreach ($phpVariants as $phpVariant) {
       foreach ($dbVariants as $dbVariant) {
-        $cb->addTask($this->getTaskPhpUnit($testSuiteNames, $groups, $phpVariant, $dbVariant));
+        $cb->addTask($this->getTaskPhpUnit(
+          [
+            'testSuite' => $testSuiteNames,
+            'group' => $groups,
+          ],
+          $phpVariant,
+          $dbVariant
+        ));
       }
     }
 
     return $cb;
   }
 
-  protected function getTaskPhpUnit(
-    array $testSuiteNames,
-    array $groupNames,
-    array $phpVariant,
-    array $dbVariant = []
-  ): CollectionBuilder {
-    $phpUnitTask = parent::getTaskPhpUnit($testSuiteNames, $groupNames, $phpVariant);
-
-    $onlyUnitTestSuite = $testSuiteNames == ['unit'];
-    if ($onlyUnitTestSuite) {
-      return $phpUnitTask;
-    }
+  /**
+   * {@inheritdoc}
+   */
+  protected function getTaskPhpUnit(array $options, array $phpVariant = [], array $dbVariant = []): CollectionBuilder {
+    $phpUnitTask = parent::getTaskPhpUnit($options);
 
     $phpUnitConfigFileName = MarvinIncubatorUtils::getPhpUnitConfigFileName(
       $this->getProjectRootDir(),

@@ -216,7 +216,10 @@ class BaseValidatorCommands extends CommandsBase {
   }
 
   protected function explodeCommaSeparatedList(string $items): array {
-    return array_filter(preg_split('/\s*,\s*/', trim($items)));
+    return array_filter(
+      preg_split('/\s*,\s*/', trim($items)),
+      'mb_strlen'
+    );
   }
 
 }

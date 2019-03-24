@@ -30,7 +30,7 @@ class CommandsTestBase extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static function getDrupalRoot() {
-    return static::getProjectRoot() . '/tests/fixtures/drush-sut/web';
+    return static::getProjectRoot() . '/tests/fixtures/project_01/web';
   }
 
   protected static function getDrushExecutable(): string {
@@ -44,7 +44,7 @@ class CommandsTestBase extends KernelTestBase {
     $process = new Process($this->getFinalDrushCommand($command), $sutRoot);
     $process->run();
 
-    return ProcessResult::fromProcess($process);
+    return ProcessResult::createFromProcess($process);
   }
 
   protected function getFinalDrushCommand(string $command): string {

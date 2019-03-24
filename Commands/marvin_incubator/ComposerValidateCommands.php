@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Lint;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Lint\ComposerCommandsBase;
+use Drush\Commands\marvin\ComposerCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Console\Input\InputInterface;

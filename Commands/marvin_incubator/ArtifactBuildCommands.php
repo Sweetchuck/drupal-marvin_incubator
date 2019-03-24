@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Artifact;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Artifact\ArtifactBuildCommandsBase;
+use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Robo\Collection\CollectionBuilder;
 

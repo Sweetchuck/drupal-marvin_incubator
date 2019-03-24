@@ -197,7 +197,7 @@ class GitHookHandler {
       'cliArgs' => array_merge(
         [
           "{$this->binDir}/drush",
-          "--define=command.marvin.settings.gitHook={$this->gitHook}",
+          "--define=marvin.gitHook={$this->gitHook}",
           '--config=drush',
           "--config={$this->marvinIncubatorDir}/Commands",
           "--include={$this->marvinIncubatorDir}",

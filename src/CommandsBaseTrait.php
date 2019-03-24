@@ -63,7 +63,7 @@ trait CommandsBaseTrait {
   protected function getTaskManagedDrupalExtensionList(string $workingDirectory = ''): CollectionBuilder {
     $packageDefinitions = (array) $this
       ->getConfig()
-      ->get('command.marvin.settings.managedDrupalExtension.package');
+      ->get('marvin.managedDrupalExtension.package');
 
     $ignoredFilter = new ArrayFilterEnabled();
     $ignoredFilter->setKey('ignored');

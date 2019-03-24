@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Artifact;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Artifact\ArtifactBuildCommandsBase;
+use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Drupal\marvin\Robo\ArtifactCollectFilesTaskLoader;
 use Drupal\marvin\Robo\CopyFilesTaskLoader;
 use Drupal\marvin\Robo\PrepareDirectoryTaskLoader;
@@ -22,6 +22,11 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
   use CopyFilesTaskLoader;
   use PrepareDirectoryTaskLoader;
   use VersionNumberTaskLoader;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $customEventNamePrefix = 'marvin:artifact:build';
 
   /**
    * @hook on-event marvin:artifact:types
@@ -69,7 +74,7 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
     string $packageName,
     string $packagePath
   ): array {
-    $buildDir = $this->getConfig()->get('command.marvin.settings.buildDir');
+    $buildDir = $this->getConfig()->get('marvin.buildDir');
 
     return [
       'marvin.detectLatestVersionNumber' => [

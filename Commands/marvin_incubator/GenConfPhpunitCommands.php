@@ -39,14 +39,14 @@ class GenConfPhpunitCommands extends CommandsBase {
     $drupalRoot = Path::makeRelative($drupalRootAbs, $projectRoot);
     $backToProjectRoot = Path::makeRelative($projectRoot, $drupalRootAbs);
 
-    $reportsDir = (string) $this->getConfig()->get('command.marvin.settings.reportsDir', 'reports');
+    $reportsDir = (string) $this->getConfig()->get('marvin.reportsDir', 'reports');
     $db = SqlBase::create([]);
     $dstFileName = "$backToProjectRoot/phpunit.$dbId.{$webPhpVariant['version']['majorMinor']}.xml";
 
     $dbConnection = $db->getDbSpec();
     unset($dbConnection['prefix']);
 
-    $phpunitConfGenTask = $this
+    return $this
       ->taskPhpunitConfigGenerator()
       ->setOutputDestination($dstFileName)
       ->setDrupalRoot($drupalRoot)
@@ -55,8 +55,6 @@ class GenConfPhpunitCommands extends CommandsBase {
       ->setPhpVersion((string) $webPhpVariant['version']['id'])
       ->setReportsDir($reportsDir)
       ->setPackagePaths($this->getManagedDrupalExtensions());
-
-    return $phpunitConfGenTask;
   }
 
 }

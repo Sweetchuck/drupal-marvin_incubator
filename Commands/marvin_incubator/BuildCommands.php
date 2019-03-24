@@ -2,19 +2,24 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Build;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Build\BuildCommandsBase;
+use Drush\Commands\marvin\CommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 
-class BuildCommands extends BuildCommandsBase {
+class BuildCommands extends CommandsBase {
 
   use CommandsBaseTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $customEventNamePrefix = 'marvin:build';
+
+  /**
    * Builds the code base up from the source code.
    *
-   * Usually it runs "yarn install", "tsc", "bundle install" and things like
+   * Usually it runs "yarn install", "tsc" and things like
    * that.
    *
    * @command marvin:build

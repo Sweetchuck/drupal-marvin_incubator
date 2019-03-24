@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Site;
+namespace Drush\Commands\marvin_incubator;
 
 use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\marvin\DatabaseVariantTrait;
@@ -13,6 +13,7 @@ use Drupal\marvin_incubator\Robo\SitesPhpGeneratorTaskLoader;
 use Drupal\marvin_incubator\Robo\SiteTaskLoader;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drush\Commands\marvin\CommandsBase;
+use Exception;
 use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -76,7 +77,7 @@ class SiteCommands extends CommandsBase {
   public function createValidate(CommandData $commandData): void {
     $siteName = $commandData->input()->getArgument('siteName');
     if (in_array($siteName, $this->protectedSiteNames['create'])) {
-      throw new \Exception("Site name '$siteName' is protected", 1);
+      throw new Exception("Site name '$siteName' is protected", 1);
     }
   }
 
@@ -105,7 +106,7 @@ class SiteCommands extends CommandsBase {
   public function deleteValidate(CommandData $commandData): void {
     $siteName = $commandData->input()->getArgument('siteName');
     if (in_array($siteName, $this->protectedSiteNames['delete'])) {
-      throw new \Exception("Site name '$siteName' is protected", 1);
+      throw new Exception("Site name '$siteName' is protected", 1);
     }
   }
 

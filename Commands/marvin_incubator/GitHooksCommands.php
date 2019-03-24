@@ -61,7 +61,7 @@ class GitHooksCommands extends CommandsBase {
     return $this
       ->taskMarvinGitHooksDeploy()
       ->setRootProjectDir($config->get('env.cwd'))
-      ->setComposerExecutable($config->get('command.marvin.settings.composerExecutable'))
+      ->setComposerExecutable($config->get('marvin.composerExecutable'))
       ->setPackagePath($packagePath)
       ->setHookFilesSourceDir("$marvinIncubatorDir/gitHooks/managedExtension")
       ->setCommonTemplateFileName("$marvinIncubatorDir/gitHooks/managedExtension/_common.php");

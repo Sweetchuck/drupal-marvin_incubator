@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\marvin_incubator\Lint;
+namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\Lint\CommandsBase as LintCommandsBase;
+use Drush\Commands\marvin\LintCommandsBase;
 
-class Commands extends LintCommandsBase {
+class LintCommands extends LintCommandsBase {
 
   /**
    * @command marvin:lint

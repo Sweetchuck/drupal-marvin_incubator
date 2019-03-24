@@ -14,8 +14,8 @@ trait GenConfSitesPhpTrait {
     $drupalRootAbs = $bootstrapManager->getRoot();
 
     $config = $this->getConfig();
-    $siteDirPattern = $config->get('command.marvin.settings.siteDirPattern', '');
-    $urlPattern = $config->get('command.marvin.settings.urlPattern', '');
+    $siteDirPattern = $config->get('marvin.siteDirPattern', '');
+    $urlPattern = $config->get('marvin.urlPattern', '');
 
     return $this
       ->collectionBuilder()
