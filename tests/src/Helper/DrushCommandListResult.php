@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\marvin_incubator\Helper;
 
-use foo\bar;
-
 class DrushCommandListResult {
 
   /**
