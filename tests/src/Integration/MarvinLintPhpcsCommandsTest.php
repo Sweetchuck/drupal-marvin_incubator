@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\marvin_incubator\Integration;
 
-class MarvinLintPhpcsTest extends CommandsTestCase {
+class MarvinLintPhpcsCommandsTest extends CommandsTestCase {
 
   /**
    * {@inheritdoc}
