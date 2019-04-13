@@ -2,20 +2,19 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\Tests\marvin_incubator\DrushUnish;
+namespace Drupal\Tests\marvin_incubator\Integration;
 
-class MarvinArtifactTypesCommandsTest extends CommandsTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $drushCommand = 'marvin:artifact:types';
+/**
+ * @group marvin_incubator
+ * @group drush_command
+ */
+class MarvinArtifactTypesCommandsTest extends CommandsTestCase {
 
   /**
    * {@inheritdoc}
    */
   public function casesExecuteDrushCommand(): array {
-    $options = $this->getDefaultDrushCommandOptions();
+    $options = $this->getCommonCommandLineOptions();
 
     return [
       'default' => [
@@ -32,6 +31,7 @@ class MarvinArtifactTypesCommandsTest extends CommandsTestBase {
             ],
           ],
         ],
+        'marvin:artifact:types',
         [],
         $options,
       ],
@@ -46,10 +46,33 @@ class MarvinArtifactTypesCommandsTest extends CommandsTestBase {
             ],
           ],
         ],
+        'marvin:artifact:types',
         [],
         ['format' => 'table'] + $options,
       ],
     ];
+  }
+
+  /**
+   * @dataProvider casesExecuteDrushCommand
+   */
+  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = []) {
+    $this->drush(
+      $command,
+      $args,
+      $options,
+      NULL,
+      NULL,
+      $expected['exitCode'] ?? 0
+    );
+
+    if (array_key_exists('stdError', $expected)) {
+      static::assertText($expected['stdError'], $this->getErrorOutput(), 'stdError');
+    }
+
+    if (array_key_exists('stdOutput', $expected)) {
+      static::assertText($expected['stdOutput'], $this->getOutput(), 'stdOutput');
+    }
   }
 
 }

@@ -10,4 +10,4 @@ drush:
       - '${drush.vendor-dir}/../tests/fixtures/project_01/docroot/modules/custom/dummy_m2'
 
 marvin:
-  projectType: 'integrationTest'
+  projectType: 'incubator'

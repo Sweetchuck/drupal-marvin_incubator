@@ -128,12 +128,29 @@ class CommandsTestCase extends ExistingSiteBase {
     return dirname($this->getDrupalRoot());
   }
 
-  public function getMarvinIncubatorRootDir(): string {
+  protected function getMarvinIncubatorRootDir(): string {
     return dirname(__DIR__, 3);
   }
 
-  public function getDrupalRoot(): string {
+  protected function getDrupalRoot(): string {
     return Path::join($this->getMarvinIncubatorRootDir(), "{$this->fixturesDir}/{$this->projectName}/docroot");
+  }
+
+  public static function assertText(array $rules, string $text, string $msgPrefix) {
+    foreach ($rules as $assertType => $expectations) {
+      foreach ($expectations as $message => $expected) {
+        $fullMessage = "$msgPrefix $assertType - $message";
+        switch ($assertType) {
+          case 'same':
+            static::assertSame($expected, $text, $fullMessage);
+            break;
+
+          case 'contains':
+            static::assertContains($expected, $text, $fullMessage);
+            break;
+        }
+      }
+    }
   }
 
 }
