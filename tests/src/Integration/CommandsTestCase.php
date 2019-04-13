@@ -53,14 +53,16 @@ class CommandsTestCase extends ExistingSiteBase {
   /**
    * @dataProvider casesExecuteDrushCommand
    */
-  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = []) {
+  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = [], array $envVars = []) {
     $this->drush(
       $command,
       $args,
       $options,
       NULL,
       NULL,
-      $expected['exitCode'] ?? 0
+      $expected['exitCode'] ?? 0,
+      NULL,
+      $envVars
     );
 
     if (array_key_exists('stdError', $expected)) {

@@ -8,7 +8,7 @@ namespace Drupal\Tests\marvin_incubator\Integration;
  * @group marvin_incubator
  * @group drush_command
  */
-class MarvinArtifactTypesCommandsTest extends CommandsTestCase {
+class MarvinArtifactTypesTest extends CommandsTestCase {
 
   /**
    * {@inheritdoc}

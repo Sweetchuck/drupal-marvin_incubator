@@ -2,21 +2,23 @@
 
 declare(strict_types = 1);
 
-namespace Drush\Commands\Tests\marvin_incubator\DrushUnish;
+namespace Drupal\Tests\marvin_incubator\Integration;
 
-class MarvinLintComposerValidateTest extends CommandsTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $drushCommand = 'marvin:lint:composer-validate';
+/**
+ * @group marvin_incubator
+ * @group drush_command
+ */
+class MarvinLintComposerValidateTest extends CommandsTestCase {
 
   /**
    * {@inheritdoc}
    */
   public function casesExecuteDrushCommand(): array {
-    $fixturesDir = static::getTmp();
-    $options = $this->getDefaultDrushCommandOptions();
+    $baseDir = $this->getMarvinIncubatorRootDir();
+    $fixturesDir = $this->fixturesDir;
+
+    $options = $this->getCommonCommandLineOptions();
+    $envVars = $this->getCommonCommandLineEnvVars();
 
     return [
       'dummy_m1' => [
@@ -29,12 +31,14 @@ class MarvinLintComposerValidateTest extends CommandsTestBase {
           ],
           'stdError' => [
             'contains' => [
-              'stdError contains' => " Running composer validate in $fixturesDir/extensions/dummy_m1\n",
+              'stdError contains' => " Running composer validate in $baseDir/$fixturesDir/extensions/dummy_m1\n",
             ],
           ],
         ],
+        'marvin:lint:composer-validate',
         ['dummy_m1'],
         $options,
+        $envVars,
       ],
       'dummy_m2' => [
         [
@@ -51,12 +55,14 @@ class MarvinLintComposerValidateTest extends CommandsTestBase {
           ],
           'stdError' => [
             'contains' => [
-              'stdError contains' => " Running composer validate in $fixturesDir/extensions/dummy_m2\n",
+              'stdError contains' => " Running composer validate in $baseDir/$fixturesDir/extensions/dummy_m2\n",
             ],
           ],
         ],
+        'marvin:lint:composer-validate',
         ['dummy_m2'],
         $options,
+        $envVars,
       ],
     ];
   }

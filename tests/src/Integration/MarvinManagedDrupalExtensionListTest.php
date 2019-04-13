@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
  * @group marvin_incubator
  * @group drush_command
  */
-class MarvinManagedDrupalExtensionCommandsTest extends CommandsTestCase {
+class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
 
   public function testMarvinManagedDrupalExtensionList() {
     $miRootDir = $this->getMarvinIncubatorRootDir();
