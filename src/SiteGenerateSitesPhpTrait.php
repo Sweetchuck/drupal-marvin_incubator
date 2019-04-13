@@ -6,9 +6,19 @@ namespace Drupal\marvin_incubator;
 
 use Robo\Contract\TaskInterface;
 
-trait GenConfSitesPhpTrait {
+trait SiteGenerateSitesPhpTrait {
 
-  protected function getTaskMarvinGenConfSitesPhp(array $dbVariants): TaskInterface {
+  /**
+   * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\CollectSiteNamesTask
+   */
+  abstract protected function taskMarvinCollectSiteNames();
+
+  /**
+   * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\SitesPhpGeneratorTask
+   */
+  abstract protected function taskMarvinGenerateSitesPhp(array $options = []);
+
+  protected function getTaskMarvinGenerateSitesPhp(array $dbVariants): TaskInterface {
     /** @var \Drush\Boot\BootstrapManager $bootstrapManager */
     $bootstrapManager = $this->getContainer()->get('bootstrap.manager');
     $drupalRootAbs = $bootstrapManager->getRoot();
@@ -26,7 +36,7 @@ trait GenConfSitesPhpTrait {
       )
       ->addTask(
         $this
-          ->taskMarvinSitesPhpGenerator()
+          ->taskMarvinGenerateSitesPhp()
           ->setSiteDirPattern($siteDirPattern)
           ->setUrlPattern($urlPattern)
           ->setOutputDestination("$drupalRootAbs/sites/sites.php")

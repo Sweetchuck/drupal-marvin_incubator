@@ -6,24 +6,26 @@ namespace Drush\Commands\marvin_incubator;
 
 use Drupal\marvin\DatabaseVariantTrait;
 use Drupal\marvin_incubator\CommandsBaseTrait;
-use Drupal\marvin_incubator\GenConfSitesPhpTrait;
+use Drupal\marvin_incubator\Robo\CollectSiteNamesTaskLoader;
+use Drupal\marvin_incubator\SiteGenerateSitesPhpTrait;
 use Drupal\marvin_incubator\Robo\SitesPhpGeneratorTaskLoader;
 use Drush\Commands\marvin\CommandsBase;
 use Robo\Contract\TaskInterface;
 
-class GenConfSitesPhpCommands extends CommandsBase {
+class SiteGenerateSitesPhpCommands extends CommandsBase {
 
   use CommandsBaseTrait;
+  use CollectSiteNamesTaskLoader;
   use DatabaseVariantTrait;
   use SitesPhpGeneratorTaskLoader;
-  use GenConfSitesPhpTrait;
+  use SiteGenerateSitesPhpTrait;
 
   /**
-   * @command marvin:gen-conf:sites-php
+   * @command marvin:generate:sites-php
    * @bootstrap root
    */
-  public function genConfSitesPhp(): TaskInterface {
-    return $this->getTaskMarvinGenConfSitesPhp($this->getConfigDatabaseVariants());
+  public function generateSitesPhp(): TaskInterface {
+    return $this->getTaskMarvinGenerateSitesPhp($this->getConfigDatabaseVariants());
   }
 
 }

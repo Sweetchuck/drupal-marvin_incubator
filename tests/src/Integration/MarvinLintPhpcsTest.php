@@ -6,7 +6,7 @@ namespace Drupal\Tests\marvin_incubator\Integration;
 
 /**
  * @group marvin_incubator
- * @group drush_command
+ * @group drush-command
  */
 class MarvinLintPhpcsTest extends CommandsTestCase {
 

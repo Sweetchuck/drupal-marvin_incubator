@@ -12,17 +12,17 @@ use Drush\Sql\SqlBase;
 use Robo\Contract\TaskInterface;
 use Webmozart\PathUtil\Path;
 
-class GenConfPhpunitCommands extends CommandsBase {
+class PhpunitGenerateConfigCommands extends CommandsBase {
 
   use CommandsBaseTrait;
   use PhpVariantTrait;
   use PhpunitConfigGeneratorTaskLoader;
 
   /**
-   * @command marvin:gen-conf:phpunit
+   * @command marvin:generate:phpunit-config
    * @bootstrap configuration
    */
-  public function genConf(): TaskInterface {
+  public function generatePhpunitConfig(): TaskInterface {
     /** @var \Drush\Boot\BootstrapManager $bootstrapManager */
     $bootstrapManager = $this->getContainer()->get('bootstrap.manager');
 

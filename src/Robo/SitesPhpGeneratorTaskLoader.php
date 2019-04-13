@@ -9,7 +9,7 @@ trait SitesPhpGeneratorTaskLoader {
   /**
    * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\SitesPhpGeneratorTask
    */
-  protected function taskMarvinSitesPhpGenerator(array $options = []) {
+  protected function taskMarvinGenerateSitesPhp(array $options = []) {
     /** @var \Drupal\marvin_incubator\Robo\Task\SitesPhpGeneratorTask $task */
     $task = $this->task(SitesPhpGeneratorTask::class);
     $task->setOptions($options);

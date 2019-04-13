@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * @group marvin_incubator
- * @group drush_command
+ * @group drush-command
  */
 class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
 

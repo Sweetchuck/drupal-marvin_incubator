@@ -37,7 +37,7 @@ class TaskBuilder implements BuilderAwareInterface, ContainerAwareInterface {
   }
 
   use SitesPhpGeneratorTaskLoader {
-    taskMarvinSitesPhpGenerator as public;
+    taskMarvinGenerateSitesPhp as public;
   }
 
   use SiteTaskLoader {

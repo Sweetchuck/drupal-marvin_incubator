@@ -12,6 +12,7 @@ use Robo\Collection\CollectionBuilder;
 use Sweetchuck\CliCmdBuilder\CommandBuilder;
 use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class PhpunitCommands extends PhpunitCommandsBase {
 
@@ -38,6 +39,8 @@ class PhpunitCommands extends PhpunitCommandsBase {
    * @marvinArgPackages packages
    * @marvinOptionPhpVariants phpVariants
    * @marvinOptionDatabaseVariants dbVariants
+   *
+   * @todo CLI option for testSuiteNames.
    */
   public function phpunit(
     array $packages,
@@ -46,12 +49,25 @@ class PhpunitCommands extends PhpunitCommandsBase {
       'dbVariants' => [],
     ]
   ): ?CollectionBuilder {
-    $cb = $this->collectionBuilder();
-
-    // @todo CLI option for testSuiteNames.
     $testSuiteNames = $this->getTestSuiteNamesByEnvironmentVariant();
     if ($testSuiteNames === NULL || !$packages) {
       return NULL;
+    }
+
+    $phpVariants = array_filter($options['phpVariants'], new ArrayFilterEnabled());
+    if (!$phpVariants) {
+      // @todo This warning is no longer required.
+      $this
+        ->getLogger()
+        ->warning(dt('There is no configured PHP variant. Check ${marvin.php.variant} in your drush.yml files'));
+    }
+
+    $dbVariants = array_filter($options['dbVariants'], new ArrayFilterEnabled());
+    if (!$dbVariants) {
+      // @todo This warning is no longer required.
+      $this
+        ->getLogger()
+        ->warning(dt('There is no configured Database variant. Check ${marvin.database.variant} in your drush.yml files'));
     }
 
     $groups = [];
@@ -59,13 +75,17 @@ class PhpunitCommands extends PhpunitCommandsBase {
       $groups[] = MarvinUtils::splitPackageName($packageName)['name'];
     }
 
-    $phpVariants = array_filter($options['phpVariants'], new ArrayFilterEnabled());
-    $dbVariants = array_filter($options['dbVariants'], new ArrayFilterEnabled());
-
+    $composerInfo = $this->getComposerInfo();
+    $phpunitExecutable = Path::makeRelative(
+      Path::join($this->getProjectRootDir(), $composerInfo['config']['bin-dir'], 'phpunit'),
+      $this->getConfig()->get('env.cwd')
+    );
+    $cb = $this->collectionBuilder();
     foreach ($phpVariants as $phpVariant) {
       foreach ($dbVariants as $dbVariant) {
         $cb->addTask($this->getTaskPhpUnit(
           [
+            'phpunitExecutable' => $phpunitExecutable,
             'testSuite' => $testSuiteNames,
             'group' => $groups,
           ],
@@ -82,7 +102,13 @@ class PhpunitCommands extends PhpunitCommandsBase {
    * {@inheritdoc}
    */
   protected function getTaskPhpUnit(array $options, array $phpVariant = [], array $dbVariant = []): CollectionBuilder {
-    $phpUnitTask = parent::getTaskPhpUnit($options);
+    $phpExecutable = (new CommandBuilder())
+      ->setExecutable($phpVariant['phpdbgExecutable'])
+      ->addOption('-qrr')
+      ->setOutputType('unchanged');
+
+    $phpUnitTask = parent::getTaskPhpUnit($options)
+      ->setPhpExecutable($phpExecutable);
 
     $phpUnitConfigFileName = MarvinIncubatorUtils::getPhpUnitConfigFileName(
       $this->getProjectRootDir(),
@@ -99,12 +125,7 @@ class PhpunitCommands extends PhpunitCommandsBase {
     $simpleTestBaseUrlEnv = getenv('SIMPLETEST_BASE_URL');
     $simpleTestBaseUrlInput = $this->input()->getOption('uri');
     if (!$simpleTestBaseUrlEnv && $simpleTestBaseUrlInput) {
-      $phpExecutable = (new CommandBuilder())
-        ->addEnvVar('SIMPLETEST_BASE_URL', $simpleTestBaseUrlInput)
-        ->setExecutable($phpVariant['phpdbgExecutable'])
-        ->addOption('-qrr');
-
-      $phpUnitTask->setPhpExecutable($phpExecutable);
+      $phpExecutable->addEnvVar('SIMPLETEST_BASE_URL', $simpleTestBaseUrlInput);
     }
 
     return $phpUnitTask;
