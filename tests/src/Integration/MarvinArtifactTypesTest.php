@@ -53,26 +53,4 @@ class MarvinArtifactTypesCommandsTest extends CommandsTestCase {
     ];
   }
 
-  /**
-   * @dataProvider casesExecuteDrushCommand
-   */
-  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = []) {
-    $this->drush(
-      $command,
-      $args,
-      $options,
-      NULL,
-      NULL,
-      $expected['exitCode'] ?? 0
-    );
-
-    if (array_key_exists('stdError', $expected)) {
-      static::assertText($expected['stdError'], $this->getErrorOutput(), 'stdError');
-    }
-
-    if (array_key_exists('stdOutput', $expected)) {
-      static::assertText($expected['stdOutput'], $this->getOutput(), 'stdOutput');
-    }
-  }
-
 }

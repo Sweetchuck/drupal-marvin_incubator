@@ -35,11 +35,40 @@ class CommandsTestCase extends ExistingSiteBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function tearDown() {
     parent::tearDown();
 
     foreach ($this->getExtensionDirs() as $extensionDir) {
       $this->deleteGitRepo($extensionDir);
+    }
+  }
+
+  public function casesExecuteDrushCommand(): array {
+    return [];
+  }
+
+  /**
+   * @dataProvider casesExecuteDrushCommand
+   */
+  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = []) {
+    $this->drush(
+      $command,
+      $args,
+      $options,
+      NULL,
+      NULL,
+      $expected['exitCode'] ?? 0
+    );
+
+    if (array_key_exists('stdError', $expected)) {
+      static::assertText($expected['stdError'], $this->getErrorOutput(), 'stdError');
+    }
+
+    if (array_key_exists('stdOutput', $expected)) {
+      static::assertText($expected['stdOutput'], $this->getOutput(), 'stdOutput');
     }
   }
 
