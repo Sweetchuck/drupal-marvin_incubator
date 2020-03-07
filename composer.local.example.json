@@ -86,30 +86,35 @@
         "sweetchuck/utils": {
             "type": "path",
             "url": "../../sweetchuck/utils"
+        },
+        "drupal-8": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
         }
     },
     "require": {
+        "php": ">=7.2",
         "ext-dom": "*",
         "ext-json": "*",
-        "drupal/marvin": "dev-8.x-1.x",
-        "sweetchuck/robo-php-lint": "^0.0",
-        "sweetchuck/robo-stringy": "^0.0"
+        "drupal/marvin": "*",
+        "sweetchuck/robo-php-lint": "*",
+        "sweetchuck/robo-stringy": "*"
     },
     "require-dev": {
         "composer/installers": "^1.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/coder": "^8.2",
-        "drupal/core": "^8.6",
+        "drupal/core-recommended": "^8.8",
         "drupal/dummy_m1": "dev-8.x-1.x",
         "drupal/dummy_m2": "dev-8.x-1.x",
-        "drush/drush": "^9.6",
+        "drush/drush": "^10.1",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^6.3",
+        "phpunit/phpunit": "^7.5",
         "sweetchuck/git-hooks": "^0.0",
         "weitzman/drupal-test-traits": "^1.1"
     },
     "suggest": {
-        "drush/drush": "^9.6"
+        "drush/drush": "^10.1"
     },
     "autoload": {
         "psr-4": {
@@ -119,14 +124,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-          "Drupal\\Dev\\marvin_incubator\\Composer\\": "src-dev/Composer/",
+            "Drupal\\Dev\\marvin_incubator\\Composer\\": "src-dev/Composer/",
 
-          "Drupal\\Tests\\marvin_incubator\\Helper\\": "tests/src/Helper/",
-          "Drupal\\Tests\\marvin_incubator\\Unit\\": "tests/src/Unit/",
-          "Drupal\\Tests\\marvin_incubator\\Integration\\": "tests/src/Integration/",
+            "Drupal\\Tests\\marvin_incubator\\Helper\\": "tests/src/Helper/",
+            "Drupal\\Tests\\marvin_incubator\\Unit\\": "tests/src/Unit/",
+            "Drupal\\Tests\\marvin_incubator\\Integration\\": "tests/src/Integration/",
 
-          "Drupal\\Tests\\": "tests/fixtures/project_01/docroot/core/tests/Drupal/Tests/",
-          "Drupal\\KernelTests\\": "tests/fixtures/project_01/docroot/core/tests/Drupal/KernelTests"
+            "Drupal\\Tests\\": "tests/fixtures/project_01/docroot/core/tests/Drupal/Tests/",
+            "Drupal\\KernelTests\\": "tests/fixtures/project_01/docroot/core/tests/Drupal/KernelTests"
         }
     },
     "extra": {

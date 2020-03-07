@@ -17,7 +17,7 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpDeletePhpunitConfigFiles();
   }
@@ -60,9 +60,9 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
           'stdError' => [
             'same' => [
               'stdError same' => implode(PHP_EOL, [
-                "[notice] cd '$baseDir' && composer show -P",
-                ' [notice] ',
-                ' [notice]',
+                "[Composer - Package paths] cd '$baseDir' && composer show -P",
+                ' [Marvin - Managed Drupal extension list] ',
+                ' [Marvin - Generate PHPUnit XML]',
               ]),
             ],
           ],
@@ -71,14 +71,6 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
         'marvin:generate:phpunit-config',
         [],
         ['uri' => "http://$phpVersionName.dev.sqlite.d8.localhost"] + $options,
-      ],
-    ];
-  }
-
-  protected function getCommonCommandLineOptions() {
-    return [
-      'config' => [
-        Path::join($this->getProjectRootDir(), 'drush'),
       ],
     ];
   }
@@ -108,6 +100,14 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
     if (array_key_exists('stdOutput', $expected)) {
       static::assertText($expected['stdOutput'], $this->getOutput(), 'stdOutput');
     }
+  }
+
+  protected function getCommonCommandLineOptions() {
+    return [
+      'config' => [
+        Path::join($this->getProjectRootDir(), 'drush'),
+      ],
+    ];
   }
 
 }

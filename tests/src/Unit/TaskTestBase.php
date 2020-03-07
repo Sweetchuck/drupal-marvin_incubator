@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\marvin\Unit;
+namespace Drupal\Tests\marvin_incubator\Unit;
 
 use Drupal\marvin\Utils as MarvinUtils;
 use Drupal\Tests\marvin_incubator\Helper\DummyOutput;

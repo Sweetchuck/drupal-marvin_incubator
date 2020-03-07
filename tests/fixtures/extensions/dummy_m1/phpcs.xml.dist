@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset
+    name="Custom"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <file>./src/</file>
+    <file>./tests/src/</file>
+    <file>./dummy_m1.module</file>
+    <exclude-pattern>./node_modules/</exclude-pattern>
+
+    <arg
+        name="extensions"
+        value="inc/php,install/php,module/php,php/php,profile/php,test/php,theme/php" />
+
+    <rule ref="Drupal">
+        <!--<exclude name="Drupal.Commenting.ClassComment.Missing" />-->
+        <!--<exclude name="Drupal.Commenting.DocComment.MissingShort" />-->
+        <!--<exclude name="Drupal.Commenting.FunctionComment.Missing" />-->
+        <!--<exclude name="Drupal.Commenting.FunctionComment.MissingParamComment" />-->
+        <!--<exclude name="Drupal.Commenting.FunctionComment.MissingReturnComment" />-->
+    </rule>
+
+    <rule ref="DrupalPractice" />
+</ruleset>

@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\Tests\marvin_incubator\Kernel;
+declare(strict_types = 1);
 
-use Drupal\Tests\marvin_incubator\Integration\CommandsTestCase;
+namespace Drupal\Tests\marvin_incubator\Integration;
+
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -10,38 +11,37 @@ use Symfony\Component\Yaml\Yaml;
  * @group drush-command
  */
 class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
-
-  public function testMarvinManagedDrupalExtensionList() {
+  public function casesExecuteDrushCommand(): array {
     $miRootDir = $this->getMarvinIncubatorRootDir();
+    $extensions = $this->getExtensionDirs();
 
-    $expected = [
-      'exitCode' => 0,
-      'stdOutput' => $this->getExtensionDirs(),
-      'stdError' => implode(PHP_EOL, [
-        "[notice] cd '$miRootDir' && composer show -P",
-        ' [notice]',
-      ]),
-    ];
-
-    $args = [];
     $options = [];
     $options += $this->getCommonCommandLineOptions();
+    $args = [];
 
-    $this->drush(
-      'marvin:managed-drupal-extension:list',
-      $args,
-      $options,
-      NULL,
-      NULL,
-      $expected['exitCode']
-    );
-
-    static::assertSame($expected['stdError'], $this->getErrorOutput(), 'stdError');
-
-    $extensions = Yaml::parse($this->getOutput());
-    unset($extensions['drupal/marvin']);
-
-    static::assertSame($expected['stdOutput'], $extensions);
+    return [
+      'default' => [
+        [
+          'stdError' => [
+            'same' => [
+              'stdError same' => implode(PHP_EOL, [
+                "[Composer - Package paths] cd '$miRootDir' && composer show -P",
+                ' [Marvin - Managed Drupal extension list]',
+              ]),
+            ],
+          ],
+          'stdOutput' => [
+            'same' => [
+              'stdOutput same' => trim(Yaml::dump($extensions, 99, 2)),
+            ],
+          ],
+          'exitCode' => 0,
+        ],
+        'marvin:managed-drupal-extension:list',
+        $args,
+        $options,
+      ],
+    ];
   }
 
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\marvin\Unit_incubator;
+namespace Drupal\Tests\marvin_incubator\Unit;
 
 use Drupal\marvin_incubator\SitesPhpGenerator;
 use PHPUnit\Framework\TestCase;

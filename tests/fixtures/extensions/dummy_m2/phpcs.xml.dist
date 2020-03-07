@@ -2,19 +2,9 @@
 <ruleset
     name="Custom"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
+    xsi:noNamespaceSchemaLocation="../../../../vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
-    <file>./Commands/</file>
-    <file>./Generators/</file>
-    <file>./src/</file>
-    <file>./tests/src/</file>
-
-    <file>./tests/fixtures/extensions/dummy_m1/</file>
-    <exclude-pattern>./tests/fixtures/extensions/dummy_m1/node_modules/</exclude-pattern>
-
-    <file>./tests/fixtures/extensions/dummy_m2/</file>
-    <exclude-pattern>./tests/fixtures/extensions/dummy_m2/node_modules/</exclude-pattern>
-    <exclude-pattern>./tests/fixtures/extensions/dummy_m2/dummy_m2.module</exclude-pattern>
+    <file>./dummy_m2.module</file>
 
     <arg
         name="extensions"

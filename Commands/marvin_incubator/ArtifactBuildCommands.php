@@ -7,10 +7,29 @@ namespace Drush\Commands\marvin_incubator;
 use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Robo\Collection\CollectionBuilder;
+use Robo\State\Data as RoboStateData;
 
 class ArtifactBuildCommands extends ArtifactBuildCommandsBase {
 
   use CommandsBaseTrait;
+
+  /**
+   * @inheritdoc
+   */
+  protected function isApplicable(string $projectType): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected function getTaskCollectChildExtensionDirs() {
+    return function (RoboStateData $data): int {
+      $data['customExtensionDirs'] = $this->getManagedDrupalExtensions();
+
+      return 0;
+    };
+  }
 
   /**
    * @command marvin:artifact:build

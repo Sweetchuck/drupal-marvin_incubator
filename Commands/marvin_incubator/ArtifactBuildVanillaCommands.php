@@ -28,6 +28,18 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
    */
   protected $customEventNamePrefix = 'marvin:artifact:build';
 
+  protected function isApplicable(string $projectType): bool {
+    return TRUE;
+  }
+
+  protected function getTaskCollectChildExtensionDirs() {
+    return function (RoboStateData $data): int {
+      $data['customExtensionDirs'] = $this->getManagedDrupalExtensions();
+
+      return 0;
+    };
+  }
+
   /**
    * @hook on-event marvin:artifact:types
    */

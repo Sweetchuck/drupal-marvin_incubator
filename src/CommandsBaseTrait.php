@@ -7,7 +7,6 @@ namespace Drupal\marvin_incubator;
 use Drupal\marvin_incubator\Robo\ManagedDrupalExtensionTaskLoader;
 use Robo\Collection\CollectionBuilder;
 use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
-use Webmozart\PathUtil\Path;
 
 /**
  * @todo Move this file into /Commands/marvin_incubator
@@ -25,27 +24,6 @@ trait CommandsBaseTrait {
    * @var null|array
    */
   protected $managedDrupalExtensions = NULL;
-
-  /**
-   * @deprecated Duplicated.
-   *
-   * @see \Drupal\marvin\Utils::detectDrupalRootDir
-   */
-  protected function getDrupalRootDir(): string {
-    if ($this->drupalRoot === NULL) {
-      $this->drupalRoot = '';
-      $installerPaths = $this->composerInfo['extra']['installer-paths'] ?? [];
-      foreach ($installerPaths as $installerPath => $filters) {
-        if (in_array('type:drupal-core', $filters)) {
-          $this->drupalRoot = Path::getDirectory($installerPath);
-
-          break;
-        }
-      }
-    }
-
-    return $this->drupalRoot;
-  }
 
   protected function getManagedDrupalExtensions(string $workingDirectory = ''): array {
     if ($this->managedDrupalExtensions === NULL) {

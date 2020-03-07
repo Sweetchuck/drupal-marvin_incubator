@@ -23,7 +23,7 @@
             "type": "path",
             "url": "tests/fixtures/extensions/dummy_m2"
         },
-        "sweetchuck/drupal-marvin": {
+        "drupal/marvin": {
             "type": "github",
             "url": "https://github.com/sweetchuck/drupal-marvin.git"
         },
@@ -33,31 +33,34 @@
         }
     },
     "require": {
+        "php": ">=7.2",
         "ext-dom": "*",
         "ext-json": "*",
         "drupal/marvin": "dev-8.x-1.x",
-        "sweetchuck/robo-php-lint": "^0.0",
-        "sweetchuck/robo-stringy": "^0.0"
+        "sweetchuck/robo-php-lint": "^0.1",
+        "sweetchuck/robo-stringy": "^0.1",
+        "sweetchuck/utils": "^0.1"
     },
     "require-dev": {
         "composer/installers": "^1.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/coder": "^8.2",
-        "drupal/core": "^8.6",
+        "drupal/core-recommended": "^8.8",
         "drupal/dummy_m1": "dev-8.x-1.x",
         "drupal/dummy_m2": "dev-8.x-1.x",
-        "drush/drush": "^9.6",
+        "drush/drush": "^10.1",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^6.3",
+        "phpunit/phpunit": "^7.5",
         "sweetchuck/git-hooks": "^0.0",
         "weitzman/drupal-test-traits": "^1.1"
     },
     "suggest": {
-        "drush/drush": "^9.6"
+        "drush/drush": "^10.1"
     },
     "autoload": {
         "psr-4": {
             "Drush\\Commands\\marvin_incubator\\": "Commands/marvin_incubator/",
+            "Drush\\Generators\\marvin_incubator\\": "Generators/marvin_incubator/",
             "Drupal\\marvin_incubator\\": "src/"
         }
     },

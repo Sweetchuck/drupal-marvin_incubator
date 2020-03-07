@@ -16,7 +16,7 @@ class MarvinGenerateSitesPhpTest extends CommandsTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpDeleteSitesPhp();
   }
@@ -45,8 +45,8 @@ class MarvinGenerateSitesPhpTest extends CommandsTestCase {
           'stdError' => [
             'same' => [
               'stdError same' => implode(PHP_EOL, [
-                '[notice] ',
-                ' [notice]',
+                '[Marvin - Collect site names] ',
+                ' [Marvin - Generate sites.php]',
               ]),
             ],
           ],

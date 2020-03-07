@@ -4,43 +4,43 @@ services:
     class: 'Drupal\marvin_incubator\Utils'
 
   marvin_incubator.artifact_build.commands:
-    class: 'Drush\Commands\marvin_incubator\Artifact\ArtifactBuildCommands'
+    class: 'Drush\Commands\marvin_incubator\ArtifactBuildCommands'
     tags:
       -
         name: 'drush.command'
 
   marvin_incubator.artifact_build_vanilla.commands:
-    class: 'Drush\Commands\marvin_incubator\Artifact\ArtifactBuildVanillaCommands'
+    class: 'Drush\Commands\marvin_incubator\ArtifactBuildVanillaCommands'
     tags:
       -
         name: 'drush.command'
 
   marvin_incubator.build.commands:
-    class: 'Drush\Commands\marvin_incubator\Build\BuildCommands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.build_bundle.commands:
-    class: 'Drush\Commands\marvin_incubator\Build\BuildBundleCommands'
+    class: 'Drush\Commands\marvin_incubator\BuildCommands'
     tags:
       -
         name: 'drush.command'
 
   marvin_incubator.build_npm.commands:
-    class: 'Drush\Commands\marvin_incubator\Build\BuildNpmCommands'
+    class: 'Drush\Commands\marvin_incubator\BuildNpmCommands'
     tags:
       -
         name: 'drush.command'
 
-  marvin_incubator.compass.commands:
-    class: 'Drush\Commands\marvin_incubator\Compass\CompassCommands'
+  marvin_incubator.composer_validate.commands:
+    class: 'Drush\Commands\marvin_incubator\ComposerValidateCommands'
     tags:
       -
         name: 'drush.command'
 
   marvin_incubator.git_hook.commands:
     class: 'Drush\Commands\marvin_incubator\GitHookCommands'
+    tags:
+      -
+        name: 'drush.command'
+
+  marvin_incubator.git_hook_commit_msg.commands:
+    class: 'Drush\Commands\marvin_incubator\GitHookCommitMsgCommands'
     tags:
       -
         name: 'drush.command'
@@ -52,31 +52,7 @@ services:
         name: 'drush.command'
 
   marvin_incubator.lint.commands:
-    class: 'Drush\Commands\marvin_incubator\Lint\Commands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.composer_validate.commands:
-    class: 'Drush\Commands\marvin_incubator\Lint\ComposerValidateCommands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.php_lint.commands:
-    class: 'Drush\Commands\marvin_incubator\Lint\PhpLintCommands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.phpcs.commands:
-    class: 'Drush\Commands\marvin_incubator\Lint\PhpcsCommands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.scss_lint.commands:
-    class: 'Drush\Commands\marvin_incubator\Lint\ScssLintCommands'
+    class: 'Drush\Commands\marvin_incubator\LintCommands'
     tags:
       -
         name: 'drush.command'
@@ -87,8 +63,38 @@ services:
       -
         name: 'drush.command'
 
+  marvin_incubator.phpcs.commands:
+    class: 'Drush\Commands\marvin_incubator\PhpcsCommands'
+    tags:
+      -
+        name: 'drush.command'
+
+  marvin_incubator.php_lint.commands:
+    class: 'Drush\Commands\marvin_incubator\PhpLintCommands'
+    tags:
+      -
+        name: 'drush.command'
+
   marvin_incubator.phpunit.commands:
-    class: 'Drush\Commands\marvin_incubator\Test\PhpunitCommands'
+    class: 'Drush\Commands\marvin_incubator\PhpunitCommands'
+    tags:
+      -
+        name: 'drush.command'
+
+  marvin_incubator.scss_lint.commands:
+    class: 'Drush\Commands\marvin_incubator\ScssLintCommands'
+    tags:
+      -
+        name: 'drush.command'
+
+  marvin_incubator.site.commands:
+    class: 'Drush\Commands\marvin_incubator\SiteCommands'
+    tags:
+      -
+        name: 'drush.command'
+
+  marvin_incubator.site_generate_sites_php.commands:
+    class: 'Drush\Commands\marvin_incubator\SiteGenerateSitesPhpCommands'
     tags:
       -
         name: 'drush.command'

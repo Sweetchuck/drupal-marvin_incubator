@@ -54,12 +54,7 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
                 "cd '{$extensionDirs['drupal/dummy_m1']}'",
                 '&&',
                 '../../../../bin/phpcs',
-                "--standard='Drupal,DrupalPractice'",
                 "--report='json'",
-                '--',
-                "'src/'",
-                "'tests/'",
-                "'dummy_m1.module'",
               ]),
             ],
           ],
@@ -85,7 +80,7 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
           ],
           'stdError' => [
             'contains' => [
-              'stdError contains' => "cd '{$extensionDirs['drupal/dummy_m2']}' && ../../../../bin/phpcs --standard='Drupal,DrupalPractice' --report='json' -- 'dummy_m2.module'",
+              'stdError contains' => "cd '{$extensionDirs['drupal/dummy_m2']}' && ../../../../bin/phpcs --report='json'",
             ],
           ],
         ],
