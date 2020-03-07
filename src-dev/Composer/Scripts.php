@@ -24,6 +24,42 @@ class Scripts {
   /**
    * Composer event callback.
    */
+  public static function preInstallCmd(Event $event): int {
+    $self = new static($event);
+
+    try {
+      $self->gitCloneDependencies();
+    }
+    catch (Exception $e) {
+      $event->getIO()->writeError($e->getMessage());
+
+      return 1;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Composer event callback.
+   */
+  public static function preUpdateCmd(Event $event): int {
+    $self = new static($event);
+
+    try {
+      $self->gitCloneDependencies();
+    }
+    catch (Exception $e) {
+      $event->getIO()->writeError($e->getMessage());
+
+      return 1;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Composer event callback.
+   */
   public static function postInstallCmd(Event $event): int {
     $self = new static($event);
 
@@ -190,6 +226,42 @@ class Scripts {
     ];
 
     $this->processRun('.', vsprintf($cmdPattern, $cmdArgs));
+
+    return $this;
+  }
+
+  protected function gitCloneDependencies() {
+    $repositories = $this->event->getComposer()->getPackage()->getRepositories();
+
+    $mapping = [
+      '../../drupal/marvin' => [
+        'url' => 'git@github.com:Sweetchuck/drupal-marvin.git',
+        'branch' => '8.x-1.x',
+      ],
+    ];
+
+    $io = $this->event->getIO();
+    foreach ($repositories as $repository) {
+      if ($repository['type'] !== 'path' || mb_substr($repository['url'], 0, 6) !== '../../') {
+        continue;
+      }
+
+      if ($this->fs->exists($repository['url'])) {
+        $io->writeError("ALREADY EXISTS {$repository['url']}");
+
+        continue;
+      }
+
+      $io->writeError("GIT CLONE {$repository['url']}");
+      $packageName = mb_substr($repository['url'], 6);
+      $git = $mapping[$repository['url']] ?? [];
+      $git += [
+        'url' => "git@github.com:{$packageName}.git",
+        'branch' => 'master',
+      ];
+
+      $this->gitClone($git['url'], $repository['url'], $git['branch']);
+    }
 
     return $this;
   }
@@ -421,15 +493,6 @@ PHP;
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  public function prepareProjectExtensions() {
-
-
-    return $this;
-  }
-
   protected function getProjectSelfDestination(): string {
     return "{$this->projectRoot}/drush/custom/" . $this->getComposerPackageName();
   }
@@ -527,6 +590,23 @@ PHP;
     }
 
     return $codeCoverage;
+  }
+
+  protected function gitClone(string $src, string $dst, string $branch = 'master') {
+    $command = sprintf(
+      'git clone --origin %s --branch %s %s %s',
+      'upstream',
+      'master',
+      escapeshellarg($src),
+      escapeshellarg($dst)
+    );
+
+    $process = $this->processRun('.', $command);
+    if ($process->getExitCode() !== 0) {
+      throw new Exception($process->getErrorOutput(), $process->getExitCode());
+    }
+
+    return $this;
   }
 
 }

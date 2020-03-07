@@ -200,6 +200,12 @@
         }
     },
     "scripts": {
+        "pre-install-cmd": [
+            "\\Drupal\\Dev\\marvin_incubator\\Composer\\Scripts::preInstallCmd"
+        ],
+        "pre-update-cmd": [
+            "\\Drupal\\Dev\\marvin_incubator\\Composer\\Scripts::preUpdateCmd"
+        ],
         "post-install-cmd": [
             "\\Drupal\\Dev\\marvin_incubator\\Composer\\Scripts::postInstallCmd"
         ],
