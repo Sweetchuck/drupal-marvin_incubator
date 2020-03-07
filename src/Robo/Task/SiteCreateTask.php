@@ -26,6 +26,9 @@ class SiteCreateTask extends BaseTask implements
   use FilesystemTaskLoader;
   use FileTaskLoader;
 
+  /**
+   * @var string
+   */
   protected $drupalRoot = '.';
 
   public function getDrupalRoot(): string {

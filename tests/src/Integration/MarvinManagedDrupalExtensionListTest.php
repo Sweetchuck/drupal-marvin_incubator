@@ -11,6 +11,7 @@ use Symfony\Component\Yaml\Yaml;
  * @group drush-command
  */
 class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
+
   public function casesExecuteDrushCommand(): array {
     $miRootDir = $this->getMarvinIncubatorRootDir();
     $extensions = $this->getExtensionDirs();
