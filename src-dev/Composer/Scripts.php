@@ -465,6 +465,7 @@ PHP;
   protected function getProjectSelfFilesToSymlinkDefaults(): array {
     return [
       'Commands' => TRUE,
+      'Generators' => TRUE,
       'src' => TRUE,
       'composer.json' => TRUE,
       'drush.services.yml' => TRUE,

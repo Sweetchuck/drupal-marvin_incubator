@@ -113,9 +113,17 @@
         "ext-dom": "*",
         "ext-json": "*",
         "drupal/marvin": "*",
-        "sweetchuck/robo-php-lint": "*",
-        "sweetchuck/robo-stringy": "*",
-        "sweetchuck/utils": "^0.1"
+        "sweetchuck/cli-cmd-builder": "dev-master as 0.0.3",
+        "sweetchuck/robo-composer": "dev-master as 0.1.0",
+        "sweetchuck/robo-git": "dev-master as 0.2.0",
+        "sweetchuck/robo-nvm": "dev-master as 0.1.0",
+        "sweetchuck/robo-php-lint": "dev-master as 0.1.0",
+        "sweetchuck/robo-phpcs": "dev-master as 0.1.0",
+        "sweetchuck/robo-phpmd": "dev-master as 0.1.0",
+        "sweetchuck/robo-phpunit": "dev-master as 0.1.3",
+        "sweetchuck/robo-stringy": "dev-master as 0.1.0",
+        "sweetchuck/robo-yarn": "dev-master as 0.2.2",
+        "sweetchuck/utils": "dev-master as 0.1.1"
     },
     "require-dev": {
         "composer/installers": "^1.5",
