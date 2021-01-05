@@ -4,10 +4,17 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator;
 
+use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\marvin\Utils as MarvinUtils;
 use Stringy\StaticStringy;
+use const JSON_UNESCAPED_SLASHES;
 
 class PhpunitConfigGenerator {
+
+  /**
+   * @var int
+   */
+  protected $jsonEncodeFlagsForXmlAttributes = JSON_UNESCAPED_SLASHES;
 
   /**
    * @var string
@@ -80,12 +87,15 @@ class PhpunitConfigGenerator {
   /**
    * @var string
    */
-  protected $phpVersion = '0701';
+  protected $phpVersion = '0703';
 
   public function getPhpVersion(): string {
     return $this->phpVersion;
   }
 
+  /**
+   * @return $this
+   */
   public function setPhpVersion(string $value) {
     $this->phpVersion = $value;
 
@@ -120,7 +130,7 @@ class PhpunitConfigGenerator {
       ->elementTestSuites()
       ->elementListeners()
       ->elementLogging()
-      ->elementFilter();
+      ->elementCoverage();
 
     return $this->doc->saveXML();
   }
@@ -210,7 +220,8 @@ class PhpunitConfigGenerator {
     $element = $this->doc->createElement('testsuites');
     $this->doc->firstChild->appendChild($element);
 
-    foreach ($this->getTestSuitNames() as $tsName) {
+    $tsNames = $this->getTestSuitNames();
+    foreach (array_keys($tsNames) as $tsName) {
       $testSuitElement = $this->doc->createElement('testsuite');
       $element->appendChild($testSuitElement);
       $testSuitElement->setAttribute('name', $tsName);
@@ -220,6 +231,19 @@ class PhpunitConfigGenerator {
         'file',
         "{$this->drupalRoot}/core/tests/TestSuites/{$tsNameUpperCamel}TestSuite.php"
       ));
+    }
+
+    foreach ($this->getPackagePaths() as $packagePath) {
+      $packageName = basename($packagePath);
+      foreach ($tsNames as $tsName => $tsNamespace) {
+        $testSuitElement = $this->doc->createElement('testsuite');
+        $element->appendChild($testSuitElement);
+        $testSuitElement->setAttribute('name', "$packageName-$tsName");
+        $testSuitElement->appendChild($this->doc->createElement(
+          'directory',
+          "$packagePath/tests/src/$tsNamespace",
+        ));
+      }
     }
 
     return $this;
@@ -248,9 +272,7 @@ class PhpunitConfigGenerator {
     $this->doc->firstChild->appendChild($element);
 
     foreach ($this->getLoggingEntries() as $entry) {
-      $element->appendChild($this->doc->createElement('log'));
-      $element->lastChild->setAttribute('type', $entry['type']);
-      $element->lastChild->setAttribute('target', $entry['target']);
+      $element->appendChild($this->createDomElementFromEntry($entry));
     }
 
     return $this;
@@ -259,24 +281,35 @@ class PhpunitConfigGenerator {
   /**
    * @return $this
    */
-  protected function elementFilter() {
-    $element = $this->doc->createElement('filter');
-    $this->doc->firstChild->appendChild($element);
+  protected function elementCoverage() {
+    $coverage = $this->doc->createElement('coverage');
+    $this->doc->firstChild->appendChild($coverage);
+    $coverage->setAttribute('processUncoveredFiles', 'true');
 
-    $whitelistElement = $this->doc->createElement('whitelist');
-    $whitelistElement->setAttribute('processUncoveredFilesFromWhitelist', 'true');
-    $element->appendChild($whitelistElement);
-
+    $include = $this->doc->createElement('include');
+    $coverage->appendChild($include);
     foreach ($this->getPackagePaths() as $packagePath) {
-      $whitelistElement->appendChild($this->doc->createElement(
+      // @todo Add other plain PHP files such as *.module or *.install.
+      $include->appendChild($this->doc->createElement(
         'directory',
-        "$packagePath/Commands"
+        "$packagePath/Commands",
       ));
 
-      $whitelistElement->appendChild($this->doc->createElement(
+      $include->appendChild($this->doc->createElement(
         'directory',
-        "$packagePath/src"
+        "$packagePath/Generators",
       ));
+
+      $include->appendChild($this->doc->createElement(
+        'directory',
+        "$packagePath/src",
+      ));
+    }
+
+    $report = $this->doc->createElement('report');
+    $coverage->appendChild($report);
+    foreach ($this->getReportEntries() as $entry) {
+      $report->appendChild($this->createDomElementFromEntry($entry));
     }
 
     return $this;
@@ -290,15 +323,17 @@ class PhpunitConfigGenerator {
   }
 
   protected function getPhpEnvPairs(): array {
-    $jsonFlags = JSON_UNESCAPED_SLASHES;
+    $phpVersion = $this->getPhpVersion();
 
+    // @todo Fetch other key-value pairs from other phpunit.*.xml files.
     return [
+      'PHPUNIT_RESULT_CACHE' => "sites/all/temporary/.phpunit.$phpVersion.result.cache",
       'SIMPLETEST_BASE_URL' => $this->getUrl(),
       'SIMPLETEST_DB' => MarvinUtils::dbUrl($this->getDbConnection()),
       'SYMFONY_DEPRECATIONS_HELPER' => 'weak_vendor',
-      'MINK_DRIVER_CLASS' => '\Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver',
-      'MINK_DRIVER_ARGS' => json_encode($this->getMinkDriverArgs(), $jsonFlags),
-      'MINK_DRIVER_ARGS_WEBDRIVER' => json_encode($this->getMinkDriverArgsWebDriver(), $jsonFlags),
+      'MINK_DRIVER_CLASS' => DrupalSelenium2Driver::class,
+      'MINK_DRIVER_ARGS' => json_encode($this->getMinkDriverArgs(), $this->jsonEncodeFlagsForXmlAttributes),
+      'MINK_DRIVER_ARGS_WEBDRIVER' => json_encode($this->getMinkDriverArgsWebDriver(), $this->jsonEncodeFlagsForXmlAttributes),
     ];
   }
 
@@ -331,10 +366,10 @@ class PhpunitConfigGenerator {
    */
   protected function getTestSuitNames(): array {
     return [
-      'unit',
-      'kernel',
-      'functional',
-      'functional-javascript',
+      'unit' => 'Unit',
+      'kernel' => 'Kernel',
+      'functional' => 'Functional',
+      'functional-javascript' => 'FunctionalJavascript',
     ];
   }
 
@@ -344,7 +379,25 @@ class PhpunitConfigGenerator {
   protected function getListenerClassNames(): array {
     return [
       '\Drupal\Tests\Listeners\DrupalListener',
-      '\Symfony\Bridge\PhpUnit\SymfonyTestsListener',
+    ];
+  }
+
+  protected function getReportEntries(): array {
+    $reportsDir = $this->getReportsDir();
+
+    return [
+      'html' => [
+        'type' => 'html',
+        'attributes' => [
+          'outputDirectory' => "$reportsDir/human/coverage/html",
+        ],
+      ],
+      'clover' => [
+        'type' => 'clover',
+        'attributes' => [
+          'outputFile' => "$reportsDir/machine/coverage/coverage.xml",
+        ],
+      ],
     ];
   }
 
@@ -352,12 +405,34 @@ class PhpunitConfigGenerator {
     $reportsDir = $this->getReportsDir();
 
     return [
-      ['type' => 'coverage-text', 'target' => 'php://stdout'],
-      ['type' => 'coverage-html', 'target' => "{$reportsDir}/human/coverage/html"],
-      ['type' => 'coverage-clover', 'target' => "{$reportsDir}/machine/coverage.xml"],
-      ['type' => 'testdox-html', 'target' => "{$reportsDir}/human/unit/junit.html"],
-      ['type' => 'junit', 'target' => "{$reportsDir}/machine/unit/junit.xml"],
+      'text' => [
+        'type' => 'text',
+        'attributes' => [
+          'outputFile' => 'php://stdout',
+        ],
+      ],
+      'testdoxHtml' => [
+        'type' => 'testdoxHtml',
+        'attributes' => [
+          'outputFile' => "$reportsDir/human/unit/junit.html",
+        ],
+      ],
+      'junit' => [
+        'type' => 'junit',
+        'attributes' => [
+          'outputFile' => "$reportsDir/machine/unit/junit.xml",
+        ],
+      ],
     ];
+  }
+
+  protected function createDomElementFromEntry(array $entry): \DOMElement {
+    $element = $this->doc->createElement($entry['type']);
+    foreach ($entry['attributes'] ?? [] as $key => $value) {
+      $element->setAttribute($key, $value);
+    }
+
+    return $element;
   }
 
 }

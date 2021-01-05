@@ -1,8 +1,10 @@
 drupalRoot: 'drupal_root'
 url: 'http://example.com:8080'
-phpVersion: '0702'
+phpVersion: '0703'
+reportsDir: 'logs'
 dbConnection:
   driver:  'sqlite'
   database: '../sites/foo/default__default.sqlite'
 packagePaths:
   - 'a/b'
+  - 'a/c'

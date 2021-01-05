@@ -48,6 +48,14 @@ class PhpunitConfigGeneratorTest extends TestCase {
       $generator->setPackagePaths($args['packagePaths']);
     }
 
+    if (array_key_exists('phpVersion', $args)) {
+      $generator->setPhpVersion($args['phpVersion']);
+    }
+
+    if (array_key_exists('reportsDir', $args)) {
+      $generator->setReportsDir($args['reportsDir']);
+    }
+
     $this->assertSame($expected, $generator->generate());
   }
 

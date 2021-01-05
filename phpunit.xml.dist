@@ -31,6 +31,21 @@
     <!-- <env name="REAL_NVM_DIR" value=""/>-->
   </php>
 
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory>Commands/</directory>
+      <directory>Generators/</directory>
+      <directory>src/</directory>
+    </include>
+
+    <report>
+      <clover outputFile="reports/machine/coverage/overall.xml"/>
+      <html outputDirectory="reports/human/coverage/overall/html"/>
+      <php outputFile="reports/machine/coverage-php/overall.php"/>
+      <text outputFile="php://stdout"/>
+    </report>
+  </coverage>
+
   <testsuites>
     <testsuite name="Unit">
       <directory>tests/src/Unit/</directory>
@@ -41,36 +56,8 @@
     </testsuite>
   </testsuites>
 
-  <filter>
-    <whitelist processUncoveredFilesFromWhitelist="true">
-      <directory>Commands/</directory>
-      <directory>src/</directory>
-    </whitelist>
-  </filter>
-
   <logging>
-    <log
-      type="coverage-text"
-      target="php://stdout"/>
-
-    <log
-      type="coverage-html"
-      target="reports/human/coverage/overall/html"/>
-
-    <log
-      type="coverage-clover"
-      target="reports/machine/coverage/overall.xml"/>
-
-    <log
-      type="coverage-php"
-      target="reports/machine/coverage-php/overall.php"/>
-
-    <log
-      type="testdox-html"
-      target="reports/human/unit/junit.html"/>
-
-    <log
-      type="junit"
-      target="reports/machine/unit/junit.xml"/>
+    <testdoxHtml outputFile="reports/human/unit/junit.html"/>
+    <junit outputFile="reports/machine/unit/junit.xml"/>
   </logging>
 </phpunit>

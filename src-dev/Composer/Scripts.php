@@ -2,9 +2,7 @@
 
 namespace Drupal\Dev\marvin_incubator\Composer;
 
-use Composer\IO\IOInterface;
 use Composer\Script\Event;
-use DrupalComposer\DrupalScaffold\Handler as DrupalScaffoldHandler;
 use Exception;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -16,7 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
-use Sweetchuck\GitHooks\Composer\Scripts as GitHooks;
 use Sweetchuck\Utils\Filter\ArrayFilterFileSystemExists;
 
 class Scripts {
@@ -64,8 +61,6 @@ class Scripts {
     $self = new static($event);
 
     $self
-      ->gitHooksDeploy()
-      ->phpcsConfigSet()
       ->preparePhpunitXml()
       ->prepareProject();
 
@@ -79,8 +74,6 @@ class Scripts {
     $self = new static($event);
 
     $self
-      ->gitHooksDeploy()
-      ->phpcsConfigSet()
       ->preparePhpunitXml()
       ->prepareProject();
 
@@ -187,49 +180,6 @@ class Scripts {
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function gitHooksDeploy() {
-    if ($this->event->isDevMode()) {
-      GitHooks::deploy($this->event);
-    }
-
-    return $this;
-  }
-
-  /**
-   * @return $this
-   */
-  protected function phpcsConfigSet() {
-    /** @var \Composer\Config $config */
-    $config = $this->event->getComposer()->getConfig();
-
-    $phpcsExecutable = $config->get('bin-dir') . '/phpcs';
-    if (!$this->fs->exists($phpcsExecutable)) {
-      $this->logger->info("phpcs executable not exists: '$phpcsExecutable'");
-
-      return $this;
-    }
-
-    $rulesDir = $config->get('vendor-dir') . '/drupal/coder/coder_sniffer';
-    if (!$this->fs->exists($rulesDir)) {
-      $this->logger->info("phpcs rules not exists: '$rulesDir'");
-
-      return $this;
-    }
-
-    $cmdPattern = '%s --config-set installed_paths %s';
-    $cmdArgs = [
-      escapeshellcmd($phpcsExecutable),
-      escapeshellcmd($rulesDir),
-    ];
-
-    $this->processRun('.', vsprintf($cmdPattern, $cmdArgs));
-
-    return $this;
-  }
-
   protected function gitCloneDependencies() {
     $repositories = $this->event->getComposer()->getPackage()->getRepositories();
 
@@ -297,6 +247,7 @@ class Scripts {
     $basePattern = '<env name="%s" value="%s"/>';
     $replacementPairs = [];
     foreach ($this->getPhpunitEnvVars() as $envVarName => $envVarValue) {
+      /** @noinspection PhpFormatFunctionParametersMismatchInspection */
       $placeholder = sprintf("<!-- $basePattern -->", $envVarName, '');
       $replacementPairs[$placeholder] = sprintf($basePattern, $envVarName, $this->escapeXmlAttribute($envVarValue));
     }
@@ -319,7 +270,6 @@ class Scripts {
       ->prepareProjectComposerJson()
       ->prepareProjectSelf()
       ->prepareProjectDirs()
-      ->prepareProjectScaffold()
       ->prepareProjectSettingsPhp();
 
     return $this;
@@ -428,28 +378,6 @@ class Scripts {
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function prepareProjectScaffold() {
-    $indexPhp = $this->projectRoot . '/docroot/index.php';
-    $io = $this->event->getIO();
-    if ($this->fs->exists("{$this->cwd}/$indexPhp")) {
-      $io->write(
-        "File '<info>$indexPhp</info>' already exists.",
-        IOInterface::VERBOSE
-      );
-
-      return $this;
-    }
-
-    $handler = new DrupalScaffoldHandler($this->event->getComposer(), $io);
-    $handler->downloadScaffold();
-    $handler->generateAutoload();
-
-    return $this;
-  }
-
   protected function prepareProjectSettingsPhp() {
     $src = "{$this->projectRoot}/docroot/sites/default/default.settings.php";
     if (!$this->fs->exists($src)) {
@@ -494,7 +422,7 @@ PHP;
   }
 
   protected function getProjectSelfDestination(): string {
-    return "{$this->projectRoot}/drush/custom/" . $this->getComposerPackageName();
+    return "{$this->projectRoot}/drush/Commands/custom/" . $this->getComposerPackageName();
   }
 
   protected function getComposerPackageName(): string {
@@ -535,7 +463,7 @@ PHP;
     ];
   }
 
-  protected function processRun(string $workingDirectory, string $command): Process {
+  protected function processRun(string $workingDirectory, array $command): Process {
     $this->event->getIO()->write("Run '$command' in '$workingDirectory'");
     $process = new Process($command, NULL, NULL, NULL, 0);
     $process->setWorkingDirectory($workingDirectory);
@@ -593,13 +521,14 @@ PHP;
   }
 
   protected function gitClone(string $src, string $dst, string $branch = 'master') {
-    $command = sprintf(
-      'git clone --origin %s --branch %s %s %s',
-      'upstream',
-      'master',
-      escapeshellarg($src),
-      escapeshellarg($dst)
-    );
+    $command = [
+      'git',
+      'clone',
+      '--origin=upstream',
+      "--branch=$branch",
+      $src,
+      $dst,
+    ];
 
     $process = $this->processRun('.', $command);
     if ($process->getExitCode() !== 0) {
