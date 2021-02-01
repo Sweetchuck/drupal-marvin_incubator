@@ -39,7 +39,9 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
    */
   public function casesExecuteDrushCommand(): array {
     $baseDir = $this->getMarvinIncubatorRootDir();
+    $args = [];
     $options = $this->getCommonCommandLineOptions();
+    $envVars = $this->getCommonCommandLineEnvVars();
 
     $phpVersionName = PHP_VERSION_ID . '-' . (ZEND_THREAD_SAFE ? 'zts' : 'nts');
     $majorMinor = sprintf(
@@ -69,8 +71,11 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
           'fileName' => Path::join($this->getProjectRootDir(), "phpunit.sqlite.$majorMinor.xml"),
         ],
         'marvin:generate:phpunit-config',
-        [],
-        ['uri' => "http://$phpVersionName.dev.sqlite.d8.localhost"] + $options,
+        $args,
+        [
+          'uri' => "http://$phpVersionName.dev.sqlite.d9.localhost",
+        ] + $options,
+        $envVars,
       ],
     ];
   }
@@ -78,36 +83,23 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
   /**
    * @dataProvider casesExecuteDrushCommand
    */
-  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = [], array $envVars = []) {
-    $this->drush(
+  public function testExecuteDrushCommand(
+    array $expected,
+    string $command,
+    array $args = [],
+    array $options = [],
+    array $envVars = []
+  ) {
+    parent::testExecuteDrushCommand(
+      $expected,
       $command,
       $args,
       $options,
-      NULL,
-      $this->getProjectRootDir(),
-      $expected['exitCode'] ?? 0,
-      NULL,
-      $envVars
+      $envVars,
     );
 
     // @todo Assert file content.
     static::assertFileExists($expected['fileName']);
-
-    if (array_key_exists('stdError', $expected)) {
-      static::assertText($expected['stdError'], $this->getErrorOutput(), 'stdError');
-    }
-
-    if (array_key_exists('stdOutput', $expected)) {
-      static::assertText($expected['stdOutput'], $this->getOutput(), 'stdOutput');
-    }
-  }
-
-  protected function getCommonCommandLineOptions() {
-    return [
-      'config' => [
-        Path::join($this->getProjectRootDir(), 'drush'),
-      ],
-    ];
   }
 
 }

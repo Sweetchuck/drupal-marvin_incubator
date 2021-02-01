@@ -13,19 +13,16 @@ class SitesPhpGeneratorTask extends BaseTask {
   /**
    * {@inheritdoc}
    */
-  protected $taskName = 'Marvin - Generate sites.php';
+  protected string $taskName = 'Marvin - Generate sites.php';
 
-  /**
-   * @var \Drupal\marvin_incubator\SitesPhpGenerator
-   */
-  protected $generator;
+  protected SitesPhpGenerator $generator;
 
-  /**
-   * @var \Drupal\marvin\WriterWrapper
-   */
-  protected $outputDestinationWrapper;
+  protected WriterWrapper $outputDestinationWrapper;
 
-  public function __construct($generator = NULL, $outputDestinationWrapper = NULL) {
+  public function __construct(
+    ?SitesPhpGenerator $generator = NULL,
+    ?WriterWrapper $outputDestinationWrapper = NULL
+  ) {
     $this->generator = $generator ?: new SitesPhpGenerator();
     $this->outputDestinationWrapper = $outputDestinationWrapper ?: new WriterWrapper();
   }

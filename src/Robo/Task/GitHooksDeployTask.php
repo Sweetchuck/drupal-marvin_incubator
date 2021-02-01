@@ -7,7 +7,7 @@ use Drupal\marvin_incubator\Utils;
 use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
 use Robo\Common\IO;
-use Robo\Contract\OutputAwareInterface;
+use Consolidation\AnnotatedCommand\Output\OutputAwareInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
@@ -19,15 +19,9 @@ class GitHooksDeployTask extends BaseTask implements
   use ContainerAwareTrait;
   use IO;
 
-  /**
-   * @var \Symfony\Component\Filesystem\Filesystem
-   */
-  protected $fs;
+  protected Filesystem $fs;
 
-  /**
-   * @var string
-   */
-  protected $packagePath = '';
+  protected string $packagePath = '';
 
   public function getPackagePath(): string {
     return $this->packagePath;
@@ -42,10 +36,7 @@ class GitHooksDeployTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $hookFilesSourceDir = '';
+  protected string $hookFilesSourceDir = '';
 
   public function getHookFilesSourceDir(): string {
     return $this->hookFilesSourceDir;
@@ -60,10 +51,7 @@ class GitHooksDeployTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $commonTemplateFileName = '';
+  protected string $commonTemplateFileName = '';
 
   public function getCommonTemplateFileName(): string {
     return $this->commonTemplateFileName;
@@ -78,10 +66,7 @@ class GitHooksDeployTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $rootProjectDir = '';
+  protected string $rootProjectDir = '';
 
   public function getRootProjectDir(): string {
     return $this->rootProjectDir;
@@ -98,10 +83,7 @@ class GitHooksDeployTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $composerExecutable = 'composer';
+  protected string $composerExecutable = 'composer';
 
   public function getComposerExecutable(): string {
     return $this->composerExecutable;

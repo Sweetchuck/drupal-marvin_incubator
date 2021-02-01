@@ -29,7 +29,7 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
           'stdOutput' => [
             'same' => [
               'stdOutput same' => implode(PHP_EOL, [
-                'tests/fixtures/extensions/dummy_m1/src/DummyM1.php',
+                'tests/fixtures/packages/drupal/dummy_m1/src/DummyM1.php',
                 '+----------+------+------------------------------+',
                 '| Severity | Line | Message                      |',
                 '+----------+------+------------------------------+',
@@ -37,7 +37,7 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
                 '| error    |    9 | Missing function doc comment |',
                 '+----------+------+------------------------------+',
                 '',
-                'tests/fixtures/extensions/dummy_m1/tests/src/Unit/DummyM1Test.php',
+                'tests/fixtures/packages/drupal/dummy_m1/tests/src/Unit/DummyM1Test.php',
                 '+----------+------+------------------------------------------+',
                 '| Severity | Line | Message                                  |',
                 '+----------+------+------------------------------------------+',
@@ -49,11 +49,11 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
             ],
           ],
           'stdError' => [
-            'contains' => [
-              'stdError contains' => implode(' ', [
+            'stringContainsString' => [
+              'stdError stringContainsString' => implode(' ', [
                 "cd '{$extensionDirs['drupal/dummy_m1']}'",
                 '&&',
-                '../../../../bin/phpcs',
+                '../../../../../vendor/bin/phpcs',
                 "--report='json'",
               ]),
             ],
@@ -69,7 +69,7 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
           'stdOutput' => [
             'same' => [
               'stdOutput same' => implode(PHP_EOL, [
-                'tests/fixtures/extensions/dummy_m2/dummy_m2.module',
+                'tests/fixtures/packages/drupal/dummy_m2/dummy_m2.module',
                 '+----------+------+---------------------------------------------------------+',
                 '| Severity | Line | Message                                                 |',
                 '+----------+------+---------------------------------------------------------+',
@@ -79,8 +79,8 @@ class MarvinLintPhpcsTest extends CommandsTestCase {
             ],
           ],
           'stdError' => [
-            'contains' => [
-              'stdError contains' => "cd '{$extensionDirs['drupal/dummy_m2']}' && ../../../../bin/phpcs --report='json'",
+            'stringContainsString' => [
+              'stdError stringContainsString' => "cd '{$extensionDirs['drupal/dummy_m2']}' && ../../../../../vendor/bin/phpcs --report='json'",
             ],
           ],
         ],

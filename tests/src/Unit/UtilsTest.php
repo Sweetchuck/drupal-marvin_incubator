@@ -28,10 +28,22 @@ class UtilsTest extends TestCase {
       ],
       'basic' => [
         [
-          'v1/profile_01_outside_git' => "$vfsRoot/dir/outside/v1/profile_01",
-          'v1/module_01_outside_git' => "$vfsRoot/dir/outside/v1/module_01",
-          'v1/theme_01_outside_git' => "$vfsRoot/dir/outside/v1/theme_01",
-          'v1/drush_01_outside_git' => "$vfsRoot/dir/outside/v1/drush_01",
+          'v1/profile_01_outside_git' => [
+            'name' => 'v1/profile_01_outside_git',
+            'path' => "$vfsRoot/dir/outside/v1/profile_01",
+          ],
+          'v1/module_01_outside_git' => [
+            'name' => 'v1/module_01_outside_git',
+            'path' => "$vfsRoot/dir/outside/v1/module_01",
+          ],
+          'v1/theme_01_outside_git' => [
+            'name' => 'v1/theme_01_outside_git',
+            'path' => "$vfsRoot/dir/outside/v1/theme_01",
+          ],
+          'v1/drush_01_outside_git' => [
+            'name' => 'v1/drush_01_outside_git',
+            'path' => "$vfsRoot/dir/outside/v1/drush_01",
+          ],
         ],
         "$vfsRoot/dir/inside",
         [

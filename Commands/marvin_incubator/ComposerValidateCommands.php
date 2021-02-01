@@ -39,8 +39,8 @@ class ComposerValidateCommands extends ComposerCommandsBase {
 
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();
     foreach ($packages as $packageName) {
-      $packagePath = $managedDrupalExtensions[$packageName];
-      $cb->addTask($this->getTaskComposerValidate($packagePath));
+      $package = $managedDrupalExtensions[$packageName];
+      $cb->addTask($this->getTaskComposerValidate($package['path']));
     }
 
     return $cb;

@@ -13,7 +13,6 @@ use Drupal\marvin_incubator\Robo\SitesPhpGeneratorTaskLoader;
 use Drupal\marvin_incubator\Robo\SiteTaskLoader;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drush\Commands\marvin\CommandsBase;
-use Exception;
 use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -26,23 +25,14 @@ class SiteCommands extends CommandsBase {
   use SitesPhpGeneratorTaskLoader;
   use CollectSiteNamesTaskLoader;
 
-  /**
-   * @var \Symfony\Component\Filesystem\Filesystem
-   */
-  protected $fs;
+  protected Filesystem $fs;
 
-  /**
-   * @var array
-   */
-  protected $protectedSiteNames = [
+  protected array $protectedSiteNames = [
     'list' => ['simpletest'],
     'create' => ['default', 'simpletest'],
     'delete' => ['default'],
   ];
 
-  /**
-   * {@inheritdoc}
-   */
   public function __construct() {
     parent::__construct();
 
@@ -68,7 +58,7 @@ class SiteCommands extends CommandsBase {
    * @bootstrap root
    */
   public function info() {
-
+    // @todo Implement.
   }
 
   /**
@@ -77,7 +67,7 @@ class SiteCommands extends CommandsBase {
   public function createValidate(CommandData $commandData): void {
     $siteName = $commandData->input()->getArgument('siteName');
     if (in_array($siteName, $this->protectedSiteNames['create'])) {
-      throw new Exception("Site name '$siteName' is protected", 1);
+      throw new \Exception("Site name '$siteName' is protected", 1);
     }
   }
 
@@ -96,8 +86,9 @@ class SiteCommands extends CommandsBase {
           ->setSiteName($siteName)
           ->setDbVariants($this->getConfigDatabaseVariants())
           ->setPhpVariants($this->getConfigPhpVariants())
-      )
-      ->addTask($this->getTaskMarvinGenerateSitesPhp($this->getConfigDatabaseVariants()));
+      );
+    // Currently sites.php has a dynamic content. No need to generate.
+    // ->addTask($this->getTaskMarvinGenerateSitesPhp($this->getConfigDatabaseVariants())).
   }
 
   /**
@@ -106,7 +97,7 @@ class SiteCommands extends CommandsBase {
   public function deleteValidate(CommandData $commandData): void {
     $siteName = $commandData->input()->getArgument('siteName');
     if (in_array($siteName, $this->protectedSiteNames['delete'])) {
-      throw new Exception("Site name '$siteName' is protected", 1);
+      throw new \Exception("Site name '$siteName' is protected", 1);
     }
   }
 
@@ -124,8 +115,9 @@ class SiteCommands extends CommandsBase {
           ->taskMarvinSiteDelete()
           ->setDrupalRoot('.')
           ->setSiteName($siteName)
-      )
-      ->addTask($this->getTaskMarvinGenerateSitesPhp($this->getConfigDatabaseVariants()));
+      );
+    // Currently sites.php has a dynamic content. No need to delete.
+    // ->addTask($this->getTaskMarvinGenerateSitesPhp($this->getConfigDatabaseVariants())).
   }
 
 }

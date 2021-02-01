@@ -14,9 +14,17 @@ class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
 
   public function casesExecuteDrushCommand(): array {
     $miRootDir = $this->getMarvinIncubatorRootDir();
-    $extensions = $this->getExtensionDirs();
+    $extensions = [];
+    foreach ($this->getExtensionDirs() as $extName => $extPath) {
+      $extensions[$extName] = [
+        'name' => $extName,
+        'path' => $extPath,
+      ];
+    }
 
-    $options = [];
+    $options = [
+      'format' => 'yaml',
+    ];
     $options += $this->getCommonCommandLineOptions();
     $args = [];
 
@@ -32,8 +40,8 @@ class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
             ],
           ],
           'stdOutput' => [
-            'same' => [
-              'stdOutput same' => trim(Yaml::dump($extensions, 99, 2)),
+            'stringContainsString' => [
+              'stdOutput stringContainsString' => trim(Yaml::dump($extensions, 99, 2)),
             ],
           ],
           'exitCode' => 0,

@@ -15,15 +15,9 @@ trait CommandsBaseTrait {
 
   use ManagedDrupalExtensionTaskLoader;
 
-  /**
-   * @var null|string
-   */
-  protected $drupalRoot = NULL;
+  protected ?string $drupalRoot = NULL;
 
-  /**
-   * @var null|array
-   */
-  protected $managedDrupalExtensions = NULL;
+  protected ?array $managedDrupalExtensions = NULL;
 
   protected function getManagedDrupalExtensions(string $workingDirectory = ''): array {
     if ($this->managedDrupalExtensions === NULL) {
@@ -62,7 +56,7 @@ trait CommandsBaseTrait {
           ->taskMarvinManagedDrupalExtensionList()
           ->setWorkingDirectory($workingDirectory)
           ->setIgnoredPackages(array_keys($ignoredPackages))
-          ->deferTaskConfiguration('setPackagePaths', 'packagePaths'));
+          ->deferTaskConfiguration('setPackagePaths', 'composer.packagePaths'));
   }
 
   /**

@@ -6,45 +6,21 @@ namespace Drupal\marvin_incubator;
 
 class GitHookHandler {
 
-  /**
-   * @var string
-   */
-  protected $rootProjectDir = '';
+  protected string $rootProjectDir = '';
 
-  /**
-   * @var string
-   */
-  protected $composerExecutable = '';
+  protected string $composerExecutable = '';
 
-  /**
-   * @var string
-   */
-  protected $marvinIncubatorDir = '';
+  protected string $marvinIncubatorDir = '';
 
-  /**
-   * @var string
-   */
-  protected $packagePath = '';
+  protected string $packagePath = '';
 
-  /**
-   * @var string
-   */
-  protected $gitHook = '';
+  protected string $gitHook = '';
 
-  /**
-   * @var string
-   */
-  protected $drushCommand = '';
+  protected string $drushCommand = '';
 
-  /**
-   * @var string
-   */
-  protected $binDir = '';
+  protected string $binDir = '';
 
-  /**
-   * @var string
-   */
-  protected $vendorDir = '';
+  protected string $vendorDir = '';
 
   /**
    * @var resource
@@ -56,10 +32,7 @@ class GitHookHandler {
    */
   protected $stdError;
 
-  /**
-   * @var array
-   */
-  protected $cliArgs = [];
+  protected array $cliArgs = [];
 
   /**
    * @param resource $stdOutput

@@ -8,20 +8,11 @@ use Symfony\Component\Process\Process;
 
 class ProcessResult {
 
-  /**
-   * @var int
-   */
-  public $exitCode = 0;
+  public ?int $exitCode = NULL;
 
-  /**
-   * @var string
-   */
-  public $stdOutput = '';
+  public string $stdOutput = '';
 
-  /**
-   * @var string
-   */
-  public $stdError = '';
+  public string $stdError = '';
 
   /**
    * @return static

@@ -105,7 +105,7 @@ class MarvinGenerateSitesPhpTest extends CommandsTestCase {
   }
 
   protected function getSitesPhpFileName(): string {
-    return Path::join($this->getDrupalRoot(), 'sites', 'sites.php');
+    return Path::join($this->getProjectDocroot(), 'sites', 'sites.php');
   }
 
 }

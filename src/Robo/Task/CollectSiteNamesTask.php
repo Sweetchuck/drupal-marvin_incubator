@@ -13,12 +13,9 @@ class CollectSiteNamesTask extends BaseTask {
   /**
    * {@inheritdoc}
    */
-  protected $taskName = 'Marvin - Collect site names';
+  protected string $taskName = 'Marvin - Collect site names';
 
-  /**
-   * @var string
-   */
-  protected $drupalRoot = '.';
+  protected string $drupalRoot = '.';
 
   public function getDrupalRoot(): string {
     return $this->drupalRoot;

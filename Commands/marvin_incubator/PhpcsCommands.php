@@ -59,13 +59,15 @@ class PhpcsCommands extends PhpcsCommandsBase {
    * @bootstrap none
    *
    * @marvinArgPackages packages
+   *
+   * @initLintReporters
    */
   public function lintPhpcs(array $packages): CollectionBuilder {
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();
     $cb = $this->collectionBuilder();
     foreach ($packages as $packageName) {
-      $packagePath = $managedDrupalExtensions[$packageName];
-      $cb->addTask($this->getTaskLintPhpcsExtension($packagePath));
+      $package = $managedDrupalExtensions[$packageName];
+      $cb->addTask($this->getTaskLintPhpcsExtension($package['path']));
     }
 
     return $cb;

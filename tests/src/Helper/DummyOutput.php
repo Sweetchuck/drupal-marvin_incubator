@@ -7,6 +7,9 @@ namespace Drupal\Tests\marvin_incubator\Helper;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+/**
+ * @deprecated \Sweetchuck\Codeception\Module\RoboTaskRunner\DummyOutput
+ */
 class DummyOutput extends ConsoleOutput {
 
   /**

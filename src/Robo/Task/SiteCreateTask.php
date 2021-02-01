@@ -4,15 +4,16 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator\Robo\Task;
 
+use Consolidation\AnnotatedCommand\Output\OutputAwareInterface;
 use Drupal\marvin\Robo\Task\BaseTask;
 use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
+use Robo\Collection\CollectionBuilder;
 use Robo\Common\BuilderAwareTrait;
 use Robo\Common\IO;
 use Robo\Contract\BuilderAwareInterface;
-use Robo\Contract\OutputAwareInterface;
-use Robo\Task\File\loadTasks as FileTaskLoader;
-use Robo\Task\Filesystem\loadTasks as FilesystemTaskLoader;
+use Robo\Task\File\Tasks as FileTaskLoader;
+use Robo\Task\Filesystem\Tasks as FilesystemTaskLoader;
 use Symfony\Component\Yaml\Yaml;
 
 class SiteCreateTask extends BaseTask implements
@@ -26,10 +27,7 @@ class SiteCreateTask extends BaseTask implements
   use FilesystemTaskLoader;
   use FileTaskLoader;
 
-  /**
-   * @var string
-   */
-  protected $drupalRoot = '.';
+  protected string $drupalRoot = '.';
 
   public function getDrupalRoot(): string {
     return $this->drupalRoot;
@@ -44,10 +42,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $siteName = '';
+  protected string $siteName = '';
 
   public function getSiteName(): string {
     return $this->siteName;
@@ -62,10 +57,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var array
-   */
-  protected $dbVariants = [];
+  protected array $dbVariants = [];
 
   public function getDbVariants(): array {
     return $this->dbVariants;
@@ -80,10 +72,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var array
-   */
-  protected $phpVariants = [];
+  protected array $phpVariants = [];
 
   public function getPhpVariants(): array {
     return $this->phpVariants;
@@ -98,10 +87,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $uriPattern = 'http://{{ phpId }}.dev.{{ dbId }}.{{ siteName }}.marvin_incubator.d8.localhost:1080';
+  protected string $uriPattern = 'http://{{ phpId }}.dev.{{ dbId }}.{{ siteName }}.marvin_incubator.d8.localhost:1080';
 
   public function getUriPattern(): string {
     return $this->uriPattern;
@@ -116,10 +102,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $siteDirPattern = '{{ siteName }}.{{ dbId }}';
+  protected string $siteDirPattern = '{{ siteName }}.{{ dbId }}';
 
   public function getSiteDirPattern(): string {
     return $this->siteDirPattern;
@@ -134,15 +117,9 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var \Robo\Collection\CollectionBuilder
-   */
-  protected $cb;
+  protected CollectionBuilder $cb;
 
-  /**
-   * @var array
-   */
-  protected $dbVariant = [];
+  protected array $dbVariant = [];
 
   public function setOptions(array $options) {
     parent::setOptions($options);
@@ -185,7 +162,7 @@ class SiteCreateTask extends BaseTask implements
         ->addTaskCreateDirectories()
         ->addTaskHashSalt()
         ->addTaskSettingsPhp()
-        ->addTaskDrushSiteAliases();
+        ->addTaskDrushSiteAliases($dbVariant);
     }
 
     $this
@@ -209,7 +186,7 @@ class SiteCreateTask extends BaseTask implements
         ->taskFilesystemStack()
         ->mkdir("$drupalRoot/sites/$siteDir/files")
         ->mkdir("$outerSitePath/$siteDir/backup")
-        ->mkdir("$outerSitePath/$siteDir/config/sync")
+        ->mkdir("$outerSitePath/$siteDir/config/prod")
         ->mkdir("$outerSitePath/$siteDir/private")
         ->mkdir("$outerSitePath/$siteDir/temporary")
       );
@@ -235,14 +212,14 @@ class SiteCreateTask extends BaseTask implements
     $fileContent = <<< PHP
 <?php
 
+declare(strict_types = 1);
+
 /**
  * @var string \$app_root
  * @var string \$site_path
- * @var string \$projectName
- * @var string \$dbName
  */
 
-include __DIR__ . '/../base.settings.php';
+require __DIR__ . '/../settings.php';
 
 PHP;
 
@@ -262,13 +239,9 @@ PHP;
   /**
    * @return $this
    */
-  protected function addTaskDrushSiteAliases() {
+  protected function addTaskDrushSiteAliases(array $dbVariant) {
     foreach ($this->getPhpVariants() as $phpVariant) {
-      if (empty($phpVariant['cli'])) {
-        continue;
-      }
-
-      $this->addTaskDrushSiteAlias($phpVariant);
+      $this->addTaskDrushSiteAlias($dbVariant, $phpVariant);
     }
 
     return $this;
@@ -277,19 +250,25 @@ PHP;
   /**
    * @return $this
    */
-  protected function addTaskDrushSiteAlias(array $phpVariant) {
+  protected function addTaskDrushSiteAlias(array $dbVariant, array $phpVariant) {
     $siteDir = $this->getSiteDir();
 
     $site = [
-      'dev' => [
+      'local' => [
         'uri' => $this->getUri($phpVariant),
-        'root' => realpath($this->getDrupalRoot()),
+        'root' => '${runtime.project}/docroot',
         'command' => [
           'site' => [
             'install' => [
               'options' => [
                 'sites-subdir' => $siteDir,
-                'site-name' => $siteDir,
+                'site-name' => sprintf(
+                  '%s %s – %s – %s',
+                  '${marvin.vendorLabel}',
+                  '${marvin.projectLabel}',
+                  $this->getSiteName(),
+                  $dbVariant['id'],
+                ),
               ],
             ],
           ],

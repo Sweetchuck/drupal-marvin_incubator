@@ -23,10 +23,7 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
   use PrepareDirectoryTaskLoader;
   use VersionNumberTaskLoader;
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $customEventNamePrefix = 'marvin:artifact:build';
+  protected string $customEventNamePrefix = 'marvin:artifact:build';
 
   protected function isApplicable(string $projectType): bool {
     return TRUE;
@@ -48,8 +45,8 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
 
     if ($projectType === 'incubator') {
       $types['vanilla'] = [
-        'label' => dt('Vanilla'),
-        'description' => dt('Not customized'),
+        'label' => 'Vanilla',
+        'description' => 'Not customized',
       ];
     }
 
@@ -79,6 +76,8 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
 
   /**
    * @hook on-event marvin:artifact:build:vanilla
+   *
+   * @noinspection PhpUnusedParameterInspection
    */
   public function onEventMarvinArtifactBuildVanilla(
     InputInterface $input,

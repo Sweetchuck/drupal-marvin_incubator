@@ -6,6 +6,20 @@ marvin:
   projectType: 'incubator'
 
   ##
+  # Human readable version of the composer.json#/name
+  #
+  # @var string
+  ##
+  vendorLabel: 'D9'
+
+  ##
+  # Human readable version of the composer.json#/name
+  #
+  # @var string
+  ##
+  projectLabel: 'Incubator'
+
+  ##
   # @var string
   ##
   reportsDir: 'reports'

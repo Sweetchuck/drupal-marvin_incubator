@@ -9,6 +9,7 @@ use Drupal\marvin_incubator\CommandsBaseTrait;
 use Drupal\marvin_incubator\Robo\PhpunitConfigGeneratorTaskLoader;
 use Drush\Commands\marvin\CommandsBase;
 use Drush\Sql\SqlBase;
+use Psr\Log\LoggerInterface;
 use Robo\Contract\TaskInterface;
 use Webmozart\PathUtil\Path;
 
@@ -23,13 +24,17 @@ class PhpunitGenerateConfigCommands extends CommandsBase {
    * @bootstrap configuration
    */
   public function generatePhpunitConfig(): TaskInterface {
-    /** @var \Drush\Boot\BootstrapManager $bootstrapManager */
     $bootstrapManager = $this->getContainer()->get('bootstrap.manager');
 
     $uri = $bootstrapManager->getUri();
+    if (is_bool($uri)) {
+      return $this->getTaskLoggerWrite('URI could not be detected');
+    }
+
+    $uri = (string) $uri;
     $uriParts = parse_url($uri);
     // @todo URL parts detector.
-    list($webPhpVariantId, , $dbId) = explode('.', $uriParts['host']);
+    [$webPhpVariantId, , $dbId] = explode('.', $uriParts['host']);
 
     $phpVariants = $this->getConfigPhpVariants();
     $webPhpVariant = $phpVariants[$webPhpVariantId];
@@ -50,11 +55,33 @@ class PhpunitGenerateConfigCommands extends CommandsBase {
       ->taskPhpunitConfigGenerator()
       ->setOutputDestination($dstFileName)
       ->setDrupalRoot($drupalRoot)
-      ->setUrl($bootstrapManager->getUri())
+      ->setUrl($uri)
       ->setDbConnection($dbConnection)
       ->setPhpVersion((string) $webPhpVariant['version']['id'])
       ->setReportsDir($reportsDir)
       ->setPackagePaths($this->getManagedDrupalExtensions());
+  }
+
+  /**
+   * @todo Move this method into \Drush\Commands\marvin\CommandsBase.
+   *
+   * @see \Drush\Commands\marvin\CommandsBase
+   */
+  protected function getTaskLoggerWrite(
+    string $message,
+    array $context = [],
+    $exitCode = 1,
+    string $level = 'error',
+    ?LoggerInterface $logger = NULL
+  ): TaskInterface {
+    return $this
+      ->collectionBuilder()
+      ->addCode(function () use ($message, $context, $exitCode, $level, $logger): int {
+        $logger = $logger ?: $this->getLogger();
+        $logger->log($level, $message, $context);
+
+        return $exitCode;
+      });
   }
 
 }

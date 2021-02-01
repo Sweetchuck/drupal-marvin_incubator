@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\marvin_incubator\Robo;
 
 use Drupal\marvin_incubator\Robo\Task\ManagedDrupalExtensionListTask;
-use League\Container\ContainerAwareInterface;
 
 trait ManagedDrupalExtensionTaskLoader {
 
@@ -11,21 +12,15 @@ trait ManagedDrupalExtensionTaskLoader {
    * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\ManagedDrupalExtensionListTask
    */
   protected function taskMarvinManagedDrupalExtensionList(array $options = []) {
-    /** @var \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\ManagedDrupalExtensionListTask $taskWrapper */
-    $taskWrapper = $this->task(ManagedDrupalExtensionListTask::class);
-
-    /** @var \Drupal\marvin_incubator\Robo\Task\ManagedDrupalExtensionListTask $task */
-    $task = $taskWrapper->getCollectionBuilderCurrentTask();
-    if ($this instanceof ContainerAwareInterface && $task instanceof ContainerAwareInterface) {
-      $container = $this->getContainer();
-      if ($container && !$task->getContainer()) {
-        $task->setContainer($container);
-      }
-    }
-
+    $container = $this->getContainer();
+    /** @var \Drupal\marvin_incubator\Robo\Task\ManagedDrupalExtensionListTask|\Robo\Collection\CollectionBuilder $task */
+    $task = $this->task(
+      ManagedDrupalExtensionListTask::class,
+      $container->get('marvin_incubator.utils'),
+    );
     $task->setOptions($options);
 
-    return $taskWrapper;
+    return $task;
   }
 
 }

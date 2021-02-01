@@ -9,7 +9,7 @@ class SitesPhpGenerator {
   /**
    * @var string[]
    */
-  protected $siteNames = [];
+  protected array $siteNames = [];
 
   public function getSiteNames(): array {
     return $this->siteNames;
@@ -29,7 +29,7 @@ class SitesPhpGenerator {
   /**
    * @var string[]
    */
-  protected $databaseVariantIds = [];
+  protected array $databaseVariantIds = [];
 
   /**
    * @return string[]
@@ -50,10 +50,7 @@ class SitesPhpGenerator {
    */
   protected $siteDirPatternDefault = '{{ siteName }}.{{ dbId }}';
 
-  /**
-   * @var string
-   */
-  protected $siteDirPattern = '';
+  protected string $siteDirPattern = '';
 
   public function getSiteDirPattern(): string {
     return $this->siteDirPattern;
@@ -68,15 +65,9 @@ class SitesPhpGenerator {
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $urlPatternDefault = '{{ dbId }}.{{ siteName }}.d8.localhost';
+  protected string $urlPatternDefault = '{{ dbId }}.{{ siteName }}.d8.localhost';
 
-  /**
-   * @var string
-   */
-  protected $urlPattern = '';
+  protected string $urlPattern = '';
 
   public function getUrlPattern(): string {
     return $this->urlPattern;

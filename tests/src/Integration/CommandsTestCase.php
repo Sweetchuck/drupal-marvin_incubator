@@ -14,15 +14,11 @@ class CommandsTestCase extends ExistingSiteBase {
 
   use DrushTestTrait;
 
-  /**
-   * @var string
-   */
-  protected $fixturesDir = 'tests/fixtures';
+  protected static string $fixturesDir = 'tests/fixtures';
 
-  /**
-   * @var string
-   */
-  protected $projectName = 'project_01';
+  protected static string $projectName = 'project_01';
+
+  protected static string $defaultDttBaseUrl = 'http://127.0.0.1:8888';
 
   /**
    * {@inheritdoc}
@@ -53,13 +49,19 @@ class CommandsTestCase extends ExistingSiteBase {
   /**
    * @dataProvider casesExecuteDrushCommand
    */
-  public function testExecuteDrushCommand(array $expected, string $command, array $args = [], array $options = [], array $envVars = []) {
+  public function testExecuteDrushCommand(
+    array $expected,
+    string $command,
+    array $args = [],
+    array $options = [],
+    array $envVars = []
+  ) {
     $this->drush(
       $command,
       $args,
       $options,
       NULL,
-      NULL,
+      $this->getProjectRootDir(),
       $expected['exitCode'] ?? 0,
       NULL,
       $envVars
@@ -76,35 +78,33 @@ class CommandsTestCase extends ExistingSiteBase {
 
   protected function getExtensionDirs(): array {
     $baseDir = $this->getMarvinIncubatorRootDir();
+    $fixturesDir = static::$fixturesDir;
 
     return [
-      'drupal/dummy_m1' => "$baseDir/{$this->fixturesDir}/extensions/dummy_m1",
-      'drupal/dummy_m2' => "$baseDir/{$this->fixturesDir}/extensions/dummy_m2",
+      'drupal/dummy_m1' => "$baseDir/{$fixturesDir}/repository/drupal/dummy_m1",
+      'drupal/dummy_m2' => "$baseDir/{$fixturesDir}/repository/drupal/dummy_m2",
     ];
   }
 
   protected function initGitRepo(string $dir) {
     $this->deleteGitRepo($dir);
 
-    $cmdPattern = [
+    $shell = getenv('SHELL');
+
+    $command = [
+      $shell,
+      '-c',
       // @todo Without local config.
-      'git init',
-      '&&',
-      'git checkout -b %s',
-      '&&',
-      'git add .',
-      '&&',
-      'git commit -m %s',
+      sprintf(
+        'git init && git checkout -b %s && git add . && git commit -m %s',
+        escapeshellarg('9.x-1.x'),
+        escapeshellarg('Initial commit'),
+      ),
     ];
-    $cmdArgs = [
-      escapeshellarg('8.x-1.x'),
-      escapeshellarg('Initial commit'),
-    ];
-    $cmd = vsprintf(implode(' ', $cmdPattern), $cmdArgs);
 
     static::assertSame(
       0,
-      (new Process($cmd, $dir))->run(),
+      (new Process($command, $dir))->run(),
       "Initializing Git repository in '$dir' directory"
     );
 
@@ -143,8 +143,10 @@ class CommandsTestCase extends ExistingSiteBase {
 
   protected function getCommonCommandLineOptions() {
     return [
+      'uri' => $this->getProjectUri(),
+      'root' => 'docroot',
       'config' => [
-        Path::join($this->getDrupalRoot(), '..', 'drush'),
+        'drush',
       ],
     ];
   }
@@ -152,19 +154,34 @@ class CommandsTestCase extends ExistingSiteBase {
   protected function getCommonCommandLineEnvVars() {
     return [
       'HOME' => '/dev/null',
+      'COLUMNS' => 120,
+      'COMPOSER' => './composer.json',
     ];
   }
 
   protected function getProjectRootDir(): string {
-    return dirname($this->getDrupalRoot());
+    return Path::join(
+      $this->getMarvinIncubatorRootDir(),
+      static::$fixturesDir,
+      'repository',
+      'd9',
+      static::$projectName,
+    );
   }
 
   protected function getMarvinIncubatorRootDir(): string {
     return dirname(__DIR__, 3);
   }
 
-  protected function getDrupalRoot(): string {
-    return Path::join($this->getMarvinIncubatorRootDir(), "{$this->fixturesDir}/{$this->projectName}/docroot");
+  protected function getProjectUri(): string {
+    return getenv('DTT_BASE_URL') ?: static::$defaultDttBaseUrl;
+  }
+
+  protected function getProjectDocroot(): string {
+    return Path::join(
+      $this->getProjectRootDir(),
+      'docroot',
+    );
   }
 
   public static function assertText(array $rules, string $text, string $msgPrefix) {
@@ -176,9 +193,12 @@ class CommandsTestCase extends ExistingSiteBase {
             static::assertSame($expected, $text, $fullMessage);
             break;
 
-          case 'contains':
-            static::assertContains($expected, $text, $fullMessage);
+          case 'stringContainsString':
+            static::assertStringContainsString($expected, $text, $fullMessage);
             break;
+
+          default:
+            throw new \InvalidArgumentException("\$assterType not exists: $assertType");
         }
       }
     }

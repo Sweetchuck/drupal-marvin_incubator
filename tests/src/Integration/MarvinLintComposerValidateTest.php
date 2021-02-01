@@ -15,7 +15,7 @@ class MarvinLintComposerValidateTest extends CommandsTestCase {
    */
   public function casesExecuteDrushCommand(): array {
     $baseDir = $this->getMarvinIncubatorRootDir();
-    $fixturesDir = $this->fixturesDir;
+    $fixturesDir = static::$fixturesDir;
 
     $options = $this->getCommonCommandLineOptions();
     $envVars = $this->getCommonCommandLineEnvVars();
@@ -30,8 +30,8 @@ class MarvinLintComposerValidateTest extends CommandsTestCase {
             ],
           ],
           'stdError' => [
-            'contains' => [
-              'stdError contains' => " Running composer validate in $baseDir/$fixturesDir/extensions/dummy_m1\n",
+            'stringContainsString' => [
+              'stdError stringContainsString' => " Running composer validate in $baseDir/$fixturesDir/repository/drupal/dummy_m1\n",
             ],
           ],
         ],
@@ -46,16 +46,17 @@ class MarvinLintComposerValidateTest extends CommandsTestCase {
           'stdOutput' => [
             'same' => [
               'stdOutput same' => implode(PHP_EOL, [
-                './composer.json is valid for simple usage with composer but has',
-                'strict errors that make it unable to be published as a package:',
+                './composer.json is valid for simple usage with Composer but has',
+                'strict errors that make it unable to be published as a package',
                 'See https://getcomposer.org/doc/04-schema.md for details on the schema',
-                'description : The property description is required',
+                '# Publish errors',
+                '- description : The property description is required',
               ]),
             ],
           ],
           'stdError' => [
-            'contains' => [
-              'stdError contains' => " Running composer validate in $baseDir/$fixturesDir/extensions/dummy_m2\n",
+            'stringContainsString' => [
+              'stdError stringContainsString' => " Running composer validate in $baseDir/$fixturesDir/repository/drupal/dummy_m2\n",
             ],
           ],
         ],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\marvin_incubator\Robo;
 
 use Drupal\marvin_incubator\Robo\Task\GitHooksDeployTask;

@@ -11,10 +11,7 @@ class BuildCommands extends CommandsBase {
 
   use CommandsBaseTrait;
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $customEventNamePrefix = 'marvin:build';
+  protected string $customEventNamePrefix = 'marvin:build';
 
   /**
    * Builds the code base up from the source code.

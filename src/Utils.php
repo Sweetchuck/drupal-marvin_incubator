@@ -14,7 +14,7 @@ class Utils implements UtilsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * @todo Make this method static, or the other ones non-static.
    */
   public function collectManagedDrupalExtensions(
     string $drupalRootDir,
@@ -30,7 +30,10 @@ class Utils implements UtilsInterface {
           && MarvinUtils::isDrupalPackage($composerLock[$lockKey][$packageName])
           && !StaticStringy::startsWith($packagePath, $drupalRootDir)
         ) {
-          $managedExtensions[$packageName] = $packagePath;
+          $managedExtensions[$packageName] = [
+            'name' => $packageName,
+            'path' => $packagePath,
+          ];
         }
       }
     }
@@ -83,6 +86,12 @@ class Utils implements UtilsInterface {
     array $dbVariant
   ): string {
     return "$projectRootDir/phpunit.{$dbVariant['id']}.{$phpVariant['version']['majorMinor']}.xml";
+  }
+
+  public static function boolToString(bool $value, bool $uppercase = TRUE): string {
+    $string = var_export($value, TRUE);
+
+    return $uppercase ? mb_strtoupper($string) : $string;
   }
 
 }

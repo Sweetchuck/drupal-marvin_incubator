@@ -6,20 +6,11 @@ namespace Drupal\Tests\marvin_incubator\Helper;
 
 class DrushCommandListResult {
 
-  /**
-   * @var \DOMDocument
-   */
-  public $doc;
+  public ?\DOMDocument $doc = NULL;
 
-  /**
-   * @var \DOMXPath
-   */
-  public $xpath;
+  public ?\DOMXPath $xpath = NULL;
 
-  /**
-   * @var string
-   */
-  protected $result = '';
+  protected string $result = '';
 
   public function getResult(): string {
     return $this->result;

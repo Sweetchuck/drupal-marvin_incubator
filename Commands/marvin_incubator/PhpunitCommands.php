@@ -18,14 +18,8 @@ class PhpunitCommands extends PhpunitCommandsBase {
 
   use CommandsBaseTrait;
 
-  /**
-   * @var \Symfony\Component\Filesystem\Filesystem
-   */
-  protected $fs;
+  protected Filesystem $fs;
 
-  /**
-   * {@inheritdoc}
-   */
   public function __construct() {
     parent::__construct();
 

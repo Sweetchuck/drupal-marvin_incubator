@@ -3,10 +3,9 @@
   <php>
     <ini name="error_reporting" value="32767"/>
     <ini name="memory_limit" value="-1"/>
-    <env name="PHPUNIT_RESULT_CACHE" value="sites/all/temporary/.phpunit.0703.result.cache"/>
+    <env name="PHPUNIT_RESULT_CACHE" value="sites/all/temporary/.phpunit.0704.result.cache"/>
     <env name="SIMPLETEST_BASE_URL" value="http://example.com:8080"/>
     <env name="SIMPLETEST_DB" value="sqlite://../sites/foo/default__default.sqlite"/>
-    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendor"/>
     <env name="MINK_DRIVER_CLASS" value="Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver"/>
     <env name="MINK_DRIVER_ARGS" value="[&quot;chrome&quot;,null,&quot;http://localhost:4444/wd/hub&quot;]"/>
     <env name="MINK_DRIVER_ARGS_WEBDRIVER" value="[&quot;chromium&quot;,{&quot;browserName&quot;:&quot;chrome&quot;,&quot;chromeOptions&quot;:{&quot;args&quot;:[&quot;--disable-gpu&quot;,&quot;--headless&quot;]}},&quot;http://localhost:9222&quot;]"/>
@@ -25,28 +24,28 @@
       <file>drupal_root/core/tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
     </testsuite>
     <testsuite name="b-unit">
-      <directory>a/b/tests/src/Unit</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/tests/src/Unit</directory>
     </testsuite>
     <testsuite name="b-kernel">
-      <directory>a/b/tests/src/Kernel</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/tests/src/Kernel</directory>
     </testsuite>
     <testsuite name="b-functional">
-      <directory>a/b/tests/src/Functional</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/tests/src/Functional</directory>
     </testsuite>
     <testsuite name="b-functional-javascript">
-      <directory>a/b/tests/src/FunctionalJavascript</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/tests/src/FunctionalJavascript</directory>
     </testsuite>
     <testsuite name="c-unit">
-      <directory>a/c/tests/src/Unit</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/tests/src/Unit</directory>
     </testsuite>
     <testsuite name="c-kernel">
-      <directory>a/c/tests/src/Kernel</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/tests/src/Kernel</directory>
     </testsuite>
     <testsuite name="c-functional">
-      <directory>a/c/tests/src/Functional</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/tests/src/Functional</directory>
     </testsuite>
     <testsuite name="c-functional-javascript">
-      <directory>a/c/tests/src/FunctionalJavascript</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/tests/src/FunctionalJavascript</directory>
     </testsuite>
   </testsuites>
   <listeners>
@@ -59,12 +58,12 @@
   </logging>
   <coverage processUncoveredFiles="true">
     <include>
-      <directory>a/b/Commands</directory>
-      <directory>a/b/Generators</directory>
-      <directory>a/b/src</directory>
-      <directory>a/c/Commands</directory>
-      <directory>a/c/Generators</directory>
-      <directory>a/c/src</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/Commands</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/Generators</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/b/src</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/Commands</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/Generators</directory>
+      <directory>/absolute/path/to/drupal_root/modules/contrib/c/src</directory>
     </include>
     <report>
       <html outputDirectory="logs/human/coverage/html"/>

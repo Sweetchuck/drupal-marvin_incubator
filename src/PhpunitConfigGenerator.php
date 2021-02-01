@@ -7,34 +7,30 @@ namespace Drupal\marvin_incubator;
 use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\marvin\Utils as MarvinUtils;
 use Stringy\StaticStringy;
-use const JSON_UNESCAPED_SLASHES;
 
+/**
+ * @todo Interface.
+ */
 class PhpunitConfigGenerator {
 
-  /**
-   * @var int
-   */
-  protected $jsonEncodeFlagsForXmlAttributes = JSON_UNESCAPED_SLASHES;
+  protected int $jsonEncodeFlagsForXmlAttributes = \JSON_UNESCAPED_SLASHES;
 
-  /**
-   * @var string
-   */
-  protected $drupalRoot = '.';
+  protected string $drupalRoot = '.';
 
   public function getDrupalRoot(): string {
     return $this->drupalRoot;
   }
 
+  /**
+   * @return $this
+   */
   public function setDrupalRoot(string $drupalRoot) {
     $this->drupalRoot = $drupalRoot;
 
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $url = '';
+  protected string $url = '';
 
   public function getUrl(): string {
     return $this->url;
@@ -46,10 +42,7 @@ class PhpunitConfigGenerator {
     return $this;
   }
 
-  /**
-   * @var array
-   */
-  protected $dbConnection = [
+  protected array $dbConnection = [
     'driver' => 'mysql',
     'username' => 'root',
     'password' => 'mysql',
@@ -72,22 +65,27 @@ class PhpunitConfigGenerator {
   /**
    * @var string[]
    */
-  protected $packagePaths = [];
+  protected array $packagePaths = [];
 
+  /**
+   * @return string[]
+   */
   public function getPackagePaths(): array {
     return $this->packagePaths;
   }
 
+  /**
+   * @param string[] $value
+   *
+   * @return $this
+   */
   public function setPackagePaths(array $value) {
     $this->packagePaths = $value;
 
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $phpVersion = '0703';
+  protected string $phpVersion = '0703';
 
   public function getPhpVersion(): string {
     return $this->phpVersion;
@@ -102,10 +100,7 @@ class PhpunitConfigGenerator {
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $reportsDir = 'reports';
+  protected string $reportsDir = 'reports';
 
   public function getReportsDir(): string {
     return $this->reportsDir;
@@ -117,10 +112,7 @@ class PhpunitConfigGenerator {
     return $this;
   }
 
-  /**
-   * @var \DOMDocument
-   */
-  protected $doc;
+  protected \DOMDocument $doc;
 
   public function generate(): string {
     $this
@@ -233,12 +225,12 @@ class PhpunitConfigGenerator {
       ));
     }
 
-    foreach ($this->getPackagePaths() as $packagePath) {
-      $packageName = basename($packagePath);
+    foreach ($this->getPackagePaths() as $packageName => $packagePath) {
+      $packageNameProject = preg_replace('@.+?/@', '', $packageName);
       foreach ($tsNames as $tsName => $tsNamespace) {
         $testSuitElement = $this->doc->createElement('testsuite');
         $element->appendChild($testSuitElement);
-        $testSuitElement->setAttribute('name', "$packageName-$tsName");
+        $testSuitElement->setAttribute('name', "$packageNameProject-$tsName");
         $testSuitElement->appendChild($this->doc->createElement(
           'directory',
           "$packagePath/tests/src/$tsNamespace",
@@ -330,9 +322,10 @@ class PhpunitConfigGenerator {
       'PHPUNIT_RESULT_CACHE' => "sites/all/temporary/.phpunit.$phpVersion.result.cache",
       'SIMPLETEST_BASE_URL' => $this->getUrl(),
       'SIMPLETEST_DB' => MarvinUtils::dbUrl($this->getDbConnection()),
-      'SYMFONY_DEPRECATIONS_HELPER' => 'weak_vendor',
+      // 'SYMFONY_DEPRECATIONS_HELPER' => 'weak_vendor',
       'MINK_DRIVER_CLASS' => DrupalSelenium2Driver::class,
       'MINK_DRIVER_ARGS' => json_encode($this->getMinkDriverArgs(), $this->jsonEncodeFlagsForXmlAttributes),
+      // @todo Maybe MINK_DRIVER_ARGS_WEBDRIVER is not needed.
       'MINK_DRIVER_ARGS_WEBDRIVER' => json_encode($this->getMinkDriverArgsWebDriver(), $this->jsonEncodeFlagsForXmlAttributes),
     ];
   }

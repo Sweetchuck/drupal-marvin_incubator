@@ -13,24 +13,15 @@ class PhpunitConfigGeneratorTask extends BaseTask {
   /**
    * {@inheritdoc}
    */
-  protected $taskName = 'Marvin - Generate PHPUnit XML';
+  protected string $taskName = 'Marvin - Generate PHPUnit XML';
 
-  /**
-   * @var \Drupal\marvin\WriterWrapper
-   */
-  protected $outputDestinationWrapper;
+  protected WriterWrapper $outputDestinationWrapper;
 
-  /**
-   * @param null|\Drupal\marvin\WriterWrapper $outputDestinationWrapper
-   */
-  public function __construct($outputDestinationWrapper = NULL) {
+  public function __construct(?WriterWrapper $outputDestinationWrapper = NULL) {
     $this->outputDestinationWrapper = $outputDestinationWrapper ?: new WriterWrapper();
   }
 
-  /**
-   * @var string
-   */
-  protected $drupalRoot = '';
+  protected string $drupalRoot = '';
 
   public function getDrupalRoot(): string {
     return $this->drupalRoot;
@@ -42,10 +33,7 @@ class PhpunitConfigGeneratorTask extends BaseTask {
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $url = '';
+  protected string $url = '';
 
   public function getUrl(): string {
     return $this->url;
@@ -57,10 +45,7 @@ class PhpunitConfigGeneratorTask extends BaseTask {
     return $this;
   }
 
-  /**
-   * @var array
-   */
-  protected $dbConnection = [];
+  protected array $dbConnection = [];
 
   public function getDbConnection(): array {
     return $this->dbConnection;
@@ -75,22 +60,27 @@ class PhpunitConfigGeneratorTask extends BaseTask {
   /**
    * @var string[]
    */
-  protected $packagePaths = [];
+  protected array $packagePaths = [];
 
+  /**
+   * @return string[]
+   */
   public function getPackagePaths(): array {
     return $this->packagePaths;
   }
 
+  /**
+   * @param string[] $value
+   *
+   * @return $this
+   */
   public function setPackagePaths(array $value) {
     $this->packagePaths = $value;
 
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $phpVersion = '0701';
+  protected string $phpVersion = '0704';
 
   public function getPhpVersion(): string {
     return $this->phpVersion;
@@ -102,10 +92,7 @@ class PhpunitConfigGeneratorTask extends BaseTask {
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $reportsDir = 'reports';
+  protected string $reportsDir = 'reports';
 
   public function getReportsDir(): string {
     return $this->reportsDir;

@@ -4,15 +4,16 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator\Robo\Task;
 
+use Consolidation\AnnotatedCommand\Output\OutputAwareInterface;
 use Drupal\marvin\Robo\Task\BaseTask;
 use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
+use Robo\Collection\CollectionBuilder;
 use Robo\Common\BuilderAwareTrait;
 use Robo\Common\IO;
 use Robo\Contract\BuilderAwareInterface;
-use Robo\Contract\OutputAwareInterface;
-use Robo\Task\File\loadTasks as FileTaskLoader;
-use Robo\Task\Filesystem\loadTasks as FilesystemTaskLoader;
+use Robo\Task\File\Tasks as FileTaskLoader;
+use Robo\Task\Filesystem\Tasks as FilesystemTaskLoader;
 
 class SiteDeleteTask extends BaseTask implements
     BuilderAwareInterface,
@@ -25,10 +26,7 @@ class SiteDeleteTask extends BaseTask implements
   use FilesystemTaskLoader;
   use FileTaskLoader;
 
-  /**
-   * @var string
-   */
-  protected $drupalRoot = '.';
+  protected string $drupalRoot = '.';
 
   public function getDrupalRoot(): string {
     return $this->drupalRoot;
@@ -43,10 +41,7 @@ class SiteDeleteTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $siteName = '';
+  protected string $siteName = '';
 
   public function getSiteName(): string {
     return $this->siteName;
@@ -61,10 +56,7 @@ class SiteDeleteTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @var \Robo\Collection\CollectionBuilder
-   */
-  protected $cb;
+  protected CollectionBuilder $cb;
 
   public function setOptions(array $options) {
     parent::setOptions($options);

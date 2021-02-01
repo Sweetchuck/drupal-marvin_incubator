@@ -7,6 +7,7 @@ namespace Drupal\Tests\marvin_incubator\Integration;
 /**
  * @group marvin_incubator
  * @group drush-command
+ * @group marvin.artifact
  */
 class MarvinArtifactTypesTest extends CommandsTestCase {
 
@@ -41,7 +42,7 @@ class MarvinArtifactTypesTest extends CommandsTestCase {
             'same' => [
               'stdOutput same' => implode(PHP_EOL, [
                 'ID      Label   Description    ',
-                ' vanilla Vanilla Not customized',
+                'vanilla Vanilla Not customized',
               ]),
             ],
           ],

@@ -19,7 +19,6 @@ trait SiteGenerateSitesPhpTrait {
   abstract protected function taskMarvinGenerateSitesPhp(array $options = []);
 
   protected function getTaskMarvinGenerateSitesPhp(array $dbVariants): TaskInterface {
-    /** @var \Drush\Boot\BootstrapManager $bootstrapManager */
     $bootstrapManager = $this->getContainer()->get('bootstrap.manager');
     $drupalRootAbs = $bootstrapManager->getRoot();
 

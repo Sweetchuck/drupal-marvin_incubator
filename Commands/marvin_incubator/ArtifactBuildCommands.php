@@ -13,16 +13,10 @@ class ArtifactBuildCommands extends ArtifactBuildCommandsBase {
 
   use CommandsBaseTrait;
 
-  /**
-   * @inheritdoc
-   */
   protected function isApplicable(string $projectType): bool {
     return TRUE;
   }
 
-  /**
-   * @inheritdoc
-   */
   protected function getTaskCollectChildExtensionDirs() {
     return function (RoboStateData $data): int {
       $data['customExtensionDirs'] = $this->getManagedDrupalExtensions();

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\marvin_incubator\Robo\Task;
 
 use Drupal\marvin\ComposerInfo;
 use Drupal\marvin\Robo\Task\BaseTask as MarvinBaseTask;
+use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Webmozart\PathUtil\Path;
 
 class ManagedDrupalExtensionListTask extends MarvinBaseTask {
@@ -11,12 +14,15 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
   /**
    * {@inheritdoc}
    */
-  protected $taskName = 'Marvin - Managed Drupal extension list';
+  protected string $taskName = 'Marvin - Managed Drupal extension list';
 
-  /**
-   * @var string
-   */
-  protected $workingDirectory = '.';
+  protected MarvinIncubatorUtils $utils;
+
+  public function __construct(MarvinIncubatorUtils $utils) {
+    $this->utils = $utils;
+  }
+
+  protected string $workingDirectory = '.';
 
   public function getWorkingDirectory(): string {
     return $this->workingDirectory;
@@ -31,10 +37,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $composerJsonFileName = 'composer.json';
+  protected string $composerJsonFileName = 'composer.json';
 
   public function getComposerJsonFileName(): string {
     return $this->composerJsonFileName;
@@ -49,10 +52,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
-  /**
-   * @var array
-   */
-  protected $packagePaths = [];
+  protected array $packagePaths = [];
 
   public function getPackagePaths(): array {
     return $this->packagePaths;
@@ -67,10 +67,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
-  /**
-   * @var array
-   */
-  protected $ignoredPackages = [];
+  protected array $ignoredPackages = [];
 
   public function getIgnoredPackages(): array {
     return $this->ignoredPackages;
@@ -110,10 +107,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
-  /**
-   * @var \Drupal\marvin\ComposerInfo
-   */
-  protected $composerInfo;
+  protected ComposerInfo $composerInfo;
 
   /**
    * {@inheritdoc}
@@ -125,8 +119,8 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     $drupalCoreDir = $this->composerInfo->getDrupalExtensionInstallDir('core');
     $drupalRootRelative = Path::join($workingDirectory, $drupalCoreDir, '..');
 
-    $utils = $this->getContainer()->get('marvin_incubator.utils');
-    $managedDrupalExtensions = $utils->collectManagedDrupalExtensions(
+    // @todo The getcwd() should not be used here.
+    $managedDrupalExtensions = $this->utils->collectManagedDrupalExtensions(
       Path::makeAbsolute($drupalRootRelative, getcwd()),
       $this->composerInfo->getLock(),
       $this->getPackagePaths()
@@ -134,7 +128,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
 
     $this->assets['managedDrupalExtensions'] = array_diff_key(
       $managedDrupalExtensions,
-      array_flip($this->getIgnoredPackages())
+      array_flip($this->getIgnoredPackages()),
     );
 
     return $this;
