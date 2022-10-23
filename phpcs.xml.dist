@@ -5,7 +5,7 @@
   name="Custom">
 
   <file>./Commands/</file>
-  <file>./Generators/</file>
+  <!--<file>./Generators/</file>-->
   <file>./src/</file>
   <file>./tests/src/</file>
 

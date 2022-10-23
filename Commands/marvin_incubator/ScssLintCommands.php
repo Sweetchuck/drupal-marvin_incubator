@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Drush\Commands\marvin_incubator;
 
 use Drupal\marvin_incubator\CommandsBaseTrait;
+use Drush\Attributes as CLI;
+use Drush\Boot\DrupalBootLevels;
 use Drush\Commands\marvin\LintCommandsBase;
 use Robo\Collection\CollectionBuilder;
 use Robo\State\Data as RoboStateData;
@@ -42,11 +44,18 @@ class ScssLintCommands extends LintCommandsBase {
   }
 
   /**
+   * Runs lint on *.scss files.
+   *
    * @command marvin:lint:scss
+   *
    * @bootstrap none
    *
    * @marvinArgPackages packages
+   *
+   * @todo ESLint integration.
    */
+  #[CLI\Command(name: 'marvin:lint:scss')]
+  #[CLI\Bootstrap(level: DrupalBootLevels::NONE)]
   public function lintScss(array $packages): CollectionBuilder {
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();
     $cb = $this->collectionBuilder();

@@ -10,7 +10,7 @@ marvin:
   #
   # @var string
   ##
-  vendorLabel: 'D9'
+  vendorLabel: 'D10'
 
   ##
   # Human readable version of the composer.json#/name
@@ -32,7 +32,7 @@ marvin:
   ##
   # @var string
   ##
-  urlPattern: '{{ dbId }}.{{ siteName }}.d8.localhost'
+  urlPattern: 'https://{{ phpId }}-dev-{{ dbId }}-{{ siteName }}-{{ projectName }}.{{ projectVendor }}.localhost'
 
   ##
   # If TRUE then the managed Drupal extensions will be detected automatically.
@@ -71,7 +71,20 @@ marvin:
       #     excludePattern:
       #       foo: true
 
-  git-hook:
+  database:
+    variant:
+      my0800:
+        connection:
+          driver: 'mysql'
+          namespace: 'Drupal\Core\Database\Driver\mysql'
+          username: '${env.USER}'
+          password: ''
+          host: '127.0.0.1'
+          port: 3306
+          collation: 'utf8mb4_general_ci'
+          database: '{{ projectVendorSnake }}__{{ projectNameSnake }}__{{ siteSnake }}'
+
+  gitHook:
     commit-msg:
       rules:
         subjectLine:

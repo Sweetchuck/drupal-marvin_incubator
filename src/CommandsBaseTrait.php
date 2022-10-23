@@ -8,9 +8,6 @@ use Drupal\marvin_incubator\Robo\ManagedDrupalExtensionTaskLoader;
 use Robo\Collection\CollectionBuilder;
 use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
 
-/**
- * @todo Move this file into /Commands/marvin_incubator
- */
 trait CommandsBaseTrait {
 
   use ManagedDrupalExtensionTaskLoader;
@@ -19,6 +16,9 @@ trait CommandsBaseTrait {
 
   protected ?array $managedDrupalExtensions = NULL;
 
+  /**
+   * @phpstan-return array<string, marvin-incubator-managed-drupal-extension>
+   */
   protected function getManagedDrupalExtensions(string $workingDirectory = ''): array {
     if ($this->managedDrupalExtensions === NULL) {
       $result = $this

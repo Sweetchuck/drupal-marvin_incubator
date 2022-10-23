@@ -7,14 +7,14 @@ namespace Drupal\Tests\marvin_incubator\Helper;
 use Composer\Script\Event;
 use Psr\Log\LoggerInterface;
 use Sweetchuck\Utils\Filesystem as FilesystemUtils;
+use Sweetchuck\Utils\Filter\ArrayFilterFileSystemExists;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
-use Sweetchuck\Utils\Filter\ArrayFilterFileSystemExists;
-use Webmozart\PathUtil\Path;
 
 class ComposerScripts {
 
@@ -159,7 +159,7 @@ class ComposerScripts {
    */
   protected $processCallbackWrapper;
 
-  protected string $projectRoot = 'tests/fixtures/repository/d9/project_01';
+  protected string $projectRoot = 'tests/fixtures/repository/d10/project_01';
 
   protected Filesystem $fs;
 

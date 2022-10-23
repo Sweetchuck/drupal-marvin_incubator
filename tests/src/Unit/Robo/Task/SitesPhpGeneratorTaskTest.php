@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\marvin\Unit_incubator\Robo\Task;
+namespace Drupal\Tests\marvin_incubator\Unit\Robo\Task;
 
 use Drupal\marvin_incubator\Robo\Task\SitesPhpGeneratorTask;
 use org\bovigo\vfs\vfsStream;

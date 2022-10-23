@@ -63,24 +63,6 @@ services:
       -
         name: 'drush.command'
 
-  marvin_incubator.phpcs.commands:
-    class: 'Drush\Commands\marvin_incubator\PhpcsCommands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.php_lint.commands:
-    class: 'Drush\Commands\marvin_incubator\PhpLintCommands'
-    tags:
-      -
-        name: 'drush.command'
-
-  marvin_incubator.phpunit.commands:
-    class: 'Drush\Commands\marvin_incubator\PhpunitCommands'
-    tags:
-      -
-        name: 'drush.command'
-
   marvin_incubator.scss_lint.commands:
     class: 'Drush\Commands\marvin_incubator\ScssLintCommands'
     tags:

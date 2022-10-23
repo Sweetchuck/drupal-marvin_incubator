@@ -7,7 +7,7 @@ namespace Drupal\marvin_incubator\Robo\Task;
 use Drupal\marvin\ComposerInfo;
 use Drupal\marvin\Robo\Task\BaseTask as MarvinBaseTask;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ManagedDrupalExtensionListTask extends MarvinBaseTask {
 
@@ -28,10 +28,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this->workingDirectory;
   }
 
-  /**
-   * @return $this
-   */
-  public function setWorkingDirectory(string $value) {
+  public function setWorkingDirectory(string $value): static {
     $this->workingDirectory = $value;
 
     return $this;
@@ -43,10 +40,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this->composerJsonFileName;
   }
 
-  /**
-   * @return $this
-   */
-  public function setComposerJsonFileName(string $value) {
+  public function setComposerJsonFileName(string $value): static {
     $this->composerJsonFileName = $value;
 
     return $this;
@@ -58,10 +52,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this->packagePaths;
   }
 
-  /**
-   * @return $this
-   */
-  public function setPackagePaths(array $value) {
+  public function setPackagePaths(array $value): static {
     $this->packagePaths = $value;
 
     return $this;
@@ -73,19 +64,13 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this->ignoredPackages;
   }
 
-  /**
-   * @return $this
-   */
-  public function setIgnoredPackages(array $value) {
+  public function setIgnoredPackages(array $value): static {
     $this->ignoredPackages = $value;
 
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  public function setOptions(array $options) {
+  public function setOptions(array $options): static {
     parent::setOptions($options);
 
     if (array_key_exists('workingDirectory', $options)) {
@@ -109,10 +94,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
 
   protected ComposerInfo $composerInfo;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function runAction() {
+  public function runAction(): static {
     $workingDirectory = $this->getWorkingDirectory();
     $this->initComposerInfo();
 
@@ -134,10 +116,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function initComposerInfo() {
+  protected function initComposerInfo(): static {
     $this->composerInfo = ComposerInfo::create(
       $this->getWorkingDirectory(),
       $this->getComposerJsonFileName()

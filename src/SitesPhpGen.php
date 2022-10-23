@@ -4,7 +4,10 @@ declare(strict_types = 1);
 
 namespace Drupal\marvin_incubator;
 
-class SitesPhpGenerator {
+/**
+ * @see https://github.com/drush-ops/drush/issues/5662
+ */
+class SitesPhpGen {
 
   /**
    * @var string[]
@@ -17,10 +20,8 @@ class SitesPhpGenerator {
 
   /**
    * @param string[] $siteNames
-   *
-   * @return $this
    */
-  public function setSiteNames(array $siteNames) {
+  public function setSiteNames(array $siteNames): static {
     $this->siteNames = $siteNames;
 
     return $this;
@@ -41,14 +42,13 @@ class SitesPhpGenerator {
   /**
    * @param string[] $ids
    */
-  public function setDatabaseVariantIds(array $ids) {
+  public function setDatabaseVariantIds(array $ids): static {
     $this->databaseVariantIds = $ids;
+
+    return $this;
   }
 
-  /**
-   * @var string
-   */
-  protected $siteDirPatternDefault = '{{ siteName }}.{{ dbId }}';
+  protected string $siteDirPatternDefault = '{{ siteName }}.{{ dbId }}';
 
   protected string $siteDirPattern = '';
 
@@ -56,10 +56,7 @@ class SitesPhpGenerator {
     return $this->siteDirPattern;
   }
 
-  /**
-   * @return $this
-   */
-  public function setSiteDirPattern(string $pattern) {
+  public function setSiteDirPattern(string $pattern): static {
     $this->siteDirPattern = $pattern;
 
     return $this;
@@ -73,8 +70,10 @@ class SitesPhpGenerator {
     return $this->urlPattern;
   }
 
-  public function setUrlPattern(string $value) {
+  public function setUrlPattern(string $value): static {
     $this->urlPattern = $value;
+
+    return $this;
   }
 
   public function generate(): string {

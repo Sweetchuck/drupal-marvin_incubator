@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\marvin_incubator;
 
 use Drupal\marvin\Utils as MarvinUtils;
-use Stringy\StaticStringy;
+use Symfony\Component\String\UnicodeString;
 
 class Utils implements UtilsInterface {
 
@@ -21,14 +21,16 @@ class Utils implements UtilsInterface {
     array $composerLock,
     array $packagePaths
   ): array {
-    $drupalRootDir = StaticStringy::ensureRight($drupalRootDir, DIRECTORY_SEPARATOR);
+    $drupalRootDir = (new UnicodeString($drupalRootDir))
+      ->ensureEnd(DIRECTORY_SEPARATOR)
+      ->toString();
     $managedExtensions = [];
     foreach ($packagePaths as $packageName => $packagePath) {
       foreach (['packages', 'packages-dev'] as $lockKey) {
         if (file_exists("$packagePath/.git")
           && isset($composerLock[$lockKey][$packageName])
           && MarvinUtils::isDrupalPackage($composerLock[$lockKey][$packageName])
-          && !StaticStringy::startsWith($packagePath, $drupalRootDir)
+          && !str_starts_with($packagePath, $drupalRootDir)
         ) {
           $managedExtensions[$packageName] = [
             'name' => $packageName,
@@ -63,6 +65,8 @@ class Utils implements UtilsInterface {
       $sites[] = $dir->getPathname();
     }
 
+    sort($sites, \SORT_NATURAL);
+
     return $sites;
   }
 
@@ -78,14 +82,6 @@ class Utils implements UtilsInterface {
     }
 
     return array_unique($siteNames);
-  }
-
-  public static function getPhpUnitConfigFileName(
-    string $projectRootDir,
-    array $phpVariant,
-    array $dbVariant
-  ): string {
-    return "$projectRootDir/phpunit.{$dbVariant['id']}.{$phpVariant['version']['majorMinor']}.xml";
   }
 
   public static function boolToString(bool $value, bool $uppercase = TRUE): string {

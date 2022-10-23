@@ -43,10 +43,13 @@ class GitHookHandler {
     $this->stdError = $stdError ?? STDERR;
   }
 
-  /**
-   * @return $this
-   */
-  public function init(array $cliArgs, string $packagePath, string $rootProjectDir, string $composerExecutable, string $marvinIncubatorDir) {
+  public function init(
+    array $cliArgs,
+    string $packagePath,
+    string $rootProjectDir,
+    string $composerExecutable,
+    string $marvinIncubatorDir,
+  ): static {
     $this->cliArgs = $cliArgs;
     $this->packagePath = $packagePath;
     $this->rootProjectDir = $rootProjectDir;
@@ -60,37 +63,25 @@ class GitHookHandler {
       ->initBinDir();
   }
 
-  /**
-   * @return $this
-   */
-  protected function initGitHook() {
+  protected function initGitHook(): static {
     $this->gitHook = basename($this->cliArgs[0]);
 
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function initDrushCommand() {
+  protected function initDrushCommand(): static {
     $this->drushCommand = "marvin:git-hook:{$this->gitHook}";
 
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function changeDirToRootProject() {
+  protected function changeDirToRootProject(): static {
     chdir($this->rootProjectDir);
 
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function initBinDir() {
+  protected function initBinDir(): static {
     $output = exec(sprintf(
       '%s config bin-dir 2>/dev/null',
       escapeshellcmd($this->composerExecutable)
@@ -101,10 +92,7 @@ class GitHookHandler {
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function initVendorDir() {
+  protected function initVendorDir(): static {
     $output = exec(sprintf(
       '%s config vendor-dir 2>/dev/null',
       escapeshellcmd($this->composerExecutable)
@@ -127,19 +115,13 @@ class GitHookHandler {
       ->getContext();
   }
 
-  /**
-   * @return $this
-   */
-  public function writeHeader() {
+  public function writeHeader(): static {
     $this->logError("BEGIN {$this->gitHook}");
 
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  public function writeFooter() {
+  public function writeFooter(): static {
     $this->logError("END   {$this->gitHook}");
 
     return $this;
@@ -185,19 +167,13 @@ class GitHookHandler {
     ];
   }
 
-  /**
-   * @return $this
-   */
-  protected function logOutput(string $message) {
+  protected function logOutput(string $message): static {
     $this->log($this->stdOutput, $message);
 
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function logError(string $message) {
+  protected function logError(string $message): static {
     $this->log($this->stdError, $message);
 
     return $this;
@@ -206,10 +182,8 @@ class GitHookHandler {
   /**
    * @param resource $output
    * @param string $message
-   *
-   * @return $this
    */
-  protected function log($output, string $message) {
+  protected function log($output, string $message): static {
     fwrite($output, $message . PHP_EOL);
 
     return $this;
@@ -217,8 +191,11 @@ class GitHookHandler {
 
   protected function getLastLine(string $string): string {
     $lines = preg_split('/[\n\r]+/', trim($string));
+    $last = end($lines);
 
-    return end($lines);
+    return $last === FALSE ?
+      ''
+      : $last;
   }
 
 }

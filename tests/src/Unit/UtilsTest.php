@@ -8,7 +8,7 @@ use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drupal\marvin_incubator\Utils;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @covers \Drupal\marvin_incubator\Utils
@@ -213,21 +213,6 @@ class UtilsTest extends TestCase {
         ['version' => ['majorMinor' => '0702']],
       ],
     ];
-  }
-
-  /**
-   * @dataProvider casesGetPhpUnitConfigFileName
-   */
-  public function testGetPhpUnitConfigFileName(
-    string $expected,
-    string $projectRootDir,
-    array $phpVariant,
-    array $dbVariant
-  ): void {
-    static::assertEquals(
-      $expected,
-      Utils::getPhpUnitConfigFileName($projectRootDir, $dbVariant, $phpVariant)
-    );
   }
 
 }

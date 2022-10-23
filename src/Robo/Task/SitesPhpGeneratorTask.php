@@ -6,7 +6,7 @@ namespace Drupal\marvin_incubator\Robo\Task;
 
 use Drupal\marvin\Robo\Task\BaseTask;
 use Drupal\marvin\WriterWrapper;
-use Drupal\marvin_incubator\SitesPhpGenerator;
+use Drupal\marvin_incubator\SitesPhpGen;
 
 class SitesPhpGeneratorTask extends BaseTask {
 
@@ -15,15 +15,15 @@ class SitesPhpGeneratorTask extends BaseTask {
    */
   protected string $taskName = 'Marvin - Generate sites.php';
 
-  protected SitesPhpGenerator $generator;
+  protected SitesPhpGen $generator;
 
   protected WriterWrapper $outputDestinationWrapper;
 
   public function __construct(
-    ?SitesPhpGenerator $generator = NULL,
+    ?SitesPhpGen $generator = NULL,
     ?WriterWrapper $outputDestinationWrapper = NULL
   ) {
-    $this->generator = $generator ?: new SitesPhpGenerator();
+    $this->generator = $generator ?: new SitesPhpGen();
     $this->outputDestinationWrapper = $outputDestinationWrapper ?: new WriterWrapper();
   }
 
@@ -36,32 +36,24 @@ class SitesPhpGeneratorTask extends BaseTask {
 
   /**
    * @param null|string|\Symfony\Component\Console\Output\OutputInterface $destination
-   *
-   * @return $this
    */
-  public function setOutputDestination($destination) {
+  public function setOutputDestination($destination): static {
     $this->outputDestinationWrapper->setDestination($destination);
 
     return $this;
   }
 
-  /**
-   * @return string
-   */
-  public function getOutputDestinationMode() {
+  public function getOutputDestinationMode(): string {
     return $this->outputDestinationWrapper->getDestinationMode();
   }
 
-  public function setOutputDestinationMode($destinationMode) {
+  public function setOutputDestinationMode($destinationMode): static {
     $this->outputDestinationWrapper->setDestinationMode($destinationMode);
 
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setOptions(array $options) {
+  public function setOptions(array $options): static {
     parent::setOptions($options);
 
     if (array_key_exists('outputDestination', $options)) {
@@ -97,10 +89,8 @@ class SitesPhpGeneratorTask extends BaseTask {
 
   /**
    * @param string[] $siteNames
-   *
-   * @return $this
    */
-  public function setSiteNames(array $siteNames) {
+  public function setSiteNames(array $siteNames): static {
     $this->generator->setSiteNames($siteNames);
 
     return $this;
@@ -115,10 +105,8 @@ class SitesPhpGeneratorTask extends BaseTask {
 
   /**
    * @param string[] $ids
-   *
-   * @return $this
    */
-  public function setDatabaseVariantIds(array $ids) {
+  public function setDatabaseVariantIds(array $ids): static {
     $this->generator->setDatabaseVariantIds($ids);
 
     return $this;
@@ -128,10 +116,7 @@ class SitesPhpGeneratorTask extends BaseTask {
     return $this->generator->getSiteDirPattern();
   }
 
-  /**
-   * @return $this
-   */
-  public function setSiteDirPattern(string $pattern) {
+  public function setSiteDirPattern(string $pattern): static {
     $this->generator->setSiteDirPattern($pattern);
 
     return $this;
@@ -141,19 +126,13 @@ class SitesPhpGeneratorTask extends BaseTask {
     return $this->generator->getUrlPattern();
   }
 
-  /**
-   * @return $this
-   */
-  public function setUrlPattern(string $pattern) {
+  public function setUrlPattern(string $pattern): static {
     $this->generator->setUrlPattern($pattern);
 
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function runAction() {
+  protected function runAction(): static {
     $this->assets['sitesPhp'] = $this->generator->generate();
 
     $this->outputDestinationWrapper

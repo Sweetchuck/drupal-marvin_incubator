@@ -6,8 +6,8 @@ namespace Drupal\Tests\marvin_incubator\Integration;
 
 use Drush\TestTraits\DrushTestTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Process;
-use Webmozart\PathUtil\Path;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 class CommandsTestCase extends ExistingSiteBase {
@@ -164,7 +164,7 @@ class CommandsTestCase extends ExistingSiteBase {
       $this->getMarvinIncubatorRootDir(),
       static::$fixturesDir,
       'repository',
-      'd9',
+      'd10',
       static::$projectName,
     );
   }

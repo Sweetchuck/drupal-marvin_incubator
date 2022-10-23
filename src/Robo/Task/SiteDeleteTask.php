@@ -15,10 +15,13 @@ use Robo\Contract\BuilderAwareInterface;
 use Robo\Task\File\Tasks as FileTaskLoader;
 use Robo\Task\Filesystem\Tasks as FilesystemTaskLoader;
 
+/**
+ * @todo Delete only one specific database variant.
+ */
 class SiteDeleteTask extends BaseTask implements
-    BuilderAwareInterface,
-    ContainerAwareInterface,
-    OutputAwareInterface {
+  BuilderAwareInterface,
+  ContainerAwareInterface,
+  OutputAwareInterface {
 
   use BuilderAwareTrait;
   use ContainerAwareTrait;
@@ -32,10 +35,7 @@ class SiteDeleteTask extends BaseTask implements
     return $this->drupalRoot;
   }
 
-  /**
-   * @return $this
-   */
-  public function setDrupalRoot(string $value) {
+  public function setDrupalRoot(string $value): static {
     $this->drupalRoot = $value;
 
     return $this;
@@ -47,10 +47,7 @@ class SiteDeleteTask extends BaseTask implements
     return $this->siteName;
   }
 
-  /**
-   * @return $this
-   */
-  public function setSiteName(string $value) {
+  public function setSiteName(string $value): static {
     $this->siteName = $value;
 
     return $this;
@@ -58,7 +55,7 @@ class SiteDeleteTask extends BaseTask implements
 
   protected CollectionBuilder $cb;
 
-  public function setOptions(array $options) {
+  public function setOptions(array $options): static {
     parent::setOptions($options);
 
     if (array_key_exists('drupalRoot', $options)) {
@@ -72,10 +69,11 @@ class SiteDeleteTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function runAction() {
+  protected function runAction(): static {
+    // @todo Drop resources.
+    // - Database.
+    // - Redis.
+    // - SearchAPI Solr.
     $this->cb = $this->collectionBuilder();
     $this
       ->addTaskDeleteDirectories()
@@ -89,10 +87,7 @@ class SiteDeleteTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function addTaskDeleteDirectories() {
+  protected function addTaskDeleteDirectories(): static {
     $drupalRoot = $this->getDrupalRoot();
 
     $innerSiteDirs = $this->getSiteDirs("$drupalRoot/sites");
@@ -110,10 +105,7 @@ class SiteDeleteTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function addTaskDeleteDrushSiteAliases() {
+  protected function addTaskDeleteDrushSiteAliases(): static {
     $this
       ->cb
       ->addTask($this
@@ -137,7 +129,9 @@ class SiteDeleteTask extends BaseTask implements
     $drupalRoot = $this->getDrupalRoot();
     $siteName = $this->getSiteName();
 
-    return glob("$drupalRoot/../drush/sites/$siteName-*.site.yml");
+    return [
+      "$drupalRoot/../drush/sites/$siteName.site.yml",
+    ];
   }
 
   protected function getSiteDirs(string $parentDir): array {

@@ -6,7 +6,7 @@ namespace Drupal\marvin_incubator\Robo\Task;
 
 use Drupal\marvin\Robo\Task\BaseTask;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class CollectSiteNamesTask extends BaseTask {
 
@@ -21,19 +21,13 @@ class CollectSiteNamesTask extends BaseTask {
     return $this->drupalRoot;
   }
 
-  /**
-   * @return $this
-   */
-  public function setDrupalRoot(string $drupalRoot) {
+  public function setDrupalRoot(string $drupalRoot): static {
     $this->drupalRoot = $drupalRoot;
 
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setOptions(array $options) {
+  public function setOptions(array $options): static {
     parent::setOptions($options);
 
     if (array_key_exists('drupalRoot', $options)) {
@@ -43,10 +37,7 @@ class CollectSiteNamesTask extends BaseTask {
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function runAction() {
+  protected function runAction(): static {
     $sitesDir = Path::join($this->getDrupalRoot(), 'sites');
     $siteDirs = MarvinIncubatorUtils::getSiteDirs($sitesDir);
     $this->assets['siteNames'] = MarvinIncubatorUtils::getSiteNames($siteDirs);

@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\Tests\marvin_incubator\Integration;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Webmozart\PathUtil\Path;
 
 /**
  * @group marvin_incubator
@@ -73,7 +73,7 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
         'marvin:generate:phpunit-config',
         $args,
         [
-          'uri' => "http://$phpVersionName.dev.sqlite.d9.localhost",
+          'uri' => "http://$phpVersionName.dev.sqlite.d10.localhost",
         ] + $options,
         $envVars,
       ],

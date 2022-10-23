@@ -8,10 +8,7 @@ use Drupal\marvin\Robo\Task\BaseTask;
 
 class PackageBuildTask extends BaseTask {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function runAction() {
+  protected function runAction(): static {
     /*
      * Actions to implement:
      * gulp list commands (marvin:build)

@@ -6,17 +6,22 @@ namespace Drush\Commands\marvin_incubator;
 
 use Consolidation\AnnotatedCommand\CommandData;
 use Consolidation\AnnotatedCommand\CommandError;
+use Consolidation\AnnotatedCommand\Hooks\HookManager;
 use Drupal\marvin\DatabaseVariantTrait;
 use Drupal\marvin\PhpVariantTrait;
-use Drush\Commands\marvin\CommandsBase;
 use Drupal\marvin\Utils as MarvinUtils;
 use Drupal\marvin_incubator\CommandsBaseTrait;
+use Drush\Attributes as CLI;
+use Drush\Commands\marvin\CommandsBase;
 
 class BaseValidatorCommands extends CommandsBase {
 
   use CommandsBaseTrait;
   use PhpVariantTrait;
   use DatabaseVariantTrait;
+
+  public const TAG_VALIDATE_MARVIN_REGEXP = 'validate-marvin-regexp';
+  public const TAG_VALIDATE_MARVIN_DATABASE_ID = 'validate-marvin-database-id';
 
   /**
    * @hook validate @marvinArgPackages
@@ -109,7 +114,7 @@ class BaseValidatorCommands extends CommandsBase {
   }
 
   protected function hookValidateMarvinOptionPhpVariantsSingle(CommandData $commandData, string $optionName): ?CommandError {
-    return $this->validateMarvinOptionItemIds(
+    return $this->validateMarvinInputItemIds(
       $commandData,
       $optionName,
       $this->getConfigPhpVariants(),
@@ -122,7 +127,7 @@ class BaseValidatorCommands extends CommandsBase {
    *
    * @todo Error when a disabled database variant is provided.
    */
-  public function hookValidateMarvinDatabaseVariants(CommandData $commandData): ?CommandError {
+  public function hookValidateMarvinOptionDatabaseVariants(CommandData $commandData): ?CommandError {
     $annotationKey = 'marvinOptionDatabaseVariants';
     $annotationData = $commandData->annotationData();
     if (!$annotationData->has($annotationKey)) {
@@ -130,16 +135,110 @@ class BaseValidatorCommands extends CommandsBase {
     }
 
     $commandErrors = [];
-    $optionNames = $this->parseMultiValueAnnotation($annotationKey, $annotationData->get($annotationKey));
-    foreach ($optionNames as $optionName) {
-      $commandErrors[] = $this->hookValidateMarvinOptionDatabaseVariantsSingle($commandData, $optionName);
+    $locators = $this->parseMultiValueAnnotation($annotationKey, $annotationData->get($annotationKey));
+    foreach ($locators as $locator) {
+      $commandErrors[] = $this->hookValidateMarvinOptionDatabaseVariantsSingle($commandData, $locator);
     }
 
     return MarvinUtils::aggregateCommandErrors($commandErrors);
   }
 
+  /**
+   * @todo Move this into \Drush\Commands\marvin\AcHooksCommands.
+   */
+  #[CLI\Hook(type: HookManager::ARGUMENT_VALIDATOR, selector: self::TAG_VALIDATE_MARVIN_REGEXP)]
+  public function onHookValidateMarvinRegexp(CommandData $commandData): ?CommandError {
+    $annotationKey = self::TAG_VALIDATE_MARVIN_REGEXP;
+    $annotationData = $commandData->annotationData();
+    if (!$annotationData->has($annotationKey)) {
+      return NULL;
+    }
+
+    $commandErrors = [];
+    $args = json_decode($annotationData->get($annotationKey), TRUE);
+    foreach ($args['locators'] as $locator) {
+      $commandErrors[] = $this->validateByRegexp($commandData, $locator, $args['pattern']);
+    }
+
+    return MarvinUtils::aggregateCommandErrors($commandErrors);
+  }
+
+  #[CLI\Hook(type: HookManager::ARGUMENT_VALIDATOR, selector: self::TAG_VALIDATE_MARVIN_DATABASE_ID)]
+  public function onHookValidateMarvinDatabaseId(CommandData $commandData): ?CommandError {
+    $annotationKey = self::TAG_VALIDATE_MARVIN_DATABASE_ID;
+    $annotationData = $commandData->annotationData();
+    if (!$annotationData->has($annotationKey)) {
+      return NULL;
+    }
+
+    $commandErrors = [];
+    $args = json_decode($annotationData->get($annotationKey), TRUE);
+    foreach ($args['locators'] as $locator) {
+      $commandErrors[] = $this->validateDatabaseId($commandData, $locator);
+    }
+
+    return MarvinUtils::aggregateCommandErrors($commandErrors);
+  }
+
+  protected function validateByRegexp(
+    CommandData $commandData,
+    string $locator,
+    string $pattern,
+  ): ?CommandError {
+    [$type, $name] = explode(':', $locator);
+    $value = $type === 'argument' ?
+      $commandData->input()->getArgument($name)
+      : $commandData->input()->getOption($name);
+
+    $namedPatterns = $this->getNamedRegexpPatterns();
+    if (array_key_exists($pattern, $namedPatterns)) {
+      $pattern = $namedPatterns[$pattern];
+    }
+
+    return preg_match($pattern, $value) === 1 ?
+      NULL
+      : new CommandError(sprintf(
+        'Value "%s" provided for %s does not match to pattern %s',
+        $value,
+        ($type === 'argument' ? "argument '$name'" : "option --$name"),
+        $pattern,
+      ));
+  }
+
+  protected function getNamedRegexpPatterns(): array {
+    return [
+      'machineNameStrict' => '/^[a-z][a-z0-9]*$/',
+      'machineNameNormal' => '/^[a-z][a-z0-9_]*$/',
+    ];
+  }
+
+  protected function validateDatabaseId(CommandData $commandData, string $locator): ?CommandError {
+    [$type, $name] = explode(':', $locator);
+    $value = $type === 'argument' ?
+      $commandData->input()->getArgument($name)
+      : $commandData->input()->getOption($name);
+
+    $allowedValues = $this->getConfigDatabaseVariants();
+    if (array_key_exists($value, $allowedValues)) {
+      return NULL;
+    }
+
+    $message = $type === 'argument' ?
+      'Value "{{ current }}" provided for argument "{{ name }}" is invalid. Allowed values: {{ allowedValues }}'
+      : 'Value "{{ current }}" provided for option --{{ name }} is invalid. Allowed values: {{ allowedValues }}';
+
+    return new CommandError(strtr(
+      $message,
+      [
+        '{{ current }}' => $value,
+        '{{ name }}' => $name,
+        '{{ allowedValues }}' => implode(', ', array_keys($allowedValues)),
+      ],
+    ));
+  }
+
   protected function hookValidateMarvinOptionDatabaseVariantsSingle(CommandData $commandData, string $optionName): ?CommandError {
-    return $this->validateMarvinOptionItemIds(
+    return $this->validateMarvinInputItemIds(
       $commandData,
       $optionName,
       $this->getConfigDatabaseVariants(),
@@ -147,14 +246,17 @@ class BaseValidatorCommands extends CommandsBase {
     );
   }
 
-  protected function validateMarvinOptionItemIds(
+  protected function validateMarvinInputItemIds(
     CommandData $commandData,
-    string $optionName,
+    string $locator,
     array $validItems,
-    string $errorMessage
+    string $errorMessage,
   ): ?CommandError {
-    $optionValues = $commandData->input()->getOption($optionName);
-    $itemIds = $this->parseOptionValues($optionValues);
+    [$type, $name] = explode(':', $locator);
+    $values = $type === 'argument' ?
+      $commandData->input()->getArgument($name)
+      : $commandData->input()->getOption($name);
+    $itemIds = $this->parseInputValues($values);
 
     $isArray = is_array($itemIds);
     if (!$isArray) {
@@ -181,7 +283,7 @@ class BaseValidatorCommands extends CommandsBase {
         dt(
           $errorMessage,
           [
-            '@optionName' => $optionName,
+            '@name' => $name,
             '@invalidItemIds' => implode(', ', $invalidItemIds),
           ]
         ),
@@ -197,15 +299,15 @@ class BaseValidatorCommands extends CommandsBase {
       $items = reset($items);
     }
 
-    $commandData->input()->setOption($optionName, $items);
+    $commandData->input()->setOption($name, $items);
 
     return NULL;
   }
 
-  protected function parseOptionValues(array $optionValues): array {
+  protected function parseInputValues(array $values): array {
     $items = [];
-    foreach ($optionValues as $optionValue) {
-      $items = array_merge($items, $this->explodeCommaSeparatedList($optionValue));
+    foreach ($values as $value) {
+      $items = array_merge($items, $this->explodeCommaSeparatedList($value));
     }
 
     return array_unique($items);
@@ -218,7 +320,7 @@ class BaseValidatorCommands extends CommandsBase {
   protected function explodeCommaSeparatedList(string $items): array {
     return array_filter(
       preg_split('/\s*,\s*/', trim($items)),
-      'mb_strlen'
+      'mb_strlen',
     );
   }
 

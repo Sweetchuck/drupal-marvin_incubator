@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\marvin_incubator\Unit;
 
-use Drupal\marvin_incubator\SitesPhpGenerator;
+use Drupal\marvin_incubator\SitesPhpGen;
 use PHPUnit\Framework\TestCase;
 
 class SitesPhpGeneratorTest extends TestCase {
@@ -126,7 +126,7 @@ class SitesPhpGeneratorTest extends TestCase {
    * @dataProvider casesGenerate
    */
   public function testGenerate(string $expected, array $options) {
-    $generator = new SitesPhpGenerator();
+    $generator = new SitesPhpGen();
     if (array_key_exists('siteNames', $options)) {
       $generator->setSiteNames($options['siteNames']);
     }

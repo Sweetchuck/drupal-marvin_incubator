@@ -17,9 +17,9 @@ use Robo\Task\Filesystem\Tasks as FilesystemTaskLoader;
 use Symfony\Component\Yaml\Yaml;
 
 class SiteCreateTask extends BaseTask implements
-    BuilderAwareInterface,
-    ContainerAwareInterface,
-    OutputAwareInterface {
+  BuilderAwareInterface,
+  ContainerAwareInterface,
+  OutputAwareInterface {
 
   use BuilderAwareTrait;
   use ContainerAwareTrait;
@@ -33,10 +33,7 @@ class SiteCreateTask extends BaseTask implements
     return $this->drupalRoot;
   }
 
-  /**
-   * @return $this
-   */
-  public function setDrupalRoot(string $value) {
+  public function setDrupalRoot(string $value): static {
     $this->drupalRoot = $value;
 
     return $this;
@@ -48,10 +45,7 @@ class SiteCreateTask extends BaseTask implements
     return $this->siteName;
   }
 
-  /**
-   * @return $this
-   */
-  public function setSiteName(string $value) {
+  public function setSiteName(string $value): static {
     $this->siteName = $value;
 
     return $this;
@@ -63,10 +57,7 @@ class SiteCreateTask extends BaseTask implements
     return $this->dbVariants;
   }
 
-  /**
-   * @return $this
-   */
-  public function setDbVariants(array $value) {
+  public function setDbVariants(array $value): static {
     $this->dbVariants = $value;
 
     return $this;
@@ -78,25 +69,19 @@ class SiteCreateTask extends BaseTask implements
     return $this->phpVariants;
   }
 
-  /**
-   * @return $this
-   */
-  public function setPhpVariants(array $value) {
+  public function setPhpVariants(array $value): static {
     $this->phpVariants = $value;
 
     return $this;
   }
 
-  protected string $uriPattern = 'http://{{ phpId }}.dev.{{ dbId }}.{{ siteName }}.marvin_incubator.d8.localhost:1080';
+  protected string $uriPattern = 'http://{{ phpId }}.dev.{{ dbId }}.{{ siteName }}.marvin_incubator.d09.localhost:1080';
 
   public function getUriPattern(): string {
     return $this->uriPattern;
   }
 
-  /**
-   * @return $this
-   */
-  public function setUriPattern(string $uriPattern) {
+  public function setUriPattern(string $uriPattern): static {
     $this->uriPattern = $uriPattern;
 
     return $this;
@@ -108,10 +93,7 @@ class SiteCreateTask extends BaseTask implements
     return $this->siteDirPattern;
   }
 
-  /**
-   * @return $this
-   */
-  public function setSiteDirPattern(string $siteDirPattern) {
+  public function setSiteDirPattern(string $siteDirPattern): static {
     $this->siteDirPattern = $siteDirPattern;
 
     return $this;
@@ -121,7 +103,7 @@ class SiteCreateTask extends BaseTask implements
 
   protected array $dbVariant = [];
 
-  public function setOptions(array $options) {
+  public function setOptions(array $options): static {
     parent::setOptions($options);
 
     if (array_key_exists('drupalRoot', $options)) {
@@ -151,10 +133,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function runAction() {
+  protected function runAction(): static {
     $this->cb = $this->collectionBuilder();
     foreach ($this->getDbVariants() as $dbVariant) {
       $this->dbVariant = $dbVariant;
@@ -173,10 +152,7 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function addTaskCreateDirectories() {
+  protected function addTaskCreateDirectories(): static {
     $siteDir = $this->getSiteDir();
     $drupalRoot = $this->getDrupalRoot();
     $outerSitePath = $this->getOuterSitePath();
@@ -236,10 +212,7 @@ PHP;
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function addTaskDrushSiteAliases(array $dbVariant) {
+  protected function addTaskDrushSiteAliases(array $dbVariant): static {
     foreach ($this->getPhpVariants() as $phpVariant) {
       $this->addTaskDrushSiteAlias($dbVariant, $phpVariant);
     }
@@ -247,10 +220,7 @@ PHP;
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function addTaskDrushSiteAlias(array $dbVariant, array $phpVariant) {
+  protected function addTaskDrushSiteAlias(array $dbVariant, array $phpVariant): static {
     $siteDir = $this->getSiteDir();
 
     $site = [

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Drupal\marvin_incubator\CommandsBaseTrait;
+use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Robo\Collection\CollectionBuilder;
 use Robo\State\Data as RoboStateData;
 

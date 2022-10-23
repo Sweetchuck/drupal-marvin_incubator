@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace Drush\Commands\marvin_incubator;
 
-use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Drupal\marvin\Robo\ArtifactCollectFilesTaskLoader;
 use Drupal\marvin\Robo\CopyFilesTaskLoader;
 use Drupal\marvin\Robo\PrepareDirectoryTaskLoader;
 use Drupal\marvin\Robo\VersionNumberTaskLoader;
 use Drupal\marvin_incubator\CommandsBaseTrait;
+use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Robo\Collection\CollectionBuilder;
 use Robo\State\Data as RoboStateData;
 use Symfony\Component\Console\Input\InputInterface;

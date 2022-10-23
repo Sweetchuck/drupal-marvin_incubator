@@ -5,6 +5,8 @@
  * Git hook callback handler for managed extensions.
  */
 
+declare(strict_types = 1);
+
 use Drupal\marvin_incubator\GitHookHandler;
 
 call_user_func(function () {
