@@ -1,13 +1,2 @@
-
-/reports/
-/tests/fixtures/packages/
-/tests/fixtures/repository/
-/vendor/
-
-/composer.*.json
-/composer.*.lock
-
-/.gitattributes
 /phpcs.xml
-/phpunit.xml
-/robo.yml
+/phpstan.neon

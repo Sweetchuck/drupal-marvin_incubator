@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\marvin_incubator\Attributes;
 
 use Consolidation\AnnotatedCommand\Parser\CommandInfo;
-use Drush\Commands\marvin_incubator\BaseValidatorCommands;
+use Drush\Commands\marvin_incubator\BaseHooksCommands;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class ValidateDatabaseId {
@@ -21,7 +21,7 @@ class ValidateDatabaseId {
   public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo) {
     $args = $attribute->getArguments();
     $commandInfo->addAnnotation(
-      BaseValidatorCommands::TAG_VALIDATE_MARVIN_DATABASE_ID,
+      BaseHooksCommands::TAG_VALIDATE_MARVIN_DATABASE_ID,
       json_encode([
         'locators' => $args['locators'] ?? $args[0],
       ]),

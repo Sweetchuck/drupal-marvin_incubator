@@ -9,13 +9,9 @@ use Consolidation\AnnotatedCommand\CommandResult;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\marvin\Utils as MarvinUtils;
 use Drupal\marvin_incubator\CommandsBaseTrait;
-use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drush\Attributes as CLI;
 use Drush\Boot\DrupalBootLevels;
 use Drush\Commands\marvin\CommandsBase;
-use League\Container\Container as LeagueContainer;
-use League\Container\ContainerAwareInterface;
-use Psr\Container\ContainerInterface;
 use Robo\Collection\CollectionBuilder;
 use Robo\State\Data as RoboState;
 
@@ -23,34 +19,28 @@ class ManagedDrupalExtensionCommands extends CommandsBase {
 
   use CommandsBaseTrait;
 
-  public function setContainer(ContainerInterface $container): ContainerAwareInterface {
-    // @todo Use @hook pre-init *.
-    if ($container instanceof LeagueContainer) {
-      if (!$container->has('marvin_incubator.utils')) {
-        $container->add('marvin_incubator.utils', MarvinIncubatorUtils::class);
-      }
-    }
-
-    parent::setContainer($container);
-
-    return $this;
-  }
-
   /**
    * Lists the managed Drupal extensions.
-   *
-   * @command marvin:managed-drupal-extension:list
-   *
-   * @bootstrap none
    *
    * @noinspection PhpUnusedParameterInspection
    */
   #[CLI\Command(name: 'marvin:managed-drupal-extension:list')]
   #[CLI\Bootstrap(level: DrupalBootLevels::NONE)]
+  #[CLI\FieldLabels(
+    labels: [
+      'type' => 'Type',
+      'name' => 'ID',
+      'projectVendor' => 'Vendor',
+      'projectName' => 'Name',
+      'path' => 'Absolute path',
+      'pathRelative' => 'Relative path',
+      'pathInstalled' => 'Installed path',
+    ],
+  )]
   public function cmdManagedDrupalExtensionListExecute(
     array $options = [
       'format' => 'table',
-    ]
+    ],
   ): CommandResult {
     return CommandResult::data($this->getManagedDrupalExtensions());
   }
@@ -64,10 +54,28 @@ class ManagedDrupalExtensionCommands extends CommandsBase {
     }
 
     $extensions = $result->getOutputData();
+    foreach ($extensions as $key => $extension) {
+      unset($extensions[$key]['composer']);
+    }
+
     $format = $commandData->input()->getOption('format');
     if ($format === 'table') {
-      $result->setOutputData(new RowsOfFields($extensions));
+      $rows = [];
+      foreach ($extensions as $id => $extension) {
+        unset(
+          $extension['path'],
+          $extension['projectVendor'],
+          $extension['projectName'],
+        );
+
+        $rows[$id] = $extension;
+      }
+
+      $result->setOutputData(new RowsOfFields($rows));
+
+      return;
     }
+    $result->setOutputData($extensions);
   }
 
   /**
@@ -89,6 +97,8 @@ class ManagedDrupalExtensionCommands extends CommandsBase {
   public function cmdMarvinManagedDrupalExtensionAddExecute(
     string $path,
   ): CollectionBuilder {
+    // @todo If not exists then download (git clone) it automatically.
+    // @todo Trigger an event.
     return $this
       ->collectionBuilder()
       ->addCode(function (RoboState $state) use ($path): int {

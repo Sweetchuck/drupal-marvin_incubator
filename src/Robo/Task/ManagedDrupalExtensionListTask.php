@@ -103,7 +103,9 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
 
     // @todo The getcwd() should not be used here.
     $managedDrupalExtensions = $this->utils->collectManagedDrupalExtensions(
-      Path::makeAbsolute($drupalRootRelative, getcwd()),
+      //Path::makeAbsolute($drupalRootRelative, getcwd()),
+      $workingDirectory,
+      $this->composerInfo->getDrupalRootDir(),
       $this->composerInfo->getLock(),
       $this->getPackagePaths()
     );
@@ -119,7 +121,7 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
   protected function initComposerInfo(): static {
     $this->composerInfo = ComposerInfo::create(
       $this->getWorkingDirectory(),
-      $this->getComposerJsonFileName()
+      $this->getComposerJsonFileName(),
     );
 
     return $this;

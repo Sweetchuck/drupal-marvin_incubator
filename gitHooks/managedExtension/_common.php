@@ -15,6 +15,12 @@ call_user_func(function () {
   $marvinIncubatorDir = '';
   $packagePath = getcwd();
 
+  if ($marvinIncubatorDir === '') {
+    // Nothing to do.
+    // This file gets included by the code coverage reporter during phpunit tests.
+    return;
+  }
+
   if (!class_exists(GitHookHandler::class)) {
     require_once "$marvinIncubatorDir/src/GitHookHandler.php";
   }

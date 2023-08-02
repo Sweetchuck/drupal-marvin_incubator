@@ -3,6 +3,11 @@ parameters:
 		marvin-incubator-managed-drupal-extension: '''
 			array{
 				name: string,
+				packageVendor: string,
+				packageName: string,
+				type: string,
 				path: string,
+				pathRelative?: string,
+				pathInstalled?: string,
 			}
 		'''

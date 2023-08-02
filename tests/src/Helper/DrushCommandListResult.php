@@ -16,17 +16,14 @@ class DrushCommandListResult {
     return $this->result;
   }
 
-  /**
-   * @return $this
-   */
-  public function setResult(string $result) {
+  public function setResult(string $result): static {
     $this->result = $result;
     $this->reset();
 
     return $this;
   }
 
-  protected function reset() {
+  protected function reset(): static {
     $this->doc = NULL;
     $this->xpath = NULL;
 

@@ -6,10 +6,13 @@ namespace Drupal\marvin_incubator;
 
 use Drupal\marvin_incubator\Robo\ManagedDrupalExtensionTaskLoader;
 use Robo\Collection\CollectionBuilder;
-use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
+use Sweetchuck\Robo\Composer\ComposerTaskLoader;
+use Sweetchuck\Utils\Filter\EnabledFilter;
+use Symfony\Component\Console\Output\OutputInterface;
 
 trait CommandsBaseTrait {
 
+  use ComposerTaskLoader;
   use ManagedDrupalExtensionTaskLoader;
 
   protected ?string $drupalRoot = NULL;
@@ -37,7 +40,7 @@ trait CommandsBaseTrait {
       ->getConfig()
       ->get('marvin.managedDrupalExtension.package');
 
-    $ignoredFilter = new ArrayFilterEnabled();
+    $ignoredFilter = new EnabledFilter();
     $ignoredFilter->setKey('ignored');
     $ignoredPackages = array_filter($packageDefinitions, $ignoredFilter);
 
@@ -47,30 +50,34 @@ trait CommandsBaseTrait {
 
     return $this
       ->collectionBuilder()
+      ->setProgressIndicator(NULL)
+      ->setVerbosityThreshold(OutputInterface::VERBOSITY_QUIET)
       ->addTask(
         $this
           ->taskComposerPackagePaths()
+          ->setVerbosityThreshold(4)
           ->setWorkingDirectory($workingDirectory))
       ->addTask(
         $this
           ->taskMarvinManagedDrupalExtensionList()
+          ->setVerbosityThreshold(4)
           ->setWorkingDirectory($workingDirectory)
+          ->setComposerJsonFileName(getenv('COMPOSER') ?: 'composer.json')
           ->setIgnoredPackages(array_keys($ignoredPackages))
           ->deferTaskConfiguration('setPackagePaths', 'composer.packagePaths'));
   }
 
   /**
    * @todo This method could be part of the \Drupal\marvin_incubator\Utils.
+   * @todo Rename this method to findManagedDrupalExtensionByUserInput().
+   *
+   * @phpstan-return marvin-incubator-managed-drupal-extension
    */
   protected function normalizeManagedDrupalExtensionName(string $extensionName): ?array {
     $managedDrupalExtensions = $this->getManagedDrupalExtensions();
 
-    // Fully qualified composer package name.
     if (isset($managedDrupalExtensions[$extensionName])) {
-      return [
-        'name' => $extensionName,
-        'path' => $managedDrupalExtensions[$extensionName],
-      ];
+      return $managedDrupalExtensions[$extensionName];
     }
 
     // Transform a Drupal extension machine-name to a fq composer package name.
@@ -78,31 +85,16 @@ trait CommandsBaseTrait {
       // @todo The vendor can be anything not just "drupal".
       $packageName = "drupal/$extensionName";
       if (isset($managedDrupalExtensions[$packageName])) {
-        return [
-          'name' => $packageName,
-          'path' => $managedDrupalExtensions[$packageName],
-        ];
+        return $managedDrupalExtensions[$packageName];
       }
     }
 
-    // Full real path.
-    $packageName = array_search($extensionName, $managedDrupalExtensions);
-    if ($packageName !== FALSE) {
-      return [
-        'name' => $packageName,
-        'path' => $extensionName,
-      ];
-    }
-
-    // Relative path.
-    if (is_dir($extensionName)) {
-      $packagePath = realpath($extensionName);
-      $packageName = array_search($packagePath, $managedDrupalExtensions);
-      if ($packageName !== FALSE) {
-        return [
-          'name' => $packageName,
-          'path' => $packagePath,
-        ];
+    foreach ($managedDrupalExtensions as $extension) {
+      if ($extension['path'] === $extensionName
+        || $extension['pathRelative'] === $extensionName
+        || $extension['pathInstalled'] === $extensionName
+      ) {
+        return $extension;
       }
     }
 

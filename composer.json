@@ -1,7 +1,7 @@
 {
+    "type": "drupal-drush",
     "name": "drupal/marvin_incubator",
     "description": "Drush commands to manage contrib development",
-    "type": "drupal-drush",
     "license": "GPL-2.0-or-later",
     "keywords": [
         "drupal",
@@ -23,68 +23,22 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "allow-plugins": {
-            "cweagans/composer-patches": true,
-            "composer/installers": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true,
-            "sweetchuck/composer-suite": true,
-            "sweetchuck/composer-repo-path": true
-        },
-        "optimize-autoloader": true,
-        "preferred-install": {
-            "*": "dist"
-        },
         "sort-packages": true
     },
     "conflict": {
         "drupal/marvin_product": "*"
     },
-    "repositories": {
-        "drupal/marvin": {
-            "type": "github",
-            "url": "https://github.com/sweetchuck/drupal-marvin.git"
-        },
-        "drupal": {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        },
-        "assets": {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    },
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-dom": "*",
         "ext-json": "*",
         "drupal/marvin": "3.x-dev",
-        "sweetchuck/utils": "1.x-dev"
+        "sweetchuck/utils": "2.x-dev"
     },
     "require-dev": {
-        "ext-pdo": "*",
-        "ext-pdo_sqlite": "*",
-        "cweagans/composer-patches": "^2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "drupal/coder": "^8.3",
-        "drupal/core-composer-scaffold": "^10.0",
-        "drupal/core-recommended": "^10.0",
         "drush/drush": "^12.0",
         "mikey179/vfsstream": "^1.6",
-        "nuvoleweb/robo-config": "^3.0",
-        "oomphinc/composer-installers-extender": "^2.0",
-        "phpmd/phpmd": "^2.13",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^9.5",
-        "sweetchuck/composer-repo-path": "1.x-dev",
-        "sweetchuck/composer-suite": "1.x-dev",
-        "sweetchuck/robo-phpcs": "3.x-dev",
-        "sweetchuck/robo-phpmd": "3.x-dev",
-        "sweetchuck/robo-phpstan": "2.x-dev",
-        "symfony/finder": "^5.2 || ^6.0",
-        "symfony/phpunit-bridge": "^5.3 || ^6.0",
+        "symfony/finder": "^6.0",
         "weitzman/drupal-test-traits": "^2.1"
     },
     "suggest": {
@@ -96,15 +50,6 @@
             "Drupal\\marvin_incubator\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Drupal\\Tests\\marvin_incubator\\": "tests/src/",
-
-            "Drupal\\Tests\\": "tests/fixtures/repository/d10/project_01/docroot/core/tests/Drupal/Tests/",
-            "Drupal\\TestTools\\": "tests/fixtures/repository/d10/project_01/docroot/core/tests/Drupal/TestTools/",
-            "Drupal\\KernelTests\\": "tests/fixtures/repository/d10/project_01/docroot/core/tests/Drupal/KernelTests"
-        }
-    },
     "extra": {
         "branch-alias": {
             "dev-8.x-1.x": "1.x-dev",
@@ -114,317 +59,6 @@
             "services": {
                 "drush.services.yml": "*"
             }
-        },
-        "installer-types": [
-            "bower-asset",
-            "npm-asset"
-        ],
-        "installer-paths": {
-            "tests/fixtures/repository/d10/project_01/docroot/core": [
-                "type:drupal-core"
-            ],
-            "tests/fixtures/repository/d10/project_01/docroot/libraries/{$name}": [
-                "type:bower-asset",
-                "type:npm-asset",
-                "type:drupal-library"
-            ],
-            "tests/fixtures/repository/d10/project_01/docroot/modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "tests/fixtures/repository/d10/project_01/docroot/profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "tests/fixtures/repository/d10/project_01/docroot/themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "tests/fixtures/repository/d10/project_01/drush/Commands/contrib/{$name}": [
-                "type:drupal-drush"
-            ]
-        },
-        "drupal-scaffold": {
-            "locations": {
-                "web-root": "tests/fixtures/repository/d10/project_01/docroot"
-            },
-            "file-mapping": {
-                "[web-root]/modules/.gitignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/modules/README.txt": {
-                    "mode": "skip"
-                },
-                "[web-root]/profiles/.gitignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/profiles/README.txt": {
-                    "mode": "skip"
-                },
-                "[web-root]/themes/.gitignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/themes/README.txt": {
-                    "mode": "skip"
-                },
-                "[web-root]/sites/example.settings.local.php": {
-                    "mode": "skip"
-                },
-                "[web-root]/sites/.gitignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/sites/README.txt": {
-                    "mode": "skip"
-                },
-                "[web-root]/.csslintrc": {
-                    "mode": "skip"
-                },
-                "[web-root]/.editorconfig": {
-                    "mode": "skip"
-                },
-                "[web-root]/.eslintignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/.eslintrc.json": {
-                    "mode": "skip"
-                },
-                "[web-root]/.gitattributes": {
-                    "mode": "skip"
-                },
-                "[web-root]/.gitignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/example.gitignore": {
-                    "mode": "skip"
-                },
-                "[web-root]/INSTALL.txt": {
-                    "mode": "skip"
-                },
-                "[web-root]/README.txt": {
-                    "mode": "skip"
-                },
-                "[web-root]/.htaccess": {
-                    "mode": "skip"
-                },
-                "[web-root]/web.config": {
-                    "mode": "skip"
-                },
-                "[project-root]/.editorconfig": {
-                    "mode": "skip"
-                }
-            },
-            "initial": {
-                "sites/default/default.services.yml": "sites/default/services.yml",
-                "sites/default/default.settings.php": "sites/default/settings.php"
-            }
-        },
-        "composer-suite": {
-            "local": {
-                "description": "",
-                "actions": [
-                    {
-                        "type": "prepend",
-                        "config": {
-                            "parents": ["repositories"],
-                            "items": {
-                                "drupal/marvin": {
-                                    "type": "path",
-                                    "url": "../../drupal/marvin-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/drupal-marvin.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/lint-report": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/lint-report-1.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/lint-report.git",
-                                            "branch": "1.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-composer": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-composer-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-composer.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-git": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-git-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-git.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-nvm": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-nvm-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-nvm.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-php-lint": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-php-lint-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-php-lint.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-phpcs": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-phpcs-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-phpcs.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-phpmd": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-phpmd-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-phpmd.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-phpunit": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-phpunit-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-phpunit.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-stringy": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-stringy-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-stringy.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/robo-yarn": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/robo-yarn-2.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/robo-yarn.git",
-                                            "branch": "2.x"
-                                        }
-                                    }
-                                },
-                                "sweetchuck/utils": {
-                                    "type": "path",
-                                    "url": "../../sweetchuck/utils-1.x",
-                                    "options": {
-                                        "repo-path": {
-                                            "url": "https://github.com/Sweetchuck/utils.git",
-                                            "branch": "1.x"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "type": "replaceRecursive",
-                        "config": {
-                            "parents": ["require"],
-                            "items": {
-                                "drupal/marvin": "2.x-dev",
-                                "sweetchuck/lint-report": "1.x-dev",
-                                "sweetchuck/robo-composer": "2.x-dev",
-                                "sweetchuck/robo-git": "2.x-dev",
-                                "sweetchuck/robo-nvm": "2.x-dev",
-                                "sweetchuck/robo-php-lint": "2.x-dev",
-                                "sweetchuck/robo-phpcs": "2.x-dev",
-                                "sweetchuck/robo-phpmd": "2.x-dev",
-                                "sweetchuck/robo-phpunit": "2.x-dev",
-                                "sweetchuck/robo-stringy": "2.x-dev",
-                                "sweetchuck/robo-yarn": "2.x-dev",
-                                "sweetchuck/utils": "1.x-dev"
-                            }
-                        }
-                    }
-                ]
-            }
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "@prepare"
-        ],
-        "post-update-cmd": [],
-        "clean": [
-            "@clean:reports",
-            "@clean:composer"
-        ],
-        "clean:reports": "[ ! -d ./reports ] || find ./reports -mindepth 1 -maxdepth 1 -exec rm -rf {} \\;",
-        "clean:composer": [
-            "rm --recursive --force vendor/",
-            "chmod -R u+w tests/",
-            "git clean --force -d -x -- tests/",
-            "git clean --force -d -X -- tests/"
-        ],
-        "prepare": [
-            "@prepare:phpunit-xml",
-            "@prepare:repository",
-            "@prepare:project"
-        ],
-        "prepare:phpunit-xml": [
-            "\\Drupal\\Tests\\marvin_incubator\\Helper\\ComposerScripts::cmdPreparePhpunitXml"
-        ],
-        "prepare:repository": [
-            "\\Drupal\\Tests\\marvin_incubator\\Helper\\ComposerScripts::cmdPrepareRepository"
-        ],
-        "prepare:project": [
-            "\\Drupal\\Tests\\marvin_incubator\\Helper\\ComposerScripts::cmdPrepareProject"
-        ],
-        "lint": [
-            "@lint:phpcs"
-        ],
-        "lint:phpcs": [
-            "phpcs"
-        ],
-        "test": [
-            "@clean:reports",
-            "@test:unit",
-            "@test:integration"
-        ],
-        "test:unit": [
-            "mkdir -p reports/machine/coverage-php/",
-            "phpunit --testsuite='Unit' --coverage-html reports/human/coverage/Unit/html --testdox-html reports/human/testdox/Unit.html --coverage-clover reports/machine/coverage-clover/Unit.xml --coverage-php reports/machine/coverage-php/Unit.php --log-junit reports/machine/junit/Unit.xml"
-        ],
-        "test:integration": [
-            "mkdir -p reports/machine/coverage-php/",
-            "phpunit --testsuite='Integration' --coverage-html reports/human/coverage/Integration/html --testdox-html reports/human/testdox/Integration.html --coverage-clover reports/machine/coverage-clover/Integration.xml --coverage-php reports/machine/coverage-php/Integration.php --log-junit reports/machine/junit/Integration.xml"
-        ],
-        "check:test-result:junit": [
-            "\\Drupal\\Tests\\marvin_incubator\\Helper\\ComposerScripts::checkJunit"
-        ]
-    },
-    "scripts-descriptions": {
-        "clean": "Clean third-party codes and generated reports"
     }
 }

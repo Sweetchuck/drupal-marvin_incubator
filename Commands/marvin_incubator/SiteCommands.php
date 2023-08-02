@@ -12,9 +12,7 @@ use Drupal\marvin\PhpVariantTrait;
 use Drupal\marvin\Utils as MarvinUtils;
 use Drupal\marvin_incubator\Attributes as MarvinIncubatorCLI;
 use Drupal\marvin_incubator\Robo\CollectSiteNamesTaskLoader;
-use Drupal\marvin_incubator\Robo\SitesPhpGeneratorTaskLoader;
 use Drupal\marvin_incubator\Robo\SiteTaskLoader;
-use Drupal\marvin_incubator\SiteGenerateSitesPhpTrait;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drush\Attributes as CLI;
 use Drush\Boot\DrupalBootLevels;
@@ -34,8 +32,6 @@ class SiteCommands extends CommandsBase {
   use PhpVariantTrait;
   use SiteTaskLoader;
   use CollectSiteNamesTaskLoader;
-  use SitesPhpGeneratorTaskLoader;
-  use SiteGenerateSitesPhpTrait;
 
   protected Filesystem $fs;
 

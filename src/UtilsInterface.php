@@ -7,6 +7,7 @@ namespace Drupal\marvin_incubator;
 interface UtilsInterface {
 
   public function collectManagedDrupalExtensions(
+    string $rootDir,
     string $drupalRootDir,
     array $composerLock,
     array $packagePaths
