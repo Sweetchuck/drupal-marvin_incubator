@@ -18,18 +18,26 @@ class DummyOutput extends ConsoleOutput {
   /**
    * {@inheritdoc}
    */
-  public function __construct($verbosity = self::VERBOSITY_NORMAL, $decorated = NULL, OutputFormatterInterface $formatter = NULL, $isStdError = FALSE) {
+  public function __construct(
+    $verbosity = self::VERBOSITY_NORMAL,
+    $decorated = NULL,
+    OutputFormatterInterface $formatter = NULL,
+    bool $isStdError = FALSE,
+  ) {
     parent::__construct($verbosity, $decorated, $formatter);
     $this->instanceId = static::$instanceCounter++;
 
-    $errorOutput = $isStdError ? $this : new static($verbosity, $decorated, $formatter, TRUE);
+    $errorOutput = $isStdError ?
+      $this
+      // @phpstan-ignore-next-line
+      : new static($verbosity, $decorated, $formatter, TRUE);
     $this->setErrorOutput($errorOutput);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doWrite($message, $newline) {
+  protected function doWrite(string $message, bool $newline): void {
     $this->output .= $message . ($newline ? PHP_EOL : '');
   }
 

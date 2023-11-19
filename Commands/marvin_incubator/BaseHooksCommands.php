@@ -14,9 +14,8 @@ use Drupal\marvin_incubator\CommandsBaseTrait;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
 use Drush\Attributes as CLI;
 use Drush\Commands\marvin\CommandsBase;
-use League\Container\Container as LeagueContainer;
 use League\Container\ContainerAwareInterface;
-use Psr\Container\ContainerInterface;
+use League\Container\DefinitionContainerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
 class BaseHooksCommands extends CommandsBase {
@@ -29,11 +28,9 @@ class BaseHooksCommands extends CommandsBase {
   public const TAG_VALIDATE_MARVIN_DATABASE_ID = 'validate-marvin-database-id';
   public const TAG_VALIDATE_MARVIN_PACKAGE_NAMES = 'validate-marvin-package-names';
 
-  public function setContainer(ContainerInterface $container): ContainerAwareInterface {
-    if ($container instanceof LeagueContainer) {
-      if (!$container->has('marvin_incubator.utils')) {
-        $container->add('marvin_incubator.utils', MarvinIncubatorUtils::class);
-      }
+  public function setContainer(DefinitionContainerInterface $container): ContainerAwareInterface {
+    if (!$container->has('marvin_incubator.utils')) {
+      $container->add('marvin_incubator.utils', MarvinIncubatorUtils::class);
     }
 
     parent::setContainer($container);
@@ -102,7 +99,7 @@ class BaseHooksCommands extends CommandsBase {
       // Exception vs CommandError?
       // See https://github.com/consolidation/annotated-command#validate-hook .
       return new CommandError(
-        dt(
+        strtr(
           $locator['type'] === 'argument' ?
             'The following packages are invalid for argument "@inputName": @packageNames'
             : 'The following packages are invalid for option --@inputName": @packageNames',
@@ -152,14 +149,14 @@ class BaseHooksCommands extends CommandsBase {
       // Exception vs CommandError?
       // See https://github.com/consolidation/annotated-command#validate-hook .
       return new CommandError(
-        dt(
+        strtr(
           'The following packages are invalid for argument "@argName": @packageNames',
           [
             '@argName' => $argName,
             '@packageNames' => implode(', ', $invalidPackageNames),
-          ]
+          ],
         ),
-        1
+        1,
       );
     }
 
@@ -298,6 +295,9 @@ class BaseHooksCommands extends CommandsBase {
       ));
   }
 
+  /**
+   * @return array<string, string>
+   */
   protected function getNamedRegexpPatterns(): array {
     return [
       'machineNameStrict' => '/^[a-z][a-z0-9]*$/',
@@ -339,6 +339,14 @@ class BaseHooksCommands extends CommandsBase {
     );
   }
 
+  /**
+   * @param \Consolidation\AnnotatedCommand\CommandData $commandData
+   * @param string $locator
+   * @param array<string, mixed> $validItems
+   * @param string $errorMessage
+   *
+   * @return null|\Consolidation\AnnotatedCommand\CommandError
+   */
   protected function validateMarvinInputItemIds(
     CommandData $commandData,
     string $locator,
@@ -350,11 +358,6 @@ class BaseHooksCommands extends CommandsBase {
       $commandData->input()->getArgument($name)
       : $commandData->input()->getOption($name);
     $itemIds = $this->parseInputValues($values);
-
-    $isArray = is_array($itemIds);
-    if (!$isArray) {
-      $itemIds = [$itemIds];
-    }
 
     $items = [];
     $invalidItemIds = [];
@@ -373,14 +376,14 @@ class BaseHooksCommands extends CommandsBase {
       // Exception vs CommandError?
       // See https://github.com/consolidation/annotated-command#validate-hook .
       return new CommandError(
-        dt(
+        strtr(
           $errorMessage,
           [
             '@name' => $name,
             '@invalidItemIds' => implode(', ', $invalidItemIds),
-          ]
+          ],
         ),
-        1
+        1,
       );
     }
 
@@ -388,15 +391,16 @@ class BaseHooksCommands extends CommandsBase {
       $items = $validItems;
     }
 
-    if (!$isArray) {
-      $items = reset($items);
-    }
-
     $commandData->input()->setOption($name, $items);
 
     return NULL;
   }
 
+  /**
+   * @param string[] $values
+   *
+   * @return string[]
+   */
   protected function parseInputValues(array $values): array {
     $items = [];
     foreach ($values as $value) {
@@ -406,15 +410,27 @@ class BaseHooksCommands extends CommandsBase {
     return array_unique($items);
   }
 
+  /**
+   * @return string[]
+   */
   protected function parseMultiValueAnnotation(string $name, string $value): array {
     return $this->explodeCommaSeparatedList($value);
   }
 
+  /**
+   * @param string $items
+   *
+   * @return string[]
+   */
   protected function explodeCommaSeparatedList(string $items): array {
-    return array_filter(
-      preg_split('/\s*,\s*/', trim($items)),
-      'mb_strlen',
-    );
+    $list = preg_split('/\s*,\s*/', trim($items));
+
+    return $list ?
+      array_filter(
+        $list,
+        fn(string $item): bool => mb_strlen($item) > 0,
+      )
+      : [];
   }
 
 }

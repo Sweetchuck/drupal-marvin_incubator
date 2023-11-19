@@ -86,6 +86,11 @@ class GitHooksDeployTask extends BaseTask implements
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * @phpstan-param marvin-incubator-robo-task-git-hooks-deploy-options $options
+   */
   public function setOptions(array $options): static {
     parent::setOptions($options);
 
@@ -191,7 +196,10 @@ class GitHooksDeployTask extends BaseTask implements
     $destinationDir = $this->getDestinationDir();
 
     foreach ($hookFiles as $hookFile) {
-      $this->fs->copy($hookFile, Path::join($destinationDir, $hookFile->getFilename()));
+      $this->fs->copy(
+        $hookFile->getPathname(),
+        Path::join($destinationDir, $hookFile->getFilename()),
+      );
     }
 
     return $this;
@@ -200,7 +208,7 @@ class GitHooksDeployTask extends BaseTask implements
   protected function runActionCopyCommonFile(): static {
     $this->fs->dumpFile(
       Path::join($this->getDestinationDir(), '_common.php'),
-      $this->replaceTemplateVariables(file_get_contents($this->getCommonTemplateFileName()))
+      $this->replaceTemplateVariables(file_get_contents($this->getCommonTemplateFileName()) ?: ''),
     );
 
     return $this;

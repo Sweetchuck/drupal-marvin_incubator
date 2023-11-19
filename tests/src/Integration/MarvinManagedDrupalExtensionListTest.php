@@ -12,6 +12,9 @@ use Symfony\Component\Yaml\Yaml;
  */
 class MarvinManagedDrupalExtensionListTest extends CommandsTestCase {
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesExecuteDrushCommand(): array {
     $miRootDir = $this->getMarvinIncubatorRootDir();
     $extensions = [];

@@ -51,24 +51,42 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
+  /**
+   * @phpstan-var array<string, marvin-incubator-db-variant>
+   */
   protected array $dbVariants = [];
 
+  /**
+   * @phpstan-return array<string, marvin-incubator-db-variant>
+   */
   public function getDbVariants(): array {
     return $this->dbVariants;
   }
 
+  /**
+   * @phpstan-param array<string, marvin-incubator-db-variant> $value
+   */
   public function setDbVariants(array $value): static {
     $this->dbVariants = $value;
 
     return $this;
   }
 
+  /**
+   * @phpstan-var array<string, marvin-php-variant>
+   */
   protected array $phpVariants = [];
 
+  /**
+   * @phpstan-return array<string, marvin-php-variant>
+   */
   public function getPhpVariants(): array {
     return $this->phpVariants;
   }
 
+  /**
+   * @phpstan-param  array<string, marvin-php-variant> $value
+   */
   public function setPhpVariants(array $value): static {
     $this->phpVariants = $value;
 
@@ -101,8 +119,11 @@ class SiteCreateTask extends BaseTask implements
 
   protected CollectionBuilder $cb;
 
-  protected array $dbVariant = [];
-
+  /**
+   * {@inheritdoc}
+   *
+   * @phpstan-param marvin-incubator-robo-task-site-create-options $options
+   */
   public function setOptions(array $options): static {
     parent::setOptions($options);
 
@@ -136,11 +157,10 @@ class SiteCreateTask extends BaseTask implements
   protected function runAction(): static {
     $this->cb = $this->collectionBuilder();
     foreach ($this->getDbVariants() as $dbVariant) {
-      $this->dbVariant = $dbVariant;
       $this
-        ->addTaskCreateDirectories()
-        ->addTaskHashSalt()
-        ->addTaskSettingsPhp()
+        ->addTaskCreateDirectories($dbVariant)
+        ->addTaskHashSalt($dbVariant)
+        ->addTaskSettingsPhp($dbVariant)
         ->addTaskDrushSiteAliases($dbVariant);
     }
 
@@ -152,8 +172,11 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  protected function addTaskCreateDirectories(): static {
-    $siteDir = $this->getSiteDir();
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   */
+  protected function addTaskCreateDirectories(array $dbVariant): static {
+    $siteDir = $this->getSiteDir($dbVariant);
     $drupalRoot = $this->getDrupalRoot();
     $outerSitePath = $this->getOuterSitePath();
 
@@ -170,9 +193,12 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  protected function addTaskHashSalt() {
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   */
+  protected function addTaskHashSalt(array $dbVariant): static {
     $outerSitePath = $this->getOuterSitePath();
-    $siteDir = $this->getSiteDir();
+    $siteDir = $this->getSiteDir($dbVariant);
 
     $this
       ->cb
@@ -184,23 +210,26 @@ class SiteCreateTask extends BaseTask implements
     return $this;
   }
 
-  protected function addTaskSettingsPhp() {
-    $fileContent = <<< PHP
-<?php
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   */
+  protected function addTaskSettingsPhp(array $dbVariant): static {
+    $fileContent = <<< 'PHP'
+    <?php
 
-declare(strict_types = 1);
+    declare(strict_types = 1);
 
-/**
- * @var string \$app_root
- * @var string \$site_path
- */
+    /**
+     * @var string $app_root
+     * @var string $site_path
+     */
 
-require __DIR__ . '/../settings.php';
+    require __DIR__ . '/../settings.php';
 
-PHP;
+    PHP;
 
     $drupalRoot = $this->getDrupalRoot();
-    $siteDir = $this->getSiteDir();
+    $siteDir = $this->getSiteDir($dbVariant);
 
     $this
       ->cb
@@ -212,6 +241,9 @@ PHP;
     return $this;
   }
 
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   */
   protected function addTaskDrushSiteAliases(array $dbVariant): static {
     foreach ($this->getPhpVariants() as $phpVariant) {
       $this->addTaskDrushSiteAlias($dbVariant, $phpVariant);
@@ -220,12 +252,16 @@ PHP;
     return $this;
   }
 
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   * @phpstan-param marvin-php-variant $phpVariant
+   */
   protected function addTaskDrushSiteAlias(array $dbVariant, array $phpVariant): static {
-    $siteDir = $this->getSiteDir();
+    $siteDir = $this->getSiteDir($dbVariant);
 
     $site = [
       'local' => [
-        'uri' => $this->getUri($phpVariant),
+        'uri' => $this->getUri($dbVariant, $phpVariant),
         'root' => '${runtime.project}/docroot',
         'command' => [
           'site' => [
@@ -249,7 +285,7 @@ PHP;
     $this
       ->cb
       ->addTask($this
-        ->taskWriteToFile($this->getDrushSiteAliasFileName($phpVariant))
+        ->taskWriteToFile($this->getDrushSiteAliasFileName($dbVariant, $phpVariant))
         ->text(Yaml::dump($site, 42, 2))
       );
 
@@ -262,34 +298,45 @@ PHP;
     return "$drupalRoot/../sites";
   }
 
-  protected function getSiteDir(): string {
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   */
+  protected function getSiteDir(array $dbVariant): string {
     return strtr(
       $this->getSiteDirPattern(),
       [
         '{{ siteName }}' => $this->getSiteName(),
-        '{{ dbId }}' => $this->dbVariant['id'],
+        '{{ dbId }}' => $dbVariant['id'],
       ]
     );
   }
 
-  protected function getUri(array $phpVariant): string {
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   * @phpstan-param marvin-php-variant $phpVariant
+   */
+  protected function getUri(array $dbVariant, array $phpVariant): string {
     return strtr(
       $this->getUriPattern(),
       [
         '{{ siteName }}' => $this->getSiteName(),
-        '{{ dbId }}' => $this->dbVariant['id'],
+        '{{ dbId }}' => $dbVariant['id'],
         '{{ phpId }}' => $phpVariant['id'],
       ]
     );
   }
 
-  protected function getDrushSiteAliasFileName(array $phpVariant): string {
+  /**
+   * @phpstan-param marvin-incubator-db-variant $dbVariant
+   * @phpstan-param marvin-php-variant $phpVariant
+   */
+  protected function getDrushSiteAliasFileName(array $dbVariant, array $phpVariant): string {
     return strtr(
       '{{ drupalRoot }}/../drush/sites/{{ siteName }}-{{ dbId }}-{{ phpId }}.site.yml',
       [
         '{{ drupalRoot }}' => $this->getDrupalRoot(),
         '{{ siteName }}' => $this->getSiteName(),
-        '{{ dbId }}' => $this->dbVariant['id'],
+        '{{ dbId }}' => $dbVariant['id'],
         '{{ phpId }}' => $phpVariant['id'],
       ]
     );

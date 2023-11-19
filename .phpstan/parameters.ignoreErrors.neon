@@ -1,2 +1,166 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin\\\\Robo\\\\Task\\\\ArtifactCollectFilesTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setPackagePath\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin\\\\Robo\\\\Task\\\\CopyFilesTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin\\\\Robo\\\\Task\\\\CopyFilesTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setSrcDir\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin\\\\Robo\\\\Task\\\\PrepareDirectoryTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin\\\\Robo\\\\Task\\\\VersionNumberBumpExtensionInfoTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ArtifactBuildVanillaCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BaseHooksCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BaseHooksCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BaseHooksCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BuildCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BuildCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BuildCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BuildNpmCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BuildNpmCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/BuildNpmCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ManagedDrupalExtensionCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\ManagedDrupalExtensionListTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ManagedDrupalExtensionCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/ManagedDrupalExtensionCommands.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\marvin_incubator\\\\Robo\\\\Task\\\\SiteDeleteTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setDrupalRoot\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/SiteCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Base\\\\ExecStack\\:\\:exec\\(\\)\\.$#"
+			count: 3
+			path: ../Commands/marvin_incubator/SiteCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\File\\\\Write\\:\\:text\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/SiteCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:copy\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/SiteCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:mkdir\\(\\)\\.$#"
+			count: 1
+			path: ../Commands/marvin_incubator/SiteCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\File\\\\Write\\:\\:text\\(\\)\\.$#"
+			count: 3
+			path: ../src/Robo/Task/SiteCreateTask.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:mkdir\\(\\)\\.$#"
+			count: 1
+			path: ../src/Robo/Task/SiteCreateTask.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:chmod\\(\\)\\.$#"
+			count: 1
+			path: ../src/Robo/Task/SiteDeleteTask.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:remove\\(\\)\\.$#"
+			count: 1
+			path: ../src/Robo/Task/SiteDeleteTask.php
+
+		-
+			message: "#^Method Drupal\\\\marvin_incubator\\\\Utils\\:\\:collectManagedDrupalExtensions\\(\\) should return array\\<string, array\\{name\\: string, packageVendor\\: string, packageName\\: string, type\\: string, path\\: string, pathRelative\\: string\\|null, pathInstalled\\: string\\|null, composer\\: array\\{name\\: string, type\\?\\: string, config\\?\\: array\\<string, mixed\\>, dist\\?\\: array\\{url\\: string\\}, extra\\?\\: array\\<string, mixed\\>\\}\\}\\> but returns array\\<string, array\\{name\\: string, projectVendor\\: string, projectName\\: string, type\\: string\\|null, path\\: string, pathRelative\\: non\\-falsy\\-string\\|null, pathInstalled\\: non\\-falsy\\-string\\|null, composer\\: array\\{name\\: string, type\\?\\: string, config\\?\\: array\\<string, mixed\\>, dist\\?\\: array\\{url\\: string\\}, extra\\?\\: array\\<string, mixed\\>\\}\\}\\>\\.$#"
+			count: 1
+			path: ../src/Utils.php

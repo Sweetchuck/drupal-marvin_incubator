@@ -7,18 +7,35 @@ namespace Drupal\marvin_incubator\Attributes;
 use Consolidation\AnnotatedCommand\Parser\CommandInfo;
 use Drush\Commands\marvin_incubator\BaseHooksCommands;
 
+/**
+ * Drush command annotator.
+ *
+ * @code
+ * use Drupal\marvin_incubator\Attributes as MarvinIncubatorCLI;
+ *
+ * #[MarvinIncubatorCLI\ValidatePackageNames(
+ *   locators: [
+ *     [
+ *       'type' => 'argument',
+ *       'name' => 'packageNames',
+ *     ],
+ *   ],
+ * )]
+ * @endcode
+ */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class ValidatePackageNames {
 
-  protected array $locators = [];
-
-  public function __construct(
-    array $locators = [],
-  ) {
-    $this->locators = $locators;
+  /**
+   * @phpstan-param array<array{type: 'option'|'argument', name: string}> $locators
+   */
+  public function __construct(public array $locators = []) {
   }
 
-  public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo) {
+  /**
+   * @phpstan-param \ReflectionAttribute<\Robo\Tasks> $attribute
+   */
+  public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo): void {
     $args = $attribute->getArguments();
     $commandInfo->addAnnotation(
       BaseHooksCommands::TAG_VALIDATE_MARVIN_PACKAGE_NAMES,

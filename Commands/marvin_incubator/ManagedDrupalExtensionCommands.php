@@ -23,6 +23,8 @@ class ManagedDrupalExtensionCommands extends CommandsBase {
    * Lists the managed Drupal extensions.
    *
    * @noinspection PhpUnusedParameterInspection
+   *
+   * @phpstan-param array{format: string} $options
    */
   #[CLI\Command(name: 'marvin:managed-drupal-extension:list')]
   #[CLI\Bootstrap(level: DrupalBootLevels::NONE)]
@@ -48,7 +50,7 @@ class ManagedDrupalExtensionCommands extends CommandsBase {
   /**
    * @hook process marvin:managed-drupal-extension:list
    */
-  public function cmdMarvinManagedDrupalExtensionListProcess($result, CommandData $commandData) {
+  public function cmdMarvinManagedDrupalExtensionListProcess(mixed $result, CommandData $commandData): void {
     if (!($result instanceof CommandResult)) {
       return;
     }

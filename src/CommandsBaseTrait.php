@@ -17,6 +17,9 @@ trait CommandsBaseTrait {
 
   protected ?string $drupalRoot = NULL;
 
+  /**
+   * @phpstan-var null|array<string, marvin-incubator-managed-drupal-extension>
+   */
   protected ?array $managedDrupalExtensions = NULL;
 
   /**

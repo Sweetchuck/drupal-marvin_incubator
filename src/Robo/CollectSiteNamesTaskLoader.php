@@ -9,6 +9,8 @@ use Drupal\marvin_incubator\Robo\Task\CollectSiteNamesTask;
 trait CollectSiteNamesTaskLoader {
 
   /**
+   * @phpstan-param marvin-incubator-robo-task-collect-site-names-options $options
+   *
    * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\CollectSiteNamesTask
    */
   protected function taskMarvinCollectSiteNames(array $options = []) {

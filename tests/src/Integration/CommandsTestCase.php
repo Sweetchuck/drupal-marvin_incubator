@@ -42,20 +42,28 @@ class CommandsTestCase extends ExistingSiteBase {
     }
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesExecuteDrushCommand(): array {
     return [];
   }
 
   /**
    * @dataProvider casesExecuteDrushCommand
+   *
+   * @phpstan-param array<string, mixed> $expected
+   * @phpstan-param array<string, mixed> $args
+   * @phpstan-param array<string, mixed> $options
+   * @phpstan-param array<string, mixed> $envVars
    */
   public function testExecuteDrushCommand(
     array $expected,
     string $command,
     array $args = [],
     array $options = [],
-    array $envVars = []
-  ) {
+    array $envVars = [],
+  ): void {
     $this->drush(
       $command,
       $args,
@@ -76,6 +84,9 @@ class CommandsTestCase extends ExistingSiteBase {
     }
   }
 
+  /**
+   * @return string[]
+   */
   protected function getExtensionDirs(): array {
     $baseDir = $this->getMarvinIncubatorRootDir();
     $fixturesDir = static::$fixturesDir;
@@ -86,7 +97,7 @@ class CommandsTestCase extends ExistingSiteBase {
     ];
   }
 
-  protected function initGitRepo(string $dir) {
+  protected function initGitRepo(string $dir): static {
     $this->deleteGitRepo($dir);
 
     $shell = getenv('SHELL');
@@ -111,10 +122,7 @@ class CommandsTestCase extends ExistingSiteBase {
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function deleteGitRepo(string $dir) {
+  protected function deleteGitRepo(string $dir): static {
     (new Filesystem())->remove("$dir/.git");
 
     return $this;
@@ -123,7 +131,7 @@ class CommandsTestCase extends ExistingSiteBase {
   /**
    * {@inheritdoc}
    */
-  protected function convertKeyValueToFlag($key, $value) {
+  protected function convertKeyValueToFlag(string $key, mixed $value): string {
     if ($value === NULL) {
       return "--$key";
     }
@@ -141,7 +149,10 @@ class CommandsTestCase extends ExistingSiteBase {
     return implode(' ', $options);
   }
 
-  protected function getCommonCommandLineOptions() {
+  /**
+   * @phpstan-return array<string, mixed>
+   */
+  protected function getCommonCommandLineOptions(): array {
     return [
       'uri' => $this->getProjectUri(),
       'root' => 'docroot',
@@ -151,7 +162,10 @@ class CommandsTestCase extends ExistingSiteBase {
     ];
   }
 
-  protected function getCommonCommandLineEnvVars() {
+  /**
+   * @phpstan-return array<string, scalar>
+   */
+  protected function getCommonCommandLineEnvVars(): array {
     return [
       'HOME' => '/dev/null',
       'COLUMNS' => 120,
@@ -184,7 +198,10 @@ class CommandsTestCase extends ExistingSiteBase {
     );
   }
 
-  public static function assertText(array $rules, string $text, string $msgPrefix) {
+  /**
+   * @phpstan-param array<string, mixed> $rules
+   */
+  public static function assertText(array $rules, string $text, string $msgPrefix): void {
     foreach ($rules as $assertType => $expectations) {
       foreach ($expectations as $message => $expected) {
         $fullMessage = "$msgPrefix $assertType - $message";

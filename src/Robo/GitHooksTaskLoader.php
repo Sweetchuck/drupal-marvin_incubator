@@ -9,6 +9,8 @@ use Drupal\marvin_incubator\Robo\Task\GitHooksDeployTask;
 trait GitHooksTaskLoader {
 
   /**
+   * @phpstan-param marvin-incubator-robo-task-git-hooks-deploy-options $options
+   *
    * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\GitHooksDeployTask
    */
   protected function taskMarvinGitHooksDeploy(array $options = []) {

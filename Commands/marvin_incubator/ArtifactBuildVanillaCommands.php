@@ -11,6 +11,7 @@ use Drupal\marvin\Robo\VersionNumberTaskLoader;
 use Drupal\marvin_incubator\CommandsBaseTrait;
 use Drush\Commands\marvin\ArtifactBuildCommandsBase;
 use Robo\Collection\CollectionBuilder;
+use Robo\Contract\TaskInterface;
 use Robo\State\Data as RoboStateData;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,7 +30,8 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
     return TRUE;
   }
 
-  protected function getTaskCollectChildExtensionDirs() {
+  protected function getTaskCollectChildExtensionDirs(): \Closure|TaskInterface {
+    // @todo Why not this? \Drupal\marvin_incubator\Robo\Task\ManagedDrupalExtensionListTask.
     return function (RoboStateData $data): int {
       $data['customExtensionDirs'] = $this->getManagedDrupalExtensions();
 
@@ -39,6 +41,8 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
 
   /**
    * @hook on-event marvin:artifact:types
+   *
+   * @phpstan-return array<string, marvin-incubator-artifact-type-info>
    */
   public function onEventMarvinArtifactTypes(string $projectType): array {
     $types = [];
@@ -54,20 +58,23 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
   }
 
   /**
+   * @param string[] $packageNames
+   *
    * @command marvin:artifact:build:vanilla
+   *
    * @bootstrap none
    *
-   * @marvinArgPackages packages
+   * @marvinArgPackages packageNames
    */
-  public function artifactBuildVanilla(array $packages): CollectionBuilder {
+  public function artifactBuildVanilla(array $packageNames): CollectionBuilder {
     $cb = $this->collectionBuilder();
 
-    $packages = array_intersect_key(
+    $packageNames = array_intersect_key(
       $this->getManagedDrupalExtensions(),
-      array_flip($packages)
+      array_flip($packageNames)
     );
 
-    foreach ($packages as $packageName => $packagePath) {
+    foreach ($packageNames as $packageName => $packagePath) {
       $cb->addTask($this->delegate('vanilla', $packageName, $packagePath));
     }
 
@@ -78,12 +85,14 @@ class ArtifactBuildVanillaCommands extends ArtifactBuildCommandsBase {
    * @hook on-event marvin:artifact:build:vanilla
    *
    * @noinspection PhpUnusedParameterInspection
+   *
+   * @phpstan-return array<string, marvin-task-definition>
    */
   public function onEventMarvinArtifactBuildVanilla(
     InputInterface $input,
     OutputInterface $output,
     string $packageName,
-    string $packagePath
+    string $packagePath,
   ): array {
     $buildDir = $this->getConfig()->get('marvin.buildDir');
 

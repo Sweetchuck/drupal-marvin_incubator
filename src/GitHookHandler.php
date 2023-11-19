@@ -32,6 +32,9 @@ class GitHookHandler {
    */
   protected $stdError;
 
+  /**
+   * @var string[]
+   */
   protected array $cliArgs = [];
 
   /**
@@ -43,6 +46,13 @@ class GitHookHandler {
     $this->stdError = $stdError ?? STDERR;
   }
 
+  /**
+   * @param string[] $cliArgs
+   * @param string $packagePath
+   * @param string $rootProjectDir
+   * @param string $composerExecutable
+   * @param string $marvinIncubatorDir
+   */
   public function init(
     array $cliArgs,
     string $packagePath,
@@ -82,7 +92,7 @@ class GitHookHandler {
   }
 
   protected function initBinDir(): static {
-    $output = exec(sprintf(
+    $output = (string) exec(sprintf(
       '%s config bin-dir 2>/dev/null',
       escapeshellcmd($this->composerExecutable)
     ));
@@ -93,7 +103,7 @@ class GitHookHandler {
   }
 
   protected function initVendorDir(): static {
-    $output = exec(sprintf(
+    $output = (string) exec(sprintf(
       '%s config vendor-dir 2>/dev/null',
       escapeshellcmd($this->composerExecutable)
     ));
@@ -103,6 +113,9 @@ class GitHookHandler {
     return $this;
   }
 
+  /**
+   * @phpstan-return null|marvin-incubator-git-hook-handler-context
+   */
   public function doIt(): ?array {
     if (!$this->isGitHookExists()) {
       $this->logError("There is no corresponding 'drush marvin:git-hook:{$this->gitHook}' command.");
@@ -144,6 +157,9 @@ class GitHookHandler {
     return $exitCode === 0;
   }
 
+  /**
+   * @phpstan-return marvin-incubator-git-hook-handler-context
+   */
   protected function getContext(): array {
     $args = $this->cliArgs;
     array_shift($args);
@@ -190,7 +206,7 @@ class GitHookHandler {
   }
 
   protected function getLastLine(string $string): string {
-    $lines = preg_split('/[\n\r]+/', trim($string));
+    $lines = (array) preg_split('/[\n\r]+/', trim($string));
     $last = end($lines);
 
     return $last === FALSE ?

@@ -38,12 +38,21 @@ class DrushCommandListResult {
     return $this;
   }
 
+  /**
+   * @return string[]
+   */
   public function getNamespaces(): array {
     $query = '/symfony/namespaces/namespace[@id]';
+    /** @phpstan-var false|array<\DOMElement> $elements */
+    $elements = $this->xpath->query($query);
+    if (!$elements) {
+      // Developer error.
+      return [];
+    }
+
     $result = [];
-    /** @var \DOMElement $item */
-    foreach ($this->xpath->query($query) as $item) {
-      $result[] = $item->getAttribute('id');
+    foreach ($elements as $element) {
+      $result[] = $element->getAttribute('id');
     }
 
     return $result;

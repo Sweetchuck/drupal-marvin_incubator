@@ -55,6 +55,11 @@ class SiteDeleteTask extends BaseTask implements
 
   protected CollectionBuilder $cb;
 
+  /**
+   * {@inheritdoc}
+   *
+   * @phpstan-param marvin-incubator-robo-task-site-delete-options $options
+   */
   public function setOptions(array $options): static {
     parent::setOptions($options);
 
@@ -134,6 +139,9 @@ class SiteDeleteTask extends BaseTask implements
     ];
   }
 
+  /**
+   * @return string[]
+   */
   protected function getSiteDirs(string $parentDir): array {
     $siteDirs = [];
 

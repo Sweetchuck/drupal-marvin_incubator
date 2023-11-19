@@ -10,10 +10,7 @@ namespace Drupal\Tests\marvin_incubator\Integration;
  */
 class MarvinLintPhpcsTest extends CommandsTestCase {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $drushCommand = 'marvin:lint:phpcs';
+  protected string $drushCommand = 'marvin:lint:phpcs';
 
   /**
    * {@inheritdoc}

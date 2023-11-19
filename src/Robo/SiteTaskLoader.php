@@ -10,7 +10,9 @@ use Drupal\marvin_incubator\Robo\Task\SiteDeleteTask;
 trait SiteTaskLoader {
 
   /**
-   * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\SiteCreateTask
+   * @phpstan-param marvin-incubator-robo-task-site-create-options $options
+   *
+   * @phpstan-return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\SiteCreateTask
    */
   protected function taskMarvinSiteCreate(array $options = []) {
     /** @var \Drupal\marvin_incubator\Robo\Task\SiteCreateTask $task */
@@ -21,6 +23,8 @@ trait SiteTaskLoader {
   }
 
   /**
+   * @phpstan-param marvin-incubator-robo-task-site-delete-options $options
+   *
    * @return \Robo\Collection\CollectionBuilder|\Drupal\marvin_incubator\Robo\Task\SiteDeleteTask
    */
   protected function taskMarvinSiteDelete(array $options = []) {

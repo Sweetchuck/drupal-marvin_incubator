@@ -10,19 +10,19 @@ use Drush\Commands\marvin_incubator\BaseHooksCommands;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class ValidateRegexp {
 
-  protected array $locators = [];
-
-  protected string $pattern = '';
-
+  /**
+   * @phpstan-param string[] $locators
+   */
   public function __construct(
-    array $locators,
-    string $pattern,
+    protected array $locators,
+    protected string $pattern,
   ) {
-    $this->locators = $locators;
-    $this->pattern = $pattern;
   }
 
-  public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo) {
+  /**
+   * @phpstan-param \ReflectionAttribute<object> $attribute
+   */
+  public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo): void {
     $args = $attribute->getArguments();
     $commandInfo->addAnnotation(
       BaseHooksCommands::TAG_VALIDATE_MARVIN_REGEXP,

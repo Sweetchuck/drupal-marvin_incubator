@@ -18,6 +18,7 @@ class ProcessResult {
    * @return static
    */
   public static function createFromProcess(Process $process) {
+    // @phpstan-ignore-next-line
     $result = new static();
     $result->exitCode = $process->getExitCode();
     $result->stdOutput = $process->getOutput();

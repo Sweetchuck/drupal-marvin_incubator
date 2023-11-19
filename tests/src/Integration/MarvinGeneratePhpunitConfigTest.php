@@ -22,7 +22,7 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
     $this->setUpDeletePhpunitConfigFiles();
   }
 
-  protected function setUpDeletePhpunitConfigFiles() {
+  protected function setUpDeletePhpunitConfigFiles(): static {
     $files = (new Finder())
       ->in($this->getProjectRootDir())
       ->depth(0)
@@ -82,14 +82,19 @@ class MarvinGeneratePhpunitConfigTest extends CommandsTestCase {
 
   /**
    * @dataProvider casesExecuteDrushCommand
+   *
+   * @phpstan-param array<string, mixed> $expected
+   * @phpstan-param array<string, mixed> $args
+   * @phpstan-param array<string, mixed> $options
+   * @phpstan-param array<string, mixed> $envVars
    */
   public function testExecuteDrushCommand(
     array $expected,
     string $command,
     array $args = [],
     array $options = [],
-    array $envVars = []
-  ) {
+    array $envVars = [],
+  ): void {
     parent::testExecuteDrushCommand(
       $expected,
       $command,

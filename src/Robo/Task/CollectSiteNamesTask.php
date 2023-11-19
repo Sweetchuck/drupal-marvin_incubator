@@ -27,6 +27,9 @@ class CollectSiteNamesTask extends BaseTask {
     return $this;
   }
 
+  /**
+   * @phpstan-param marvin-incubator-robo-task-collect-site-names-options $options
+   */
   public function setOptions(array $options): static {
     parent::setOptions($options);
 

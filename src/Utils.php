@@ -15,10 +15,10 @@ class Utils implements UtilsInterface {
   }
 
   /**
+   * {@inheritdoc}
+   *
    * @todo Make this method static, or the other ones non-static.
    * @todo Maybe $rootProjectDir instead of $drupalRootDir.
-   *
-   * @phpstan-return array<string, marvin-incubator-managed-drupal-extension>
    */
   public function collectManagedDrupalExtensions(
     string $rootDir,
@@ -37,9 +37,13 @@ class Utils implements UtilsInterface {
           && MarvinUtils::isDrupalPackage($composerLock[$lockKey][$packageName])
           && !str_starts_with($packagePath, $rootDir . DIRECTORY_SEPARATOR)
         ) {
-          $type = preg_replace('/^drupal-/', '', $composerLock[$lockKey][$packageName]['type']);
+          $type = preg_replace(
+            '/^drupal-/',
+            '',
+            $composerLock[$lockKey][$packageName]['type'] ?? 'library',
+          );
           $nameParts = explode('/', $packageName);
-          $distUrl = $composerLock[$lockKey][$packageName]['dist']['url'] ?? '';
+          $distUrl = (string) ($composerLock[$lockKey][$packageName]['dist']['url'] ?? '');
           $extensions[$packageName] = [
             'name' => $packageName,
             'projectVendor' => $nameParts[0],
@@ -132,6 +136,9 @@ class Utils implements UtilsInterface {
       ));
   }
 
+  /**
+   * @return string[]
+   */
   protected function getNamedRegexpPatterns(): array {
     return [
       'machineNameStrict' => '/^[a-z][a-z0-9]*$/',

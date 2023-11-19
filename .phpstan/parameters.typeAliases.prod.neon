@@ -1,5 +1,10 @@
 parameters:
 	typeAliases:
+		marvin-incubator-db-variant: '''
+			array{
+				id: string,
+			}
+		'''
 		marvin-incubator-managed-drupal-extension: '''
 			array{
 				name: string,
@@ -7,7 +12,62 @@ parameters:
 				packageName: string,
 				type: string,
 				path: string,
-				pathRelative?: string,
-				pathInstalled?: string,
+				pathRelative: null|string,
+				pathInstalled: null|string,
+				composer: marvin-composer-info,
+			}
+		'''
+		marvin-incubator-robo-task-site-delete-options: '''
+			array{
+				assetNamePrefix?: string,
+				drupalRoot?: string,
+				siteName?: string,
+			}
+		'''
+		marvin-incubator-robo-task-site-create-options: '''
+			array{
+				assetNamePrefix?: string,
+				drupalRoot?: string,
+				siteName?: string,
+				dbVariants?: array<string, marvin-incubator-db-variant>,
+				phpVariants?: array<string, marvin-php-variant>,
+				uriPattern?: string,
+				siteDirPattern?: string,
+			}
+		'''
+		marvin-incubator-robo-task-managed-drupal-extension-list-options: '''
+			array{
+				assetNamePrefix?: string,
+				workingDirectory?: string,
+				composerJsonFileName?: string,
+				packagePaths?: array<string, string>,
+				ignoredPackages?: array<string>,
+			}
+		'''
+		marvin-incubator-robo-task-git-hooks-deploy-options: '''
+			array{
+				assetNamePrefix?: string,
+				packagePath?: string,
+				hookFilesSourceDir?: string,
+				commonTemplateFileName?: string,
+				composerExecutable?: string,
+			}
+		'''
+		marvin-incubator-robo-task-collect-site-names-options: '''
+			array{
+				assetNamePrefix?: string,
+				drupalRoot?: string,
+			}
+		'''
+		marvin-incubator-git-hook-handler-context: '''
+			array{
+				cliArgs: string[],
+				pathToDrushPhp: string,
+			}
+		'''
+		marvin-incubator-artifact-type-info: '''
+			array{
+				label: string,
+				description: string,
 			}
 		'''

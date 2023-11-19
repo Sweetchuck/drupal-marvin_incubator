@@ -15,12 +15,16 @@ use Symfony\Component\Filesystem\Path;
  */
 class UtilsTest extends TestCase {
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesCollectManagedDrupalExtensions(): array {
     $vfsRoot = 'vfs://testCollectManagedDrupalExtensions';
 
     return [
       'empty' => [
         [],
+        $vfsRoot,
         "$vfsRoot/dir/inside",
         [],
         [],
@@ -45,6 +49,7 @@ class UtilsTest extends TestCase {
             'path' => "$vfsRoot/dir/outside/v1/drush_01",
           ],
         ],
+        "$vfsRoot/dir/inside",
         "$vfsRoot/dir/inside",
         [
           'packages' => [
@@ -116,10 +121,16 @@ class UtilsTest extends TestCase {
   }
 
   /**
+   * @phpstan-param array<string, mixed> $expected
+   * @phpstan-param marvin-composer-lock $composerLock
+   * @phpstan-param array<string, string> $packagePaths
+   * @phpstan-param array<string, mixed> $vfsStructure
+   *
    * @dataProvider casesCollectManagedDrupalExtensions
    */
   public function testCollectManagedDrupalExtensions(
     array $expected,
+    string $projectRootDir,
     string $drupalRootDir,
     array $composerLock,
     array $packagePaths,
@@ -131,10 +142,13 @@ class UtilsTest extends TestCase {
 
     static::assertEquals(
       $expected,
-      $utils->collectManagedDrupalExtensions($drupalRootDir, $composerLock, $packagePaths)
+      $utils->collectManagedDrupalExtensions($projectRootDir, $drupalRootDir, $composerLock, $packagePaths)
     );
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesGetSiteDirs(): array {
     return [
       'basic' => [
@@ -166,6 +180,10 @@ class UtilsTest extends TestCase {
   }
 
   /**
+   * @param string[] $expected
+   * @param string $sitesDir
+   * @param array<string, mixed> $vfsStructure
+   *
    * @dataProvider casesGetSiteDirs
    */
   public function testGetSiteDirs(array $expected, string $sitesDir, array $vfsStructure): void {
@@ -177,6 +195,9 @@ class UtilsTest extends TestCase {
     static::assertEquals($expected, Utils::getSiteDirs($sitesDir));
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesGetSiteNames(): array {
     return [
       'empty' => [
@@ -198,12 +219,18 @@ class UtilsTest extends TestCase {
   }
 
   /**
+   * @param string[] $expected
+   * @param string[] $siteDirs
+   *
    * @dataProvider casesGetSiteNames
    */
-  public function testGetSiteNames($expected, array $siteDirs): void {
+  public function testGetSiteNames(array $expected, array $siteDirs): void {
     static::assertSame($expected, Utils::getSiteNames($siteDirs));
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesGetPhpUnitConfigFileName(): array {
     return [
       'basic' => [

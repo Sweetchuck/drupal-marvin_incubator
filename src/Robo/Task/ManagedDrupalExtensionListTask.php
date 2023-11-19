@@ -7,7 +7,6 @@ namespace Drupal\marvin_incubator\Robo\Task;
 use Drupal\marvin\ComposerInfo;
 use Drupal\marvin\Robo\Task\BaseTask as MarvinBaseTask;
 use Drupal\marvin_incubator\Utils as MarvinIncubatorUtils;
-use Symfony\Component\Filesystem\Path;
 
 class ManagedDrupalExtensionListTask extends MarvinBaseTask {
 
@@ -46,30 +45,51 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
+  /**
+   * @phpstan-var array<string, string>
+   */
   protected array $packagePaths = [];
 
+  /**
+   * @phpstan-return array<string, string>
+   */
   public function getPackagePaths(): array {
     return $this->packagePaths;
   }
 
+  /**
+   * @phpstan-param array<string, string> $value
+   */
   public function setPackagePaths(array $value): static {
     $this->packagePaths = $value;
 
     return $this;
   }
 
+  /**
+   * @var string[]
+   */
   protected array $ignoredPackages = [];
 
+  /**
+   * @return string[]
+   */
   public function getIgnoredPackages(): array {
     return $this->ignoredPackages;
   }
 
+  /**
+   * @param string[] $value
+   */
   public function setIgnoredPackages(array $value): static {
     $this->ignoredPackages = $value;
 
     return $this;
   }
 
+  /**
+   * @phpstan-param marvin-incubator-robo-task-managed-drupal-extension-list-options $options
+   */
   public function setOptions(array $options): static {
     parent::setOptions($options);
 
@@ -92,18 +112,16 @@ class ManagedDrupalExtensionListTask extends MarvinBaseTask {
     return $this;
   }
 
+  /**
+   * @phpstan-var \Drupal\marvin\ComposerInfo<string, mixed>
+   */
   protected ComposerInfo $composerInfo;
 
   public function runAction(): static {
     $workingDirectory = $this->getWorkingDirectory();
     $this->initComposerInfo();
 
-    $drupalCoreDir = $this->composerInfo->getDrupalExtensionInstallDir('core');
-    $drupalRootRelative = Path::join($workingDirectory, $drupalCoreDir, '..');
-
-    // @todo The getcwd() should not be used here.
     $managedDrupalExtensions = $this->utils->collectManagedDrupalExtensions(
-      //Path::makeAbsolute($drupalRootRelative, getcwd()),
       $workingDirectory,
       $this->composerInfo->getDrupalRootDir(),
       $this->composerInfo->getLock(),

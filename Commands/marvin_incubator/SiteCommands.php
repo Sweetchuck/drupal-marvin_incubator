@@ -35,6 +35,9 @@ class SiteCommands extends CommandsBase {
 
   protected Filesystem $fs;
 
+  /**
+   * @phpstan-var array<string, string[]>
+   */
   protected array $protectedSiteNames = [
     'list' => ['simpletest'],
     'create' => ['default', 'simpletest'],
@@ -59,6 +62,8 @@ class SiteCommands extends CommandsBase {
    *
    * @option string $format
    *   Default: yaml.
+   *
+   * @phpstan-param array{format: string} $options
    */
   #[CLI\Command(name: 'marvin:site:list')]
   #[CLI\Bootstrap(level: DrupalBootLevels::ROOT)]
@@ -163,6 +168,8 @@ class SiteCommands extends CommandsBase {
    * @hook on-event marvin:site:create
    *
    * @link https://github.com/consolidation/annotated-command#on-event-hook
+   *
+   * @phpstan-return array<string, marvin-task-definition>
    */
   public function onEventMarvinSiteCreate(
     InputInterface $input,
@@ -184,6 +191,9 @@ class SiteCommands extends CommandsBase {
     return $tasks;
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateInit(
     string $site,
     string $databaseId,
@@ -218,6 +228,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateValidate(): array {
     return [
       'marvin_incubator.validate' => [
@@ -256,6 +269,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateDirectories(): array {
     return [
       'marvin_incubator.directories.create' => [
@@ -288,6 +304,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateHashSalt(): array {
     return [
       'marvin_incubator.hash_salt_txt.create' => [
@@ -319,6 +338,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateSettingsPhp(): array {
     return [
       'marvin_incubator.settings_php.create' => [
@@ -353,7 +375,7 @@ class SiteCommands extends CommandsBase {
           $docroot = $state['drupalRootDir'];
           $siteFull = "{$state['site']}.{$state['databaseId']}";
           $filePath = "$docroot/sites/$siteFull/settings.php";
-          $fileContent = file_get_contents($filePath);
+          $fileContent = file_get_contents($filePath) ?: '';
 
           $prefix = "\$config['olivero.settings']['base_primary_color']";
           $fileContent = preg_replace(
@@ -370,6 +392,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateDrush(): array {
     return [
       'marvin_incubator.drush_site.create' => [
@@ -430,6 +455,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateInstall(): array {
     return [
       'marvin_incubator.install' => [
@@ -492,6 +520,9 @@ class SiteCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-return array<string, marvin-task-definition>
+   */
   protected function getTaskDefsSiteCreateFavicon(): array {
     return [
       'marvin_incubator.favicon.create' => [
@@ -512,7 +543,7 @@ class SiteCommands extends CommandsBase {
           }
 
           $content = strtr(
-            file_get_contents($src),
+            file_get_contents($src) ?: '',
             [
               '#009cde' => $state['primaryColor'],
             ],
@@ -598,6 +629,8 @@ class SiteCommands extends CommandsBase {
   }
 
   /**
+   * @phpstan-param array{r: int|float, g: int|float, b: int|float} $color
+   *
    * @todo Move this method into some utility class.
    */
   protected function rgb2hex(array $color): string {
@@ -610,6 +643,8 @@ class SiteCommands extends CommandsBase {
   }
 
   /**
+   * @phpstan-return array{r: int|float, g: int|float, b: int|float}
+   *
    * @todo Move this method into some utility class.
    */
   protected function randomRgbByBrightness(int $brightnessMin, int $brightnessMax): array {
@@ -624,6 +659,8 @@ class SiteCommands extends CommandsBase {
 
   /**
    * @todo Move this method into some utility class.
+   *
+   * @phpstan-return array{r: int|float, g: int|float, b: int|float}
    */
   protected function hsl2rgb(int $h, int $s, int $l): array {
     assert(0 <= $h && $h <= 359);
@@ -658,7 +695,7 @@ class SiteCommands extends CommandsBase {
   /**
    * @todo Move this method into some utility class.
    */
-  protected function hue2rgb($v1, $v2, $vH): int|float {
+  protected function hue2rgb(int|float $v1, int|float $v2, int|float $vH): int|float {
     if ($vH < 0) {
       $vH += 1;
     }
